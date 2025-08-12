@@ -7,7 +7,7 @@ import (
 	"testing"
 	"time"
 
-	"duckysolucky/skyhelper-networth-go/internal/lib"
+	"github.com/duckysolucky/skyhelper-networth-go/internal/lib"
 )
 
 func TestDecodeInventory(t *testing.T) {

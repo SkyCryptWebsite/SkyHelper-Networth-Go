@@ -6,9 +6,9 @@ import (
 	"sort"
 	"strings"
 
-	"duckysolucky/skyhelper-networth-go/internal/calculators"
-	"duckysolucky/skyhelper-networth-go/internal/lib"
-	"duckysolucky/skyhelper-networth-go/internal/models"
+	"github.com/duckysolucky/skyhelper-networth-go/internal/calculators"
+	"github.com/duckysolucky/skyhelper-networth-go/internal/lib"
+	"github.com/duckysolucky/skyhelper-networth-go/internal/models"
 )
 
 type ProfileNetworthCalculator struct {

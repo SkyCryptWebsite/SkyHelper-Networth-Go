@@ -7,7 +7,7 @@ import (
 	"sort"
 	"strings"
 
-	"duckysolucky/skyhelper-networth-go/internal/constants"
+	"github.com/duckysolucky/skyhelper-networth-go/internal/constants"
 )
 
 // titleCase converts a string to title case

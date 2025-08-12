@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"strings"
 
-	"duckysolucky/skyhelper-networth-go/internal/constants"
-	"duckysolucky/skyhelper-networth-go/internal/models"
+	"github.com/duckysolucky/skyhelper-networth-go/internal/constants"
+	"github.com/duckysolucky/skyhelper-networth-go/internal/models"
 )
 
 type BoosterHandler struct{}

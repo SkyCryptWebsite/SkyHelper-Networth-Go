@@ -5,9 +5,9 @@ import (
 	"strconv"
 	"strings"
 
-	"duckysolucky/skyhelper-networth-go/internal/constants"
-	"duckysolucky/skyhelper-networth-go/internal/lib"
-	"duckysolucky/skyhelper-networth-go/internal/models"
+	"github.com/duckysolucky/skyhelper-networth-go/internal/constants"
+	"github.com/duckysolucky/skyhelper-networth-go/internal/lib"
+	"github.com/duckysolucky/skyhelper-networth-go/internal/models"
 )
 
 type EnchantedBookHandler struct{}

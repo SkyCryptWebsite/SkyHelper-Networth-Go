@@ -5,9 +5,9 @@ import (
 	"os"
 	"testing"
 
-	"duckysolucky/skyhelper-networth-go/internal/calculators/handlers"
-	"duckysolucky/skyhelper-networth-go/internal/constants"
-	"duckysolucky/skyhelper-networth-go/internal/models"
+	"github.com/duckysolucky/skyhelper-networth-go/internal/calculators/handlers"
+	"github.com/duckysolucky/skyhelper-networth-go/internal/constants"
+	"github.com/duckysolucky/skyhelper-networth-go/internal/models"
 )
 
 func TestEssenceStarsHandler(t *testing.T) {

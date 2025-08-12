@@ -3,7 +3,7 @@ package handlers
 import (
 	"fmt"
 
-	"duckysolucky/skyhelper-networth-go/internal/models"
+	"github.com/duckysolucky/skyhelper-networth-go/internal/models"
 )
 
 type NewYearCakeBagHandler struct{}

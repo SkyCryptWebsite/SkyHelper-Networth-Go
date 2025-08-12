@@ -3,8 +3,8 @@ package tests
 import (
 	"testing"
 
-	"duckysolucky/skyhelper-networth-go/internal/calculators/handlers"
-	"duckysolucky/skyhelper-networth-go/internal/models"
+	"github.com/duckysolucky/skyhelper-networth-go/internal/calculators/handlers"
+	"github.com/duckysolucky/skyhelper-networth-go/internal/models"
 )
 
 func TestMidasWeaponHandler(t *testing.T) {

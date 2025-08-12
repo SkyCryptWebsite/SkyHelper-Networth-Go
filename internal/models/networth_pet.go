@@ -5,7 +5,7 @@ import (
 	"slices"
 	"sort"
 
-	"duckysolucky/skyhelper-networth-go/internal/constants"
+	"github.com/duckysolucky/skyhelper-networth-go/internal/constants"
 )
 
 type NetworthPet struct {

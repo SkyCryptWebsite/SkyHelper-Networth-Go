@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"duckysolucky/skyhelper-networth-go/internal/models"
+	"github.com/duckysolucky/skyhelper-networth-go/internal/models"
 )
 
 func ParseItems(profileData *models.SkyblockProfileMember, museumData *models.SkyblockMuseum) (*models.ParsedItems, error) {
