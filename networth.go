@@ -21,7 +21,38 @@ type ProfileNetworthCalculator struct {
 	Prices              models.Prices
 }
 
-func NewProfileNetworthCalculator(userProfile *models.SkyblockProfileMember, museumData *models.SkyblockMuseum, bankBalance float64) (*ProfileNetworthCalculator, error) {
+func NewProfileNetworthCalculator(userProfileRaw any, museumDataRaw any, bankBalance float64) (*ProfileNetworthCalculator, error) {
+	var userProfile *models.SkyblockProfileMember
+	var museumData *models.SkyblockMuseum
+
+	if profile, ok := userProfileRaw.(*models.SkyblockProfileMember); ok {
+		userProfile = profile
+	} else {
+		jsonData, err := json.Marshal(userProfileRaw)
+		if err != nil {
+			return nil, fmt.Errorf("failed to marshal profile data: %w", err)
+		}
+
+		userProfile = &models.SkyblockProfileMember{}
+		if err := json.Unmarshal(jsonData, userProfile); err != nil {
+			return nil, fmt.Errorf("failed to unmarshal profile data: %w", err)
+		}
+	}
+
+	if museum, ok := museumDataRaw.(*models.SkyblockMuseum); ok {
+		museumData = museum
+	} else {
+		jsonData, err := json.Marshal(museumDataRaw)
+		if err != nil {
+			return nil, fmt.Errorf("failed to marshal museum data: %w", err)
+		}
+
+		museumData = &models.SkyblockMuseum{}
+		if err := json.Unmarshal(jsonData, museumData); err != nil {
+			return nil, fmt.Errorf("failed to unmarshal museum data: %w", err)
+		}
+	}
+
 	items, err := lib.ParseItems(userProfile, museumData)
 	if err != nil {
 		return nil, fmt.Errorf("failed to parse items: %w", err)
