@@ -7,7 +7,7 @@ import (
 	"errors"
 	"sync"
 
-	"github.com/duckysolucky/skyhelper-networth-go/internal/models"
+	"github.com/DuckySoLucky/SkyHelper-Networth-Go/internal/models"
 	"github.com/Tnze/go-mc/nbt"
 )
 

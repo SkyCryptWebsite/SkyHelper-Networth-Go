@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/duckysolucky/skyhelper-networth-go/internal/models"
+	"github.com/DuckySoLucky/SkyHelper-Networth-Go/internal/models"
 )
 
 var cachedItems map[string]models.HypixelItem

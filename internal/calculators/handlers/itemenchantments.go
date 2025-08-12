@@ -5,8 +5,8 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/duckysolucky/skyhelper-networth-go/internal/constants"
-	"github.com/duckysolucky/skyhelper-networth-go/internal/models"
+	"github.com/DuckySoLucky/SkyHelper-Networth-Go/internal/constants"
+	"github.com/DuckySoLucky/SkyHelper-Networth-Go/internal/models"
 )
 
 type ItemEnchantments struct{}

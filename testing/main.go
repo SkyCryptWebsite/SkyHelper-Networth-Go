@@ -6,8 +6,8 @@ import (
 	"os"
 	"time"
 
-	networth "github.com/duckysolucky/skyhelper-networth-go"
-	"github.com/duckysolucky/skyhelper-networth-go/internal/models"
+	networth "github.com/DuckySoLucky/SkyHelper-Networth-Go"
+	"github.com/DuckySoLucky/SkyHelper-Networth-Go/internal/models"
 )
 
 func main() {

@@ -4,7 +4,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/duckysolucky/skyhelper-networth-go/internal/models"
+	"github.com/DuckySoLucky/SkyHelper-Networth-Go/internal/models"
 )
 
 type TestCase struct {

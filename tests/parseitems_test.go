@@ -6,8 +6,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/duckysolucky/skyhelper-networth-go/internal/lib"
-	"github.com/duckysolucky/skyhelper-networth-go/internal/models"
+	"github.com/DuckySoLucky/SkyHelper-Networth-Go/internal/lib"
+	"github.com/DuckySoLucky/SkyHelper-Networth-Go/internal/models"
 )
 
 func TestParseItems(t *testing.T) {

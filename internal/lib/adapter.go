@@ -1,6 +1,6 @@
 package lib
 
-import "github.com/duckysolucky/skyhelper-networth-go/internal/models"
+import "github.com/DuckySoLucky/SkyHelper-Networth-Go/internal/models"
 
 type ItemProviderAdapter struct{}
 
