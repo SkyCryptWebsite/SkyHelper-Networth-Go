@@ -1,0 +1,50 @@
+package tests
+
+import (
+	"testing"
+
+	"duckysolucky/skyhelper-networth-go/internal/calculators/handlers"
+	"duckysolucky/skyhelper-networth-go/internal/constants"
+	"duckysolucky/skyhelper-networth-go/internal/models"
+)
+
+func TestDivanPowderCoatingHandler(t *testing.T) {
+	testCases := []TestCase{
+		{
+			description: "Applies correctly",
+			item: &models.NetworthItem{
+				ItemId: "DIVAN_DRILL",
+				ExtraAttributes: &models.ExtraAttributes{
+					DivanPowderCoating: 1,
+				},
+				Price:       100,
+				Calculation: []models.CalculationData{},
+			},
+			prices:              map[string]float64{"DIVAN_POWDER_COATING": 100000000},
+			shouldApply:         true,
+			expectedPriceChange: 100000000 * constants.APPLICATION_WORTH["divanPowderCoating"],
+			expectedCalculation: []models.CalculationData{
+				{
+					Id:    "DIVAN_POWDER_COATING",
+					Type:  "DIVAN_POWDER_COATING",
+					Price: 100000000 * constants.APPLICATION_WORTH["divanPowderCoating"],
+					Count: 1,
+				},
+			},
+		},
+		{
+			description: "Does not apply",
+			item: &models.NetworthItem{
+				ItemId:          "DIVAN_DRILL",
+				ExtraAttributes: &models.ExtraAttributes{},
+				Price:           100,
+				Calculation:     []models.CalculationData{},
+			},
+			prices:              map[string]float64{},
+			shouldApply:         false,
+			expectedCalculation: []models.CalculationData{},
+		},
+	}
+
+	runHandlerTests(t, &handlers.DivanPowderCoatingHandler{}, testCases)
+}
