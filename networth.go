@@ -83,6 +83,9 @@ func (p *ProfileNetworthCalculator) GetNetworth(options ...models.NetworthOption
 	var opts models.NetworthOptions
 	if len(options) > 0 {
 		opts = options[0]
+	} else {
+		// If no config provided, set OnlyNetworth to true
+		opts.OnlyNetworth = true
 	}
 	return p.calculate(opts)
 }
@@ -91,6 +94,9 @@ func (p *ProfileNetworthCalculator) GetNonCosmeticNetworth(options ...models.Net
 	var opts models.NetworthOptions
 	if len(options) > 0 {
 		opts = options[0]
+	} else {
+		// If no config provided, set OnlyNetworth to true
+		opts.OnlyNetworth = true
 	}
 	opts.NonCosmetic = true
 	return p.calculate(opts)
