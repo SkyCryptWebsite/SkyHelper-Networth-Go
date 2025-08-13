@@ -1,11 +1,10 @@
 # SkyHelper-Networth-Go
 
-> [!NOTE] 
-> This repository is specifically designed for integration with [SkyCryptv3](https://github.com/DuckySoLucky/SkyCryptv3/). While this Go implementation focuses on core networth calculation functionality (including standard and non-cosmetic calculations), it does not include all features available in the Node.js module, such as UpdateManager and NetworthManager components.
-
 [![discord](https://img.shields.io/discord/720018827433345138?logo=discord)](https://discord.com/invite/fd4Be4W)
 [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 [![Go Reference](https://pkg.go.dev/badge/github.com/github.com/DuckySoLucky/SkyHelper-Networth-Go.svg)](https://pkg.go.dev/github.com/github.com/DuckySoLucky/SkyHelper-Networth-Go)
+> [!NOTE] 
+> This repository is specifically designed for integration with [SkyCryptv3](https://github.com/DuckySoLucky/SkyCryptv3/). While this Go implementation focuses on core networth calculation functionality (including standard and non-cosmetic calculations), it does not include all features available in the Node.js module, such as UpdateManager and NetworthManager components.
 
 [SkyHelper](https://skyhelper.altpapier.dev/)'s Networth Calculation as a Go module to calculate a player's SkyBlock networth by using their profile data provided by the [Hypixel API](https://api.hypixel.net/).
 
