@@ -71,5 +71,5 @@ func GetPrices(cache bool, cacheTimeSeconds int64, retries int) (*models.Prices,
 }
 
 func init() {
-	go GetPrices(true, 69420, 3) // Initial fetch to populate cache in background
+	// go GetPrices(true, 69420, 3) // Initial fetch to populate cache in background
 }

@@ -91,5 +91,5 @@ func GetItem(itemId string) *models.HypixelItem {
 }
 
 func init() {
-	go GetItems(true, 69420, 3) // Initial fetch to populate cache
+	// go GetItems(true, 69420, 3) // Initial fetch to populate cache
 }
