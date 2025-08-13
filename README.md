@@ -26,7 +26,10 @@ import (
 )
 
 func main() {
-	calculator, err := skyhelpernetworthgo.NewProfileNetworthCalculator(userProfile, museum, *profile.Banking.Balance)
+    userProfile := // https://api.hypixel.net/#tag/SkyBlock/paths/~1v2~1skyblock~1profile/get - profile.Members[uuid]
+    museumData := // https://api.hypixel.net/v2/skyblock/museum - museum.Members[uuid]
+
+	calculator, err := skyhelpernetworthgo.NewProfileNetworthCalculator(userProfile, museumData, profile.Banking.Balance)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"error": fmt.Sprintf("Failed to create networth calculator: %v", err),
