@@ -3,6 +3,7 @@ package tests
 import (
 	"testing"
 
+	skycrypttypes "github.com/DuckySoLucky/SkyCrypt-Types"
 	"github.com/DuckySoLucky/SkyHelper-Networth-Go/internal/calculators/handlers"
 	"github.com/DuckySoLucky/SkyHelper-Networth-Go/internal/constants"
 	"github.com/DuckySoLucky/SkyHelper-Networth-Go/internal/models"
@@ -14,7 +15,7 @@ func TestItemEnchantmentHandler(t *testing.T) {
 			description: "Applies correctly",
 			item: &models.NetworthItem{
 				ItemId: "ROTTEN_LEGGINGS",
-				ExtraAttributes: &models.ExtraAttributes{
+				ExtraAttributes: &skycrypttypes.ExtraAttributes{
 					Enchantments: map[string]int{
 						"true_protection": 1,
 						"ultimate_legion": 5,
@@ -60,7 +61,7 @@ func TestItemEnchantmentHandler(t *testing.T) {
 			description: "Applies correctly with blocked item-specific enchantment",
 			item: &models.NetworthItem{
 				ItemId: "ADVANCED_GARDENING_HOE",
-				ExtraAttributes: &models.ExtraAttributes{
+				ExtraAttributes: &skycrypttypes.ExtraAttributes{
 					Enchantments: map[string]int{
 						"replenish":  1,
 						"turbo_cane": 1,
@@ -85,7 +86,7 @@ func TestItemEnchantmentHandler(t *testing.T) {
 			description: "Applies correctly with ignored enchantment",
 			item: &models.NetworthItem{
 				ItemId: "IRON_SWORD",
-				ExtraAttributes: &models.ExtraAttributes{
+				ExtraAttributes: &skycrypttypes.ExtraAttributes{
 					Enchantments: map[string]int{
 						"scavenger": 5,
 						"smite":     6,
@@ -110,7 +111,7 @@ func TestItemEnchantmentHandler(t *testing.T) {
 			description: "Does not apply",
 			item: &models.NetworthItem{
 				ItemId:          "ARTIFACT_OF_CONTROL",
-				ExtraAttributes: &models.ExtraAttributes{},
+				ExtraAttributes: &skycrypttypes.ExtraAttributes{},
 				Price:           100,
 				Calculation:     []models.CalculationData{},
 			},
@@ -122,7 +123,7 @@ func TestItemEnchantmentHandler(t *testing.T) {
 			description: "Applies correctly with stacking enchantment",
 			item: &models.NetworthItem{
 				ItemId: "DIVAN_DRILL",
-				ExtraAttributes: &models.ExtraAttributes{
+				ExtraAttributes: &skycrypttypes.ExtraAttributes{
 					Enchantments: map[string]int{
 						"compact": 10,
 					},
@@ -146,7 +147,7 @@ func TestItemEnchantmentHandler(t *testing.T) {
 			description: "Applies correctly without silex",
 			item: &models.NetworthItem{
 				ItemId: "DIAMOND_PICKAXE",
-				ExtraAttributes: &models.ExtraAttributes{
+				ExtraAttributes: &skycrypttypes.ExtraAttributes{
 					Enchantments: map[string]int{
 						"efficiency": 5,
 					},
@@ -163,7 +164,7 @@ func TestItemEnchantmentHandler(t *testing.T) {
 			description: "Applies correctly with silex",
 			item: &models.NetworthItem{
 				ItemId: "DIAMOND_PICKAXE",
-				ExtraAttributes: &models.ExtraAttributes{
+				ExtraAttributes: &skycrypttypes.ExtraAttributes{
 					Enchantments: map[string]int{
 						"efficiency": 10,
 					},
@@ -187,7 +188,7 @@ func TestItemEnchantmentHandler(t *testing.T) {
 			description: "Applies correctly stonk without silex",
 			item: &models.NetworthItem{
 				ItemId: "STONK_PICKAXE",
-				ExtraAttributes: &models.ExtraAttributes{
+				ExtraAttributes: &skycrypttypes.ExtraAttributes{
 					Enchantments: map[string]int{
 						"efficiency": 6,
 					},
@@ -204,7 +205,7 @@ func TestItemEnchantmentHandler(t *testing.T) {
 			description: "Applies correctly stonk with silex",
 			item: &models.NetworthItem{
 				ItemId: "STONK_PICKAXE",
-				ExtraAttributes: &models.ExtraAttributes{
+				ExtraAttributes: &skycrypttypes.ExtraAttributes{
 					Enchantments: map[string]int{
 						"efficiency": 10,
 					},
@@ -228,7 +229,7 @@ func TestItemEnchantmentHandler(t *testing.T) {
 			description: "Applies correctly promising spade without silex",
 			item: &models.NetworthItem{
 				ItemId: "PROMISING_SPADE",
-				ExtraAttributes: &models.ExtraAttributes{
+				ExtraAttributes: &skycrypttypes.ExtraAttributes{
 					Enchantments: map[string]int{
 						"efficiency": 10,
 					},
@@ -246,7 +247,7 @@ func TestItemEnchantmentHandler(t *testing.T) {
 			description: "Applies correctly without golden bounty",
 			item: &models.NetworthItem{
 				ItemId: "IRON_SWORD",
-				ExtraAttributes: &models.ExtraAttributes{
+				ExtraAttributes: &skycrypttypes.ExtraAttributes{
 					Enchantments: map[string]int{
 						"scavenger": 5,
 					},
@@ -263,7 +264,7 @@ func TestItemEnchantmentHandler(t *testing.T) {
 			description: "Applies correctly with golden bounty",
 			item: &models.NetworthItem{
 				ItemId: "IRON_SWORD",
-				ExtraAttributes: &models.ExtraAttributes{
+				ExtraAttributes: &skycrypttypes.ExtraAttributes{
 					Enchantments: map[string]int{
 						"scavenger": 6,
 					},
@@ -287,7 +288,7 @@ func TestItemEnchantmentHandler(t *testing.T) {
 			description: "Applies correctly without pesthunting guide",
 			item: &models.NetworthItem{
 				ItemId: "FERMENTO_LEGGINGS",
-				ExtraAttributes: &models.ExtraAttributes{
+				ExtraAttributes: &skycrypttypes.ExtraAttributes{
 					Enchantments: map[string]int{
 						"pesterminator": 5,
 					},
@@ -304,7 +305,7 @@ func TestItemEnchantmentHandler(t *testing.T) {
 			description: "Applies correctly with pesthunting guide",
 			item: &models.NetworthItem{
 				ItemId: "FERMENTO_LEGGINGS",
-				ExtraAttributes: &models.ExtraAttributes{
+				ExtraAttributes: &skycrypttypes.ExtraAttributes{
 					Enchantments: map[string]int{
 						"pesterminator": 6,
 					},
@@ -328,7 +329,7 @@ func TestItemEnchantmentHandler(t *testing.T) {
 			description: "Applies correctly without gold bottle cap",
 			item: &models.NetworthItem{
 				ItemId: "ROD_OF_THE_SEA",
-				ExtraAttributes: &models.ExtraAttributes{
+				ExtraAttributes: &skycrypttypes.ExtraAttributes{
 					Enchantments: map[string]int{
 						"luck_of_the_sea": 6,
 					},
@@ -345,7 +346,7 @@ func TestItemEnchantmentHandler(t *testing.T) {
 			description: "Applies correctly with gold bottle cap",
 			item: &models.NetworthItem{
 				ItemId: "ROD_OF_THE_SEA",
-				ExtraAttributes: &models.ExtraAttributes{
+				ExtraAttributes: &skycrypttypes.ExtraAttributes{
 					Enchantments: map[string]int{
 						"luck_of_the_sea": 7,
 					},
@@ -369,7 +370,7 @@ func TestItemEnchantmentHandler(t *testing.T) {
 			description: "Applies correctly without troubled bubble",
 			item: &models.NetworthItem{
 				ItemId: "ROD_OF_THE_SEA",
-				ExtraAttributes: &models.ExtraAttributes{
+				ExtraAttributes: &skycrypttypes.ExtraAttributes{
 					Enchantments: map[string]int{
 						"piscary": 6,
 					},
@@ -386,7 +387,7 @@ func TestItemEnchantmentHandler(t *testing.T) {
 			description: "Applies correctly with troubled bubble",
 			item: &models.NetworthItem{
 				ItemId: "ROD_OF_THE_SEA",
-				ExtraAttributes: &models.ExtraAttributes{
+				ExtraAttributes: &skycrypttypes.ExtraAttributes{
 					Enchantments: map[string]int{
 						"piscary": 7,
 					},
@@ -410,7 +411,7 @@ func TestItemEnchantmentHandler(t *testing.T) {
 			description: "Applies correctly without severed pincer",
 			item: &models.NetworthItem{
 				ItemId: "ROD_OF_THE_SEA",
-				ExtraAttributes: &models.ExtraAttributes{
+				ExtraAttributes: &skycrypttypes.ExtraAttributes{
 					Enchantments: map[string]int{
 						"frail": 6,
 					},
@@ -427,7 +428,7 @@ func TestItemEnchantmentHandler(t *testing.T) {
 			description: "Applies correctly with severed pincer",
 			item: &models.NetworthItem{
 				ItemId: "ROD_OF_THE_SEA",
-				ExtraAttributes: &models.ExtraAttributes{
+				ExtraAttributes: &skycrypttypes.ExtraAttributes{
 					Enchantments: map[string]int{
 						"frail": 7,
 					},
@@ -451,7 +452,7 @@ func TestItemEnchantmentHandler(t *testing.T) {
 			description: "Applies correctly without octopus tendril",
 			item: &models.NetworthItem{
 				ItemId: "ROD_OF_THE_SEA",
-				ExtraAttributes: &models.ExtraAttributes{
+				ExtraAttributes: &skycrypttypes.ExtraAttributes{
 					Enchantments: map[string]int{
 						"spiked_hook": 6,
 					},
@@ -468,7 +469,7 @@ func TestItemEnchantmentHandler(t *testing.T) {
 			description: "Applies correctly with octopus tendril",
 			item: &models.NetworthItem{
 				ItemId: "ROD_OF_THE_SEA",
-				ExtraAttributes: &models.ExtraAttributes{
+				ExtraAttributes: &skycrypttypes.ExtraAttributes{
 					Enchantments: map[string]int{
 						"spiked_hook": 7,
 					},
@@ -492,7 +493,7 @@ func TestItemEnchantmentHandler(t *testing.T) {
 			description: "Applies correctly without chain of the end times",
 			item: &models.NetworthItem{
 				ItemId: "ROD_OF_THE_SEA",
-				ExtraAttributes: &models.ExtraAttributes{
+				ExtraAttributes: &skycrypttypes.ExtraAttributes{
 					Enchantments: map[string]int{
 						"charm": 5,
 					},
@@ -509,7 +510,7 @@ func TestItemEnchantmentHandler(t *testing.T) {
 			description: "Applies correctly with chain of the end times",
 			item: &models.NetworthItem{
 				ItemId: "ROD_OF_THE_SEA",
-				ExtraAttributes: &models.ExtraAttributes{
+				ExtraAttributes: &skycrypttypes.ExtraAttributes{
 					Enchantments: map[string]int{
 						"charm": 6,
 					},
@@ -533,7 +534,7 @@ func TestItemEnchantmentHandler(t *testing.T) {
 			description: "Does not apply",
 			item: &models.NetworthItem{
 				ItemId:          "IRON_SWORD",
-				ExtraAttributes: &models.ExtraAttributes{},
+				ExtraAttributes: &skycrypttypes.ExtraAttributes{},
 				Price:           100,
 				Calculation:     []models.CalculationData{},
 			},
@@ -545,7 +546,7 @@ func TestItemEnchantmentHandler(t *testing.T) {
 			description: "Does not apply enchantment",
 			item: &models.NetworthItem{
 				ItemId: "ENCHANTED_BOOK",
-				ExtraAttributes: &models.ExtraAttributes{
+				ExtraAttributes: &skycrypttypes.ExtraAttributes{
 					Enchantments: map[string]int{
 						"fire_protection": 6,
 					},

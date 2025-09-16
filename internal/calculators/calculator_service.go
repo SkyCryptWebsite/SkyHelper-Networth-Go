@@ -1,6 +1,7 @@
 package calculators
 
 import (
+	skycrypttypes "github.com/DuckySoLucky/SkyCrypt-Types"
 	"github.com/DuckySoLucky/SkyHelper-Networth-Go/internal/calculators/handlers"
 	"github.com/DuckySoLucky/SkyHelper-Networth-Go/internal/lib"
 	"github.com/DuckySoLucky/SkyHelper-Networth-Go/internal/models"
@@ -20,11 +21,11 @@ func NewCalculatorService() *CalculatorService {
 	}
 }
 
-func (cs *CalculatorService) NewSkyBlockItemCalculator(item *models.DecodedItem, prices models.Prices, options models.NetworthOptions) *models.NetworthItem {
+func (cs *CalculatorService) NewSkyBlockItemCalculator(item *skycrypttypes.Item, prices models.Prices, options models.NetworthOptions) *models.NetworthItem {
 	return models.NewSkyBlockItemCaclulator(item, prices, cs.itemProvider, options)
 }
 
-func (cs *CalculatorService) NewSkyBlockPetCalculator(pet *models.SkyblockPet, prices models.Prices, options models.NetworthOptions) *models.NetworthPet {
+func (cs *CalculatorService) NewSkyBlockPetCalculator(pet *skycrypttypes.Pet, prices models.Prices, options models.NetworthOptions) *models.NetworthPet {
 	return models.NewSkyBlockPetCalculator(pet, prices, options)
 }
 

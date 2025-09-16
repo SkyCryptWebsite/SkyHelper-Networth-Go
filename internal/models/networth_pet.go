@@ -5,11 +5,12 @@ import (
 	"slices"
 	"sort"
 
+	skycrypttypes "github.com/DuckySoLucky/SkyCrypt-Types"
 	"github.com/DuckySoLucky/SkyHelper-Networth-Go/internal/constants"
 )
 
 type NetworthPet struct {
-	PetData SkyblockPet `json:"petData"`
+	PetData skycrypttypes.Pet `json:"petData"`
 
 	NonCosmetic bool   `json:"nonCosmetic"`
 	Skin        string `json:"string"`
@@ -152,7 +153,7 @@ func (item *NetworthPet) getPetLevel() Level {
 	}
 }
 
-func NewSkyBlockPetCalculator(item *SkyblockPet, prices Prices, options NetworthOptions) *NetworthPet {
+func NewSkyBlockPetCalculator(item *skycrypttypes.Pet, prices Prices, options NetworthOptions) *NetworthPet {
 	networthItem := &NetworthPet{
 		PetData: *item,
 

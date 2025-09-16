@@ -5,14 +5,15 @@ import (
 	"os"
 	"testing"
 
+	skycrypttypes "github.com/DuckySoLucky/SkyCrypt-Types"
 	networth "github.com/DuckySoLucky/SkyHelper-Networth-Go"
 	"github.com/DuckySoLucky/SkyHelper-Networth-Go/internal/models"
 )
 
 var (
-	benchProfile     models.SkyblockProfile
-	benchMuseum      models.SkyblockMuseum
-	benchUserProfile models.SkyblockProfileMember
+	benchProfile     skycrypttypes.Profile
+	benchMuseum      skycrypttypes.Museum
+	benchUserProfile skycrypttypes.Member
 )
 
 func init() {
@@ -42,7 +43,7 @@ func init() {
 func BenchmarkNetworthCalculation(b *testing.B) {
 
 	for b.Loop() {
-		profileNWCalc, err := networth.NewProfileNetworthCalculator(&benchUserProfile, &benchMuseum, benchProfile.Banking.Balance)
+		profileNWCalc, err := networth.NewProfileNetworthCalculator(&benchUserProfile, &benchMuseum, *benchProfile.Banking.Balance)
 		if err != nil {
 			b.Fatalf("Failed to create ProfileNetworthCalculator: %v", err)
 		}
@@ -54,7 +55,7 @@ func BenchmarkNetworthCalculation(b *testing.B) {
 func BenchmarkNetworthCalculatorCreation(b *testing.B) {
 
 	for b.Loop() {
-		_, err := networth.NewProfileNetworthCalculator(&benchUserProfile, &benchMuseum, benchProfile.Banking.Balance)
+		_, err := networth.NewProfileNetworthCalculator(&benchUserProfile, &benchMuseum, *benchProfile.Banking.Balance)
 		if err != nil {
 			b.Fatalf("Failed to create ProfileNetworthCalculator: %v", err)
 		}
@@ -62,7 +63,7 @@ func BenchmarkNetworthCalculatorCreation(b *testing.B) {
 }
 
 func BenchmarkNetworthCalculationOnly(b *testing.B) {
-	profileNWCalc, err := networth.NewProfileNetworthCalculator(&benchUserProfile, &benchMuseum, benchProfile.Banking.Balance)
+	profileNWCalc, err := networth.NewProfileNetworthCalculator(&benchUserProfile, &benchMuseum, *benchProfile.Banking.Balance)
 	if err != nil {
 		b.Fatalf("Failed to create ProfileNetworthCalculator: %v", err)
 	}

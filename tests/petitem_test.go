@@ -3,6 +3,7 @@ package tests
 import (
 	"testing"
 
+	skycrypttypes "github.com/DuckySoLucky/SkyCrypt-Types"
 	"github.com/DuckySoLucky/SkyHelper-Networth-Go/internal/calculators/handlers"
 	"github.com/DuckySoLucky/SkyHelper-Networth-Go/internal/constants"
 	"github.com/DuckySoLucky/SkyHelper-Networth-Go/internal/models"
@@ -13,7 +14,7 @@ func TestPetItemHandler(t *testing.T) {
 		{
 			description: "Applies correctly",
 			item: &models.NetworthPet{
-				PetData:     models.SkyblockPet{HeldItem: "PET_ITEM_MINING_SKILL_BOOST_UNCOMMON"},
+				PetData:     skycrypttypes.Pet{HeldItem: "PET_ITEM_MINING_SKILL_BOOST_UNCOMMON"},
 				Price:       100,
 				Calculation: []models.CalculationData{},
 			},
@@ -33,7 +34,7 @@ func TestPetItemHandler(t *testing.T) {
 			description: "Does not apply",
 			item: &models.NetworthPet{
 				Level:       models.Level{},
-				PetData:     models.SkyblockPet{},
+				PetData:     skycrypttypes.Pet{},
 				Calculation: []models.CalculationData{},
 			},
 			prices:              map[string]float64{},

@@ -3,6 +3,7 @@ package tests
 import (
 	"testing"
 
+	skycrypttypes "github.com/DuckySoLucky/SkyCrypt-Types"
 	"github.com/DuckySoLucky/SkyHelper-Networth-Go/internal/calculators/handlers"
 	"github.com/DuckySoLucky/SkyHelper-Networth-Go/internal/constants"
 	"github.com/DuckySoLucky/SkyHelper-Networth-Go/internal/models"
@@ -14,7 +15,7 @@ func TestPrestigeHandler(t *testing.T) {
 			description: "Applies correctly",
 			item: &models.NetworthItem{
 				ItemId:          "INFERNAL_FERVOR_LEGGINGS",
-				ExtraAttributes: &models.ExtraAttributes{},
+				ExtraAttributes: &skycrypttypes.ExtraAttributes{},
 				Price:           100,
 				Calculation:     []models.CalculationData{},
 			},
@@ -65,7 +66,7 @@ func TestPrestigeHandler(t *testing.T) {
 			description: "Applies correctly when only base item has price",
 			item: &models.NetworthItem{
 				ItemId:          "INFERNAL_FERVOR_LEGGINGS",
-				ExtraAttributes: &models.ExtraAttributes{},
+				ExtraAttributes: &skycrypttypes.ExtraAttributes{},
 				Price:           100,
 				Calculation:     []models.CalculationData{},
 			},
@@ -144,7 +145,7 @@ func TestPrestigeHandler(t *testing.T) {
 			description: "Applies correctly item when has price",
 			item: &models.NetworthItem{
 				ItemId:          "INFERNAL_CRIMSON_BOOTS",
-				ExtraAttributes: &models.ExtraAttributes{},
+				ExtraAttributes: &skycrypttypes.ExtraAttributes{},
 				Price:           350000000,
 				Calculation:     []models.CalculationData{},
 			},
@@ -156,7 +157,7 @@ func TestPrestigeHandler(t *testing.T) {
 			description: "Does not apply",
 			item: &models.NetworthItem{
 				ItemId:          "IRON_SWORD",
-				ExtraAttributes: &models.ExtraAttributes{},
+				ExtraAttributes: &skycrypttypes.ExtraAttributes{},
 				Price:           100,
 				Calculation:     []models.CalculationData{},
 			},

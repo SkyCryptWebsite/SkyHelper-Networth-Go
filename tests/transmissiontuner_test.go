@@ -3,6 +3,7 @@ package tests
 import (
 	"testing"
 
+	skycrypttypes "github.com/DuckySoLucky/SkyCrypt-Types"
 	"github.com/DuckySoLucky/SkyHelper-Networth-Go/internal/calculators/handlers"
 	"github.com/DuckySoLucky/SkyHelper-Networth-Go/internal/constants"
 	"github.com/DuckySoLucky/SkyHelper-Networth-Go/internal/models"
@@ -14,7 +15,7 @@ func TestTransmissionTunerHandler(t *testing.T) {
 			description: "Applies correctly",
 			item: &models.NetworthItem{
 				ItemId: "ASPECT_OF_THE_END",
-				ExtraAttributes: &models.ExtraAttributes{
+				ExtraAttributes: &skycrypttypes.ExtraAttributes{
 					TunedTransmission: 4,
 				},
 				Price:       100,
@@ -36,7 +37,7 @@ func TestTransmissionTunerHandler(t *testing.T) {
 			description: "Does not apply",
 			item: &models.NetworthItem{
 				ItemId:          "ASPECT_OF_THE_END",
-				ExtraAttributes: &models.ExtraAttributes{},
+				ExtraAttributes: &skycrypttypes.ExtraAttributes{},
 				Price:           100,
 				Calculation:     []models.CalculationData{},
 			},

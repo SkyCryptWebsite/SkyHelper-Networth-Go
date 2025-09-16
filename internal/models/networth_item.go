@@ -7,6 +7,7 @@ import (
 	"sort"
 	"strings"
 
+	skycrypttypes "github.com/DuckySoLucky/SkyCrypt-Types"
 	"github.com/DuckySoLucky/SkyHelper-Networth-Go/internal/constants"
 )
 
@@ -30,13 +31,13 @@ type ItemProvider interface {
 }
 
 type NetworthItem struct {
-	ItemName        string           `json:"itemName"`
-	ExtraAttributes *ExtraAttributes `json:"extraAttributes"`
-	ItemId          string           `json:"itemId"`
-	SkyblockItem    *HypixelItem     `json:"skyblockItem"`
-	ItemLore        []string         `json:"itemLore"`
-	Count           int              `json:"count"`
-	BaseItemId      string           `json:"baseItemId"`
+	ItemName        string                         `json:"itemName"`
+	ExtraAttributes *skycrypttypes.ExtraAttributes `json:"extraAttributes"`
+	ItemId          string                         `json:"itemId"`
+	SkyblockItem    *HypixelItem                   `json:"skyblockItem"`
+	ItemLore        []string                       `json:"itemLore"`
+	Count           int                            `json:"count"`
+	BaseItemId      string                         `json:"baseItemId"`
 
 	Prices Prices `json:"prices"`
 
@@ -47,14 +48,14 @@ type NetworthItem struct {
 	SoulboundPortion float64           `json:"soulboundPortion"`
 }
 
-func NewSkyBlockItemCaclulator(item *DecodedItem, prices Prices, itemProvider ItemProvider, options NetworthOptions) *NetworthItem {
+func NewSkyBlockItemCaclulator(item *skycrypttypes.Item, prices Prices, itemProvider ItemProvider, options NetworthOptions) *NetworthItem {
 	networthItem := &NetworthItem{
 		ItemName:        item.Tag.Display.Name,
 		ExtraAttributes: item.Tag.ExtraAttributes,
 		ItemId:          item.Tag.ExtraAttributes.Id,
 		SkyblockItem:    itemProvider.GetItem(item.Tag.ExtraAttributes.Id),
 		ItemLore:        item.Tag.Display.Lore,
-		Count:           item.Count,
+		Count:           *item.Count,
 		BaseItemId:      item.Tag.ExtraAttributes.Id,
 
 		Prices: prices,

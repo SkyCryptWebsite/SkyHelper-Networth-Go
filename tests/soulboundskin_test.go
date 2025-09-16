@@ -3,6 +3,7 @@ package tests
 import (
 	"testing"
 
+	skycrypttypes "github.com/DuckySoLucky/SkyCrypt-Types"
 	"github.com/DuckySoLucky/SkyHelper-Networth-Go/internal/calculators/handlers"
 	"github.com/DuckySoLucky/SkyHelper-Networth-Go/internal/constants"
 	"github.com/DuckySoLucky/SkyHelper-Networth-Go/internal/models"
@@ -14,7 +15,7 @@ func TestSoulboundSkinHandler(t *testing.T) {
 			description: "Applies correctly",
 			item: &models.NetworthItem{
 				ItemId: "DIAMOND_NECRON_HEAD",
-				ExtraAttributes: &models.ExtraAttributes{
+				ExtraAttributes: &skycrypttypes.ExtraAttributes{
 					Skin: "NECRON_DIAMOND_KNIGHT",
 				},
 				Price:       100,
@@ -37,7 +38,7 @@ func TestSoulboundSkinHandler(t *testing.T) {
 			description: "Does not apply when not soulbound",
 			item: &models.NetworthItem{
 				ItemId: "DIAMOND_NECRON_HEAD",
-				ExtraAttributes: &models.ExtraAttributes{
+				ExtraAttributes: &skycrypttypes.ExtraAttributes{
 					Skin: "NECRON_DIAMOND_KNIGHT",
 				},
 				Price:       100,
@@ -52,7 +53,7 @@ func TestSoulboundSkinHandler(t *testing.T) {
 			description: "Does not apply when already has skin value",
 			item: &models.NetworthItem{
 				ItemId: "WITHER_GOGGLES_SKINNED_WITHER_GOGGLES_CELESTIAL",
-				ExtraAttributes: &models.ExtraAttributes{
+				ExtraAttributes: &skycrypttypes.ExtraAttributes{
 					Skin: "WITHER_GOGGLES_CELESTIAL",
 				},
 				Price:       100,
@@ -67,7 +68,7 @@ func TestSoulboundSkinHandler(t *testing.T) {
 			description: "Does not apply",
 			item: &models.NetworthItem{
 				ItemId:          "LEATHER_CHESTPLATE",
-				ExtraAttributes: &models.ExtraAttributes{},
+				ExtraAttributes: &skycrypttypes.ExtraAttributes{},
 				Price:           100,
 				Calculation:     []models.CalculationData{},
 			},

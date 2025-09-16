@@ -5,6 +5,7 @@ import (
 	"os"
 	"testing"
 
+	skycrypttypes "github.com/DuckySoLucky/SkyCrypt-Types"
 	"github.com/DuckySoLucky/SkyHelper-Networth-Go/internal/calculators/handlers"
 	"github.com/DuckySoLucky/SkyHelper-Networth-Go/internal/constants"
 	"github.com/DuckySoLucky/SkyHelper-Networth-Go/internal/models"
@@ -55,7 +56,7 @@ func TestEssenceStarsHandler(t *testing.T) {
 						},
 					},
 				},
-				ExtraAttributes: &models.ExtraAttributes{
+				ExtraAttributes: &skycrypttypes.ExtraAttributes{
 					DungeonItemLevel: "3b",
 				},
 				Price:       100,
@@ -92,7 +93,7 @@ func TestEssenceStarsHandler(t *testing.T) {
 			description: "Does not apply",
 			item: &models.NetworthItem{
 				ItemId:          "ARTIFACT_OF_CONTROL",
-				ExtraAttributes: &models.ExtraAttributes{},
+				ExtraAttributes: &skycrypttypes.ExtraAttributes{},
 				Price:           100,
 				Calculation:     []models.CalculationData{},
 			},

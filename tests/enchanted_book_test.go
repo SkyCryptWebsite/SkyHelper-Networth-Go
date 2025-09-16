@@ -3,6 +3,7 @@ package tests
 import (
 	"testing"
 
+	skycrypttypes "github.com/DuckySoLucky/SkyCrypt-Types"
 	"github.com/DuckySoLucky/SkyHelper-Networth-Go/internal/calculators/handlers"
 	"github.com/DuckySoLucky/SkyHelper-Networth-Go/internal/constants"
 	"github.com/DuckySoLucky/SkyHelper-Networth-Go/internal/models"
@@ -14,7 +15,7 @@ func TestEnchantedBookandler(t *testing.T) {
 			description: "Applies correctly with single enchantment",
 			item: &models.NetworthItem{
 				ItemId: "ENCHANTED_BOOK",
-				ExtraAttributes: &models.ExtraAttributes{
+				ExtraAttributes: &skycrypttypes.ExtraAttributes{
 					Enchantments: map[string]int{
 						"ultimate_legion": 7,
 					},
@@ -38,7 +39,7 @@ func TestEnchantedBookandler(t *testing.T) {
 			description: "Applies correctly with mutliple enchantment",
 			item: &models.NetworthItem{
 				ItemId: "ENCHANTED_BOOK",
-				ExtraAttributes: &models.ExtraAttributes{
+				ExtraAttributes: &skycrypttypes.ExtraAttributes{
 					Enchantments: map[string]int{
 						"ultimate_legion": 7,
 						"smite":           7,
@@ -69,7 +70,7 @@ func TestEnchantedBookandler(t *testing.T) {
 			description: "Applies correctly with no price",
 			item: &models.NetworthItem{
 				ItemId: "ENCHANTED_BOOK",
-				ExtraAttributes: &models.ExtraAttributes{
+				ExtraAttributes: &skycrypttypes.ExtraAttributes{
 					Enchantments: map[string]int{
 						"smite": 5,
 					},
@@ -85,7 +86,7 @@ func TestEnchantedBookandler(t *testing.T) {
 			description: "Does not apply on items",
 			item: &models.NetworthItem{
 				ItemId: "IRON_SWORD",
-				ExtraAttributes: &models.ExtraAttributes{
+				ExtraAttributes: &skycrypttypes.ExtraAttributes{
 					Enchantments: map[string]int{
 						"sharpness": 5,
 					},
@@ -101,7 +102,7 @@ func TestEnchantedBookandler(t *testing.T) {
 			description: "Does not apply",
 			item: &models.NetworthItem{
 				ItemId:          "ENCHANTED_BOOK",
-				ExtraAttributes: &models.ExtraAttributes{},
+				ExtraAttributes: &skycrypttypes.ExtraAttributes{},
 				Price:           100,
 				Calculation:     []models.CalculationData{},
 			},

@@ -7,14 +7,14 @@ import (
 	"testing"
 	"time"
 
+	skycrypttypes "github.com/DuckySoLucky/SkyCrypt-Types"
 	networth "github.com/DuckySoLucky/SkyHelper-Networth-Go"
-	"github.com/DuckySoLucky/SkyHelper-Networth-Go/internal/models"
 )
 
 var (
-	benchProfile     models.SkyblockProfile
-	benchMuseum      models.SkyblockMuseum
-	benchUserProfile models.SkyblockProfileMember
+	benchProfile     skycrypttypes.Profile
+	benchMuseum      skycrypttypes.Museum
+	benchUserProfile skycrypttypes.Member
 )
 
 func init() {
@@ -46,12 +46,12 @@ func BenchmarkNetworthCalculation(b *testing.B) {
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		profileNWCalc, err := networth.NewProfileNetworthCalculator(&benchUserProfile, &benchMuseum, benchProfile.Banking.Balance)
+		profileNWCalc, err := networth.NewProfileNetworthCalculator(&benchUserProfile, &benchMuseum, *benchProfile.Banking.Balance)
 		if err != nil {
 			b.Fatalf("Failed to create ProfileNetworthCalculator: %v", err)
 		}
 
-		_ = profileNWCalc.GetNetworth(networth.NetworthOptions{})
+		_ = profileNWCalc.GetNetworth()
 	}
 }
 
@@ -63,12 +63,12 @@ func TestNetworthPerformance(t *testing.T) {
 	for i := 0; i < 10; i++ {
 		start := time.Now()
 
-		profileNWCalc, err := networth.NewProfileNetworthCalculator(&benchUserProfile, &benchMuseum, benchProfile.Banking.Balance)
+		profileNWCalc, err := networth.NewProfileNetworthCalculator(&benchUserProfile, &benchMuseum, *benchProfile.Banking.Balance)
 		if err != nil {
 			t.Fatalf("Failed to create ProfileNetworthCalculator: %v", err)
 		}
 
-		nw := profileNWCalc.GetNetworth(networth.NetworthOptions{})
+		nw := profileNWCalc.GetNetworth()
 		duration := time.Since(start)
 
 		fmt.Printf("Run %2d: %v (Networth: %.0f)\n", i+1, duration, nw.Networth)
@@ -83,12 +83,12 @@ func TestNetworthPerformance(t *testing.T) {
 	for i := 0; i < 100; i++ {
 		start := time.Now()
 
-		profileNWCalc, err := networth.NewProfileNetworthCalculator(&benchUserProfile, &benchMuseum, benchProfile.Banking.Balance)
+		profileNWCalc, err := networth.NewProfileNetworthCalculator(&benchUserProfile, &benchMuseum, *benchProfile.Banking.Balance)
 		if err != nil {
 			t.Fatalf("Failed to create ProfileNetworthCalculator: %v", err)
 		}
 
-		nw := profileNWCalc.GetNetworth(networth.NetworthOptions{})
+		nw := profileNWCalc.GetNetworth()
 		duration := time.Since(start)
 
 		totalDuration += duration

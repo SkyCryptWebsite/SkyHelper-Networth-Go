@@ -6,14 +6,15 @@ import (
 	"sort"
 	"strings"
 
+	skycrypttypes "github.com/DuckySoLucky/SkyCrypt-Types"
 	"github.com/DuckySoLucky/SkyHelper-Networth-Go/internal/calculators"
 	"github.com/DuckySoLucky/SkyHelper-Networth-Go/internal/lib"
 	"github.com/DuckySoLucky/SkyHelper-Networth-Go/internal/models"
 )
 
 type ProfileNetworthCalculator struct {
-	ProfileData         *models.SkyblockProfileMember
-	MuseumData          *models.SkyblockMuseum
+	ProfileData         *skycrypttypes.Member
+	MuseumData          *skycrypttypes.Museum
 	Bank                float64
 	Purse               float64
 	PersonalBankBalance float64
@@ -21,38 +22,7 @@ type ProfileNetworthCalculator struct {
 	Prices              models.Prices
 }
 
-func NewProfileNetworthCalculator(userProfileRaw any, museumDataRaw any, bankBalance float64) (*ProfileNetworthCalculator, error) {
-	var userProfile *models.SkyblockProfileMember
-	var museumData *models.SkyblockMuseum
-
-	if profile, ok := userProfileRaw.(*models.SkyblockProfileMember); ok {
-		userProfile = profile
-	} else {
-		jsonData, err := json.Marshal(userProfileRaw)
-		if err != nil {
-			return nil, fmt.Errorf("failed to marshal profile data: %w", err)
-		}
-
-		userProfile = &models.SkyblockProfileMember{}
-		if err := json.Unmarshal(jsonData, userProfile); err != nil {
-			return nil, fmt.Errorf("failed to unmarshal profile data: %w", err)
-		}
-	}
-
-	if museum, ok := museumDataRaw.(*models.SkyblockMuseum); ok {
-		museumData = museum
-	} else {
-		jsonData, err := json.Marshal(museumDataRaw)
-		if err != nil {
-			return nil, fmt.Errorf("failed to marshal museum data: %w", err)
-		}
-
-		museumData = &models.SkyblockMuseum{}
-		if err := json.Unmarshal(jsonData, museumData); err != nil {
-			return nil, fmt.Errorf("failed to unmarshal museum data: %w", err)
-		}
-	}
-
+func NewProfileNetworthCalculator(userProfile *skycrypttypes.Member, museumData *skycrypttypes.Museum, bankBalance float64) (*ProfileNetworthCalculator, error) {
 	items, err := lib.ParseItems(userProfile, museumData)
 	if err != nil {
 		return nil, fmt.Errorf("failed to parse items: %w", err)
@@ -72,8 +42,8 @@ func NewProfileNetworthCalculator(userProfileRaw any, museumDataRaw any, bankBal
 		ProfileData:         userProfile,
 		MuseumData:          museumData,
 		Bank:                bankBalance,
-		Purse:               float64(userProfile.Currencies.Coins),
-		PersonalBankBalance: userProfile.Profile.PersonalBank,
+		Purse:               float64(userProfile.Currencies.CoinPurse),
+		PersonalBankBalance: userProfile.Profile.BankAccount,
 		Items:               items,
 		Prices:              *prices,
 	}, nil
@@ -141,7 +111,7 @@ func (p *ProfileNetworthCalculator) calculate(options models.NetworthOptions) *m
 
 		switch categoryInfo.Type {
 		case "decoded":
-			decodedItems := categoryInfo.Items.([]*models.DecodedItem)
+			decodedItems := categoryInfo.Items.([]*skycrypttypes.Item)
 			for _, item := range decodedItems {
 				if item.Tag == nil || item.Tag.ExtraAttributes == nil {
 					continue
@@ -150,7 +120,7 @@ func (p *ProfileNetworthCalculator) calculate(options models.NetworthOptions) *m
 				var result models.NetworthItemResult
 
 				if item.Tag.ExtraAttributes.PetInfo != "" {
-					var petData *models.SkyblockPet
+					var petData *skycrypttypes.Pet
 					err := json.Unmarshal([]byte(item.Tag.ExtraAttributes.PetInfo), &petData)
 					if err != nil {
 						continue
@@ -273,7 +243,7 @@ func (p *ProfileNetworthCalculator) calculate(options models.NetworthOptions) *m
 			}
 
 		case "pets":
-			pets := categoryInfo.Items.([]*models.SkyblockPet)
+			pets := categoryInfo.Items.([]*skycrypttypes.Pet)
 			for _, pet := range pets {
 				petCalculator := calculatorService.NewSkyBlockPetCalculator(pet, p.Prices, options)
 				calculatorService.CalculatePet(petCalculator)

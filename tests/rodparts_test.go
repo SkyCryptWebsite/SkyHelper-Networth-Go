@@ -3,6 +3,7 @@ package tests
 import (
 	"testing"
 
+	skycrypttypes "github.com/DuckySoLucky/SkyCrypt-Types"
 	"github.com/DuckySoLucky/SkyHelper-Networth-Go/internal/calculators/handlers"
 	"github.com/DuckySoLucky/SkyHelper-Networth-Go/internal/constants"
 	"github.com/DuckySoLucky/SkyHelper-Networth-Go/internal/models"
@@ -14,10 +15,10 @@ func TestRodPartsHandler(t *testing.T) {
 			description: "Applies correctly",
 			item: &models.NetworthItem{
 				ItemId: "ROD_OF_THE_SEA",
-				ExtraAttributes: &models.ExtraAttributes{
-					Line:   models.RodPart{Part: "titan_line"},
-					Hook:   models.RodPart{Part: "hotspot_hook"},
-					Sinker: models.RodPart{Part: "hotspot_sinker"},
+				ExtraAttributes: &skycrypttypes.ExtraAttributes{
+					Line:   skycrypttypes.RodPart{Part: "titan_line"},
+					Hook:   skycrypttypes.RodPart{Part: "hotspot_hook"},
+					Sinker: skycrypttypes.RodPart{Part: "hotspot_sinker"},
 				},
 				Price:       100,
 				Calculation: []models.CalculationData{},
@@ -50,9 +51,9 @@ func TestRodPartsHandler(t *testing.T) {
 			description: "Applies correctly with soulbound parts",
 			item: &models.NetworthItem{
 				ItemId: "ROD_OF_THE_SEA",
-				ExtraAttributes: &models.ExtraAttributes{
-					Line: models.RodPart{Part: "titan_line"},
-					Hook: models.RodPart{Part: "hotspot_hook", Soulbound: true},
+				ExtraAttributes: &skycrypttypes.ExtraAttributes{
+					Line: skycrypttypes.RodPart{Part: "titan_line"},
+					Hook: skycrypttypes.RodPart{Part: "hotspot_hook", Soulbound: true},
 				},
 				Price:       100,
 				Calculation: []models.CalculationData{},
@@ -80,7 +81,7 @@ func TestRodPartsHandler(t *testing.T) {
 			description: "Does not apply",
 			item: &models.NetworthItem{
 				ItemId:          "ROD_OF_THE_SEA",
-				ExtraAttributes: &models.ExtraAttributes{},
+				ExtraAttributes: &skycrypttypes.ExtraAttributes{},
 				Price:           100,
 				Calculation:     []models.CalculationData{},
 			},

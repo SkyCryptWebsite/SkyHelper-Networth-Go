@@ -6,8 +6,8 @@ import (
 	"testing"
 	"time"
 
+	skycrypttypes "github.com/DuckySoLucky/SkyCrypt-Types"
 	"github.com/DuckySoLucky/SkyHelper-Networth-Go/internal/lib"
-	"github.com/DuckySoLucky/SkyHelper-Networth-Go/internal/models"
 )
 
 func TestParseItems(t *testing.T) {
@@ -17,7 +17,7 @@ func TestParseItems(t *testing.T) {
 	}
 	defer file.Close()
 
-	var profile models.SkyblockProfile
+	var profile skycrypttypes.Profile
 	if err := json.NewDecoder(file).Decode(&profile); err != nil {
 		t.Fatal(err)
 	}
@@ -28,7 +28,7 @@ func TestParseItems(t *testing.T) {
 	}
 	defer file.Close()
 
-	var museum models.SkyblockMuseum
+	var museum skycrypttypes.Museum
 	if err := json.NewDecoder(file).Decode(&museum); err != nil {
 		t.Fatal(err)
 	}
@@ -62,7 +62,7 @@ func BenchmarkParseItems(b *testing.B) {
 	}
 	defer file.Close()
 
-	var profile models.SkyblockProfile
+	var profile skycrypttypes.Profile
 	if err := json.NewDecoder(file).Decode(&profile); err != nil {
 		b.Fatal(err)
 	}

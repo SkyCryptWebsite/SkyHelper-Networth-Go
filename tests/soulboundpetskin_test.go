@@ -3,6 +3,7 @@ package tests
 import (
 	"testing"
 
+	skycrypttypes "github.com/DuckySoLucky/SkyCrypt-Types"
 	"github.com/DuckySoLucky/SkyHelper-Networth-Go/internal/calculators/handlers"
 	"github.com/DuckySoLucky/SkyHelper-Networth-Go/internal/constants"
 	"github.com/DuckySoLucky/SkyHelper-Networth-Go/internal/models"
@@ -13,7 +14,7 @@ func TestSoulboundPetSkinHandler(t *testing.T) {
 		{
 			description: "Applies correctly",
 			item: &models.NetworthPet{
-				PetData:     models.SkyblockPet{Type: "GRANDMA_WOLF", Rarity: "LEGENDARY", Experience: 0, Skin: "GRANDMA_WOLF_REAL"},
+				PetData:     skycrypttypes.Pet{Type: "GRANDMA_WOLF", Rarity: "LEGENDARY", Experience: 0, Skin: "GRANDMA_WOLF_REAL"},
 				Price:       100,
 				Calculation: []models.CalculationData{},
 			},
@@ -33,7 +34,7 @@ func TestSoulboundPetSkinHandler(t *testing.T) {
 			description: "Does not apply",
 			item: &models.NetworthPet{
 				Level:       models.Level{},
-				PetData:     models.SkyblockPet{Type: "BLACK_CAT", Rarity: "MYTHIC", Skin: "BLACK_CAT_PURRANORMAL"},
+				PetData:     skycrypttypes.Pet{Type: "BLACK_CAT", Rarity: "MYTHIC", Skin: "BLACK_CAT_PURRANORMAL"},
 				Calculation: []models.CalculationData{},
 			},
 			prices:              map[string]float64{},
@@ -44,7 +45,7 @@ func TestSoulboundPetSkinHandler(t *testing.T) {
 			description: "Does not apply",
 			item: &models.NetworthPet{
 				Level:       models.Level{},
-				PetData:     models.SkyblockPet{Type: "BLACK_CAT", Rarity: "MYTHIC"},
+				PetData:     skycrypttypes.Pet{Type: "BLACK_CAT", Rarity: "MYTHIC"},
 				Calculation: []models.CalculationData{},
 			},
 			prices:              map[string]float64{},

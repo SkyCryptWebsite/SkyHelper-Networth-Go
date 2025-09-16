@@ -1,0 +1,101 @@
+{
+  "networth": 207247017022.9788,
+  "unsoulboundNetworth": 154592655397.43085,
+  "noInventory": false,
+  "isNonCosmetic": true,
+  "purse": 3063879672.0126367,
+  "bank": 50127267847.98105,
+  "personalBank": 0,
+  "types": {
+    "accessories": {
+      "total": 13097629524.384714,
+      "unsoulboundTotal": 12675503108.65103,
+      "items": []
+    },
+    "armor": {
+      "total": 719642843.81,
+      "unsoulboundTotal": 719642843.81,
+      "items": []
+    },
+    "candy_inventory": {
+      "total": 0,
+      "unsoulboundTotal": 0,
+      "items": []
+    },
+    "carnival_mask_inventory": {
+      "total": 52700000,
+      "unsoulboundTotal": 0,
+      "items": []
+    },
+    "enderchest": {
+      "total": 39465511.7277405,
+      "unsoulboundTotal": 39465511.7277405,
+      "items": []
+    },
+    "equipment": {
+      "total": 114997686.32,
+      "unsoulboundTotal": 0,
+      "items": []
+    },
+    "essence": {
+      "total": 624530839.5941867,
+      "unsoulboundTotal": 624530839.5941867,
+      "items": []
+    },
+    "fishing_bag": {
+      "total": 183371.09999999998,
+      "unsoulboundTotal": 183371.09999999998,
+      "items": []
+    },
+    "inventory": {
+      "total": 17416874486.625816,
+      "unsoulboundTotal": 13368276363.11598,
+      "items": []
+    },
+    "museum": {
+      "total": 3841472538.667463,
+      "unsoulboundTotal": 48673998.4,
+      "items": []
+    },
+    "personal_vault": {
+      "total": 16846122.277108435,
+      "unsoulboundTotal": 16846122.277108435,
+      "items": []
+    },
+    "pets": {
+      "total": 12079558241,
+      "unsoulboundTotal": 12078220241,
+      "items": []
+    },
+    "potion_bag": {
+      "total": 17600000,
+      "unsoulboundTotal": 17600000,
+      "items": []
+    },
+    "quiver": {
+      "total": 0,
+      "unsoulboundTotal": 0,
+      "items": []
+    },
+    "sacks": {
+      "total": 17572477570.652393,
+      "unsoulboundTotal": 17572477570.652393,
+      "items": []
+    },
+    "sacks_bag": {
+      "total": 536458467.76977146,
+      "unsoulboundTotal": 536458467.76977146,
+      "items": []
+    },
+    "storage": {
+      "total": 54170701326.620316,
+      "unsoulboundTotal": 21856358808.5427,
+      "items": []
+    },
+    "wardrobe": {
+      "total": 33754730972.435905,
+      "unsoulboundTotal": 21847270630.79649,
+      "items": []
+    }
+  }
+}

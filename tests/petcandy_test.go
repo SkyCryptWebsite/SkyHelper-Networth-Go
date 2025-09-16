@@ -3,6 +3,7 @@ package tests
 import (
 	"testing"
 
+	skycrypttypes "github.com/DuckySoLucky/SkyCrypt-Types"
 	"github.com/DuckySoLucky/SkyHelper-Networth-Go/internal/calculators/handlers"
 	"github.com/DuckySoLucky/SkyHelper-Networth-Go/internal/constants"
 	"github.com/DuckySoLucky/SkyHelper-Networth-Go/internal/models"
@@ -14,7 +15,7 @@ func TestPetCandyHandler(t *testing.T) {
 			description: "Applies correctly",
 			item: &models.NetworthPet{
 				Level:       models.Level{ExperienceToMax: 25000000, Level: 100},
-				PetData:     models.SkyblockPet{CandyUsed: 10},
+				PetData:     skycrypttypes.Pet{CandyUsed: 10},
 				BasePrice:   100000,
 				Price:       100000,
 				Calculation: []models.CalculationData{},
@@ -35,7 +36,7 @@ func TestPetCandyHandler(t *testing.T) {
 			description: "Applies correctly  with cap and level 100",
 			item: &models.NetworthPet{
 				Level:       models.Level{ExperienceToMax: 25000000, Level: 100},
-				PetData:     models.SkyblockPet{CandyUsed: 10},
+				PetData:     skycrypttypes.Pet{CandyUsed: 10},
 				BasePrice:   100000000,
 				Price:       100000000,
 				Calculation: []models.CalculationData{},
@@ -56,7 +57,7 @@ func TestPetCandyHandler(t *testing.T) {
 			description: "Applies correctly with cap and not level 100",
 			item: &models.NetworthPet{
 				Level:       models.Level{ExperienceToMax: 25000000, Level: 90},
-				PetData:     models.SkyblockPet{CandyUsed: 10},
+				PetData:     skycrypttypes.Pet{CandyUsed: 10},
 				BasePrice:   100000000,
 				Price:       100000000,
 				Calculation: []models.CalculationData{},
@@ -77,7 +78,7 @@ func TestPetCandyHandler(t *testing.T) {
 			description: "Does not apply",
 			item: &models.NetworthPet{
 				Level:       models.Level{ExperienceToMax: 25000000},
-				PetData:     models.SkyblockPet{},
+				PetData:     skycrypttypes.Pet{},
 				Calculation: []models.CalculationData{},
 			},
 			prices:              map[string]float64{},
@@ -88,7 +89,7 @@ func TestPetCandyHandler(t *testing.T) {
 			description: "Does not apply",
 			item: &models.NetworthPet{
 				Level: models.Level{ExperienceToMax: 25000000},
-				PetData: models.SkyblockPet{
+				PetData: skycrypttypes.Pet{
 					Experience: 35000000,
 					CandyUsed:  10,
 				},

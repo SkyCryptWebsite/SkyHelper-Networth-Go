@@ -3,6 +3,7 @@ package tests
 import (
 	"testing"
 
+	skycrypttypes "github.com/DuckySoLucky/SkyCrypt-Types"
 	"github.com/DuckySoLucky/SkyHelper-Networth-Go/internal/calculators/handlers"
 	"github.com/DuckySoLucky/SkyHelper-Networth-Go/internal/models"
 )
@@ -13,7 +14,7 @@ func TestMidasWeaponHandler(t *testing.T) {
 			description: "Applies correctly less than max price paid",
 			item: &models.NetworthItem{
 				ItemId: "MIDAS_SWORD",
-				ExtraAttributes: &models.ExtraAttributes{
+				ExtraAttributes: &skycrypttypes.ExtraAttributes{
 					WinningBid: 10000000,
 				},
 				Price:       100,
@@ -28,7 +29,7 @@ func TestMidasWeaponHandler(t *testing.T) {
 			description: "Applies correctly less than max price paid with additonal coins",
 			item: &models.NetworthItem{
 				ItemId: "MIDAS_SWORD",
-				ExtraAttributes: &models.ExtraAttributes{
+				ExtraAttributes: &skycrypttypes.ExtraAttributes{
 					WinningBid:      10000000,
 					AdditionalCoins: 25000000,
 				},
@@ -44,7 +45,7 @@ func TestMidasWeaponHandler(t *testing.T) {
 			description: "Applies correctly max price paid",
 			item: &models.NetworthItem{
 				ItemId: "MIDAS_SWORD",
-				ExtraAttributes: &models.ExtraAttributes{
+				ExtraAttributes: &skycrypttypes.ExtraAttributes{
 					WinningBid: 50000000,
 				},
 				Price:       100,
@@ -66,7 +67,7 @@ func TestMidasWeaponHandler(t *testing.T) {
 			description: "Applies correctly max price paid + additional coins",
 			item: &models.NetworthItem{
 				ItemId: "MIDAS_STAFF",
-				ExtraAttributes: &models.ExtraAttributes{
+				ExtraAttributes: &skycrypttypes.ExtraAttributes{
 					WinningBid:      50000000,
 					AdditionalCoins: 50000000,
 				},
@@ -89,7 +90,7 @@ func TestMidasWeaponHandler(t *testing.T) {
 			description: "Applies correctly max price paid",
 			item: &models.NetworthItem{
 				ItemId: "STARRED_MIDAS_STAFF",
-				ExtraAttributes: &models.ExtraAttributes{
+				ExtraAttributes: &skycrypttypes.ExtraAttributes{
 					WinningBid:      50000000,
 					AdditionalCoins: 1000000000000,
 				},
@@ -112,7 +113,7 @@ func TestMidasWeaponHandler(t *testing.T) {
 			description: "Does not apply",
 			item: &models.NetworthItem{
 				ItemId:          "IRON_SWORD",
-				ExtraAttributes: &models.ExtraAttributes{},
+				ExtraAttributes: &skycrypttypes.ExtraAttributes{},
 				Price:           100,
 				Calculation:     []models.CalculationData{},
 			},

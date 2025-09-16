@@ -3,6 +3,7 @@ package tests
 import (
 	"testing"
 
+	skycrypttypes "github.com/DuckySoLucky/SkyCrypt-Types"
 	"github.com/DuckySoLucky/SkyHelper-Networth-Go/internal/calculators/handlers"
 	"github.com/DuckySoLucky/SkyHelper-Networth-Go/internal/constants"
 	"github.com/DuckySoLucky/SkyHelper-Networth-Go/internal/models"
@@ -14,7 +15,7 @@ func TestRecombobulatorHandler(t *testing.T) {
 			description: "Applies correctly",
 			item: &models.NetworthItem{
 				ItemId: "IRON_SWORD",
-				ExtraAttributes: &models.ExtraAttributes{
+				ExtraAttributes: &skycrypttypes.ExtraAttributes{
 					Recombobulated: 1,
 					Enchantments: map[string]int{
 						"enchantment": 1,
@@ -40,7 +41,7 @@ func TestRecombobulatorHandler(t *testing.T) {
 			description: "Applies correctly with accessory via category",
 			item: &models.NetworthItem{
 				ItemId: "HEGEMONY_ARTIFACT",
-				ExtraAttributes: &models.ExtraAttributes{
+				ExtraAttributes: &skycrypttypes.ExtraAttributes{
 					Recombobulated: 1,
 				},
 				Price:       100,
@@ -66,7 +67,7 @@ func TestRecombobulatorHandler(t *testing.T) {
 			description: "Applies correctly with accessory via accessory",
 			item: &models.NetworthItem{
 				ItemId: "TEST_ACCESSORY_WITHOUT_SKYBLOCK_ITEM",
-				ExtraAttributes: &models.ExtraAttributes{
+				ExtraAttributes: &skycrypttypes.ExtraAttributes{
 					Recombobulated: 1,
 				},
 				Price:       100,
@@ -89,7 +90,7 @@ func TestRecombobulatorHandler(t *testing.T) {
 			description: "Applies correctly with accessory via hatcessory",
 			item: &models.NetworthItem{
 				ItemId: "TEST_HATCESSORY_WITHOUT_SKYBLOCK_ITEM",
-				ExtraAttributes: &models.ExtraAttributes{
+				ExtraAttributes: &skycrypttypes.ExtraAttributes{
 					Recombobulated: 1,
 				},
 				Price:       100,
@@ -112,7 +113,7 @@ func TestRecombobulatorHandler(t *testing.T) {
 			description: "Applies correctly due to specific item exception",
 			item: &models.NetworthItem{
 				ItemId: "DIVAN_CHESTPLATE",
-				ExtraAttributes: &models.ExtraAttributes{
+				ExtraAttributes: &skycrypttypes.ExtraAttributes{
 					Recombobulated: 1,
 				},
 				Price:       100,
@@ -135,7 +136,7 @@ func TestRecombobulatorHandler(t *testing.T) {
 			description: "Applies correctly with bonemerang",
 			item: &models.NetworthItem{
 				ItemId: "BONE_BOOMERANG",
-				ExtraAttributes: &models.ExtraAttributes{
+				ExtraAttributes: &skycrypttypes.ExtraAttributes{
 					Recombobulated: 1,
 					Enchantments: map[string]int{
 						"power": 5,
@@ -161,7 +162,7 @@ func TestRecombobulatorHandler(t *testing.T) {
 			description: "Does not apply",
 			item: &models.NetworthItem{
 				ItemId:          "IRON_SWORD",
-				ExtraAttributes: &models.ExtraAttributes{},
+				ExtraAttributes: &skycrypttypes.ExtraAttributes{},
 				Price:           100,
 				Calculation:     []models.CalculationData{},
 				ItemLore:        []string{},
@@ -174,7 +175,7 @@ func TestRecombobulatorHandler(t *testing.T) {
 			description: "Does not apply due to category",
 			item: &models.NetworthItem{
 				ItemId: "RADIANT_POWER_ORB",
-				ExtraAttributes: &models.ExtraAttributes{
+				ExtraAttributes: &skycrypttypes.ExtraAttributes{
 					Recombobulated: 1,
 				},
 				Price:       100,
@@ -189,7 +190,7 @@ func TestRecombobulatorHandler(t *testing.T) {
 			description: "Does not apply due to dungeon drop",
 			item: &models.NetworthItem{
 				ItemId: "MACHINE_GUN_BOW",
-				ExtraAttributes: &models.ExtraAttributes{
+				ExtraAttributes: &skycrypttypes.ExtraAttributes{
 					Recombobulated: 1,
 					ItemTier:       1,
 					Enchantments: map[string]int{

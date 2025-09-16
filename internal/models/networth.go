@@ -1,5 +1,7 @@
 package models
 
+import skycrypttypes "github.com/DuckySoLucky/SkyCrypt-Types"
+
 type Prices map[string]float64
 
 type CalculationData struct {
@@ -12,24 +14,24 @@ type CalculationData struct {
 }
 
 type ParsedItems struct {
-	Accessories           []*DecodedItem `json:"accessories"`
-	Armor                 []*DecodedItem `json:"armor"`
-	CandyInventory        []*DecodedItem `json:"candy_inventory"`
-	CarnivalMaskInventory []*DecodedItem `json:"carnival_mask_inventory"`
-	Equipment             []*DecodedItem `json:"equipment"`
-	Enderchest            []*DecodedItem `json:"enderchest"`
-	Essence               []*BasicItem   `json:"essence"`
-	FishingBag            []*DecodedItem `json:"fishing_bag"`
-	Inventory             []*DecodedItem `json:"inventory"`
-	PersonalVault         []*DecodedItem `json:"personal_vault"`
-	Pets                  []*SkyblockPet `json:"pets"`
-	PotionBag             []*DecodedItem `json:"potion_bag"`
-	Quiver                []*DecodedItem `json:"quiver"`
-	Sacks                 []*BasicItem   `json:"sacks"`
-	SacksBag              []*DecodedItem `json:"sacks_bag"`
-	Storage               []*DecodedItem `json:"storage"`
-	Wardrobe              []*DecodedItem `json:"wardrobe"`
-	Museum                []*DecodedItem `json:"museum"`
+	Accessories           []*skycrypttypes.Item `json:"accessories"`
+	Armor                 []*skycrypttypes.Item `json:"armor"`
+	CandyInventory        []*skycrypttypes.Item `json:"candy_inventory"`
+	CarnivalMaskInventory []*skycrypttypes.Item `json:"carnival_mask_inventory"`
+	Equipment             []*skycrypttypes.Item `json:"equipment"`
+	Enderchest            []*skycrypttypes.Item `json:"enderchest"`
+	Essence               []*BasicItem          `json:"essence"`
+	FishingBag            []*skycrypttypes.Item `json:"fishing_bag"`
+	Inventory             []*skycrypttypes.Item `json:"inventory"`
+	PersonalVault         []*skycrypttypes.Item `json:"personal_vault"`
+	Pets                  []*skycrypttypes.Pet  `json:"pets"`
+	PotionBag             []*skycrypttypes.Item `json:"potion_bag"`
+	Quiver                []*skycrypttypes.Item `json:"quiver"`
+	Sacks                 []*BasicItem          `json:"sacks"`
+	SacksBag              []*skycrypttypes.Item `json:"sacks_bag"`
+	Storage               []*skycrypttypes.Item `json:"storage"`
+	Wardrobe              []*skycrypttypes.Item `json:"wardrobe"`
+	Museum                []*skycrypttypes.Item `json:"museum"`
 }
 
 type BasicItem struct {

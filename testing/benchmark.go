@@ -7,6 +7,7 @@ import (
 	"strings"
 	"time"
 
+	skycrypttypes "github.com/DuckySoLucky/SkyCrypt-Types"
 	networth "github.com/DuckySoLucky/SkyHelper-Networth-Go"
 	"github.com/DuckySoLucky/SkyHelper-Networth-Go/internal/models"
 )
@@ -21,7 +22,7 @@ func main() {
 	}
 	defer file.Close()
 
-	var profile models.SkyblockProfile
+	var profile skycrypttypes.Profile
 	if err := json.NewDecoder(file).Decode(&profile); err != nil {
 		panic("Failed to parse profile")
 	}
@@ -32,7 +33,7 @@ func main() {
 	}
 	defer file.Close()
 
-	var museum models.SkyblockMuseum
+	var museum skycrypttypes.Museum
 	if err := json.NewDecoder(file).Decode(&museum); err != nil {
 		panic("Failed to parse museum")
 	}
@@ -42,7 +43,7 @@ func main() {
 	// 10 warmup runs (no detailed output)
 	fmt.Println("\nPerforming 10 warmup runs...")
 	for i := 0; i < 10; i++ {
-		profileNWCalc, err := networth.NewProfileNetworthCalculator(&userProfile, &museum, profile.Banking.Balance)
+		profileNWCalc, err := networth.NewProfileNetworthCalculator(&userProfile, &museum, *profile.Banking.Balance)
 		if err != nil {
 			panic("Failed to create ProfileNetworthCalculator: " + err.Error())
 		}
@@ -61,7 +62,7 @@ func main() {
 	for i := 0; i < 100; i++ {
 		start := time.Now()
 
-		profileNWCalc, err := networth.NewProfileNetworthCalculator(&userProfile, &museum, profile.Banking.Balance)
+		profileNWCalc, err := networth.NewProfileNetworthCalculator(&userProfile, &museum, *profile.Banking.Balance)
 		if err != nil {
 			panic("Failed to create ProfileNetworthCalculator: " + err.Error())
 		}

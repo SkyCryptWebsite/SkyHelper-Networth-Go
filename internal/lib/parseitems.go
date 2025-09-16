@@ -4,10 +4,11 @@ import (
 	"fmt"
 	"strings"
 
+	skycrypttypes "github.com/DuckySoLucky/SkyCrypt-Types"
 	"github.com/DuckySoLucky/SkyHelper-Networth-Go/internal/models"
 )
 
-func ParseItems(profileData *models.SkyblockProfileMember, museumData *models.SkyblockMuseum) (*models.ParsedItems, error) {
+func ParseItems(profileData *skycrypttypes.Member, museumData *skycrypttypes.Museum) (*models.ParsedItems, error) {
 	inventory := profileData.Inventory
 	sharedInventory := profileData.SharedInventory
 
@@ -17,7 +18,7 @@ func ParseItems(profileData *models.SkyblockProfileMember, museumData *models.Sk
 		"wardrobe":                inventory.Wardrobe.Data,
 		"inventory":               inventory.Inventory.Data,
 		"enderchest":              inventory.Enderchest.Data,
-		"accessories":             inventory.BagContents.Accessories.Data,
+		"accessories":             inventory.BagContents.TalismanBag.Data,
 		"personal_vault":          inventory.PersonalVault.Data,
 		"fishing_bag":             inventory.BagContents.FishingBag.Data,
 		"potion_bag":              inventory.BagContents.PotionBag.Data,
@@ -27,7 +28,7 @@ func ParseItems(profileData *models.SkyblockProfileMember, museumData *models.Sk
 		"quiver":                  inventory.BagContents.Quiver.Data,
 	}
 
-	for backpack, contents := range inventory.BackpackContents {
+	for backpack, contents := range inventory.Backpack {
 		itemsToDecode["storage_"+backpack] = contents.Data
 	}
 
@@ -41,12 +42,14 @@ func ParseItems(profileData *models.SkyblockProfileMember, museumData *models.Sk
 		if err != nil {
 			return nil, fmt.Errorf("failed to decode inventory for %s: %w", key, err)
 		}
-		categoryItems := make([]*models.DecodedItem, 0)
+
+		categoryItems := make([]*skycrypttypes.Item, 0)
 		for idx := range decodedItems.Items {
 			item := &decodedItems.Items[idx]
-			if item.Tag == nil || (item.Tag.ExtraAttributes == nil && item.Tag.Display == nil) {
+			if item.Tag == nil || item.Tag.ExtraAttributes == nil {
 				continue
 			}
+
 			categoryItems = append(categoryItems, item)
 		}
 		if strings.HasPrefix(key, "storage") {
@@ -107,8 +110,8 @@ func ParseItems(profileData *models.SkyblockProfileMember, museumData *models.Sk
 	return &items, nil
 }
 
-func postParseItems(profileData models.SkyblockProfileMember, items *models.ParsedItems) error {
-	categories := [][]*models.DecodedItem{
+func postParseItems(profileData skycrypttypes.Member, items *models.ParsedItems) error {
+	categories := [][]*skycrypttypes.Item{
 		items.Armor,
 		items.Equipment,
 		items.Wardrobe,
@@ -161,7 +164,7 @@ func postParseItems(profileData models.SkyblockProfileMember, items *models.Pars
 	if profileData.SackCounts != nil {
 		sackCounts = profileData.SackCounts
 	} else {
-		sackCounts = profileData.Inventory.SackCounts
+		sackCounts = profileData.Inventory.Sacks
 	}
 	for item, amount := range sackCounts {
 		if amount <= 0 {
