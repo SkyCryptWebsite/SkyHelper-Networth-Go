@@ -6,8 +6,8 @@ import (
 	"testing"
 
 	skycrypttypes "github.com/DuckySoLucky/SkyCrypt-Types"
-	networth "github.com/DuckySoLucky/SkyHelper-Networth-Go"
-	"github.com/DuckySoLucky/SkyHelper-Networth-Go/internal/models"
+	networth "github.com/SkyCryptWebsite/SkyHelper-Networth-Go"
+	"github.com/SkyCryptWebsite/SkyHelper-Networth-Go/internal/models"
 )
 
 var (

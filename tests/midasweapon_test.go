@@ -4,8 +4,8 @@ import (
 	"testing"
 
 	skycrypttypes "github.com/DuckySoLucky/SkyCrypt-Types"
-	"github.com/DuckySoLucky/SkyHelper-Networth-Go/internal/calculators/handlers"
-	"github.com/DuckySoLucky/SkyHelper-Networth-Go/internal/models"
+	"github.com/SkyCryptWebsite/SkyHelper-Networth-Go/internal/calculators/handlers"
+	"github.com/SkyCryptWebsite/SkyHelper-Networth-Go/internal/models"
 )
 
 func TestMidasWeaponHandler(t *testing.T) {

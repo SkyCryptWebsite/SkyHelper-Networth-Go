@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/DuckySoLucky/SkyHelper-Networth-Go/internal/models"
+	"github.com/SkyCryptWebsite/SkyHelper-Networth-Go/internal/models"
 )
 
 var cachedPrices models.Prices

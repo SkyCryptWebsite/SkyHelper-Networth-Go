@@ -7,7 +7,7 @@ import (
 	"time"
 
 	skycrypttypes "github.com/DuckySoLucky/SkyCrypt-Types"
-	networth "github.com/DuckySoLucky/SkyHelper-Networth-Go"
+	networth "github.com/SkyCryptWebsite/SkyHelper-Networth-Go"
 )
 
 func main() {

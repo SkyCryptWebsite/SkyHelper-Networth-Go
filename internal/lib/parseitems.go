@@ -5,7 +5,7 @@ import (
 	"strings"
 
 	skycrypttypes "github.com/DuckySoLucky/SkyCrypt-Types"
-	"github.com/DuckySoLucky/SkyHelper-Networth-Go/internal/models"
+	"github.com/SkyCryptWebsite/SkyHelper-Networth-Go/internal/models"
 )
 
 func ParseItems(profileData *skycrypttypes.Member, museumData *skycrypttypes.Museum) (*models.ParsedItems, error) {

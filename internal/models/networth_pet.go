@@ -6,7 +6,7 @@ import (
 	"sort"
 
 	skycrypttypes "github.com/DuckySoLucky/SkyCrypt-Types"
-	"github.com/DuckySoLucky/SkyHelper-Networth-Go/internal/constants"
+	"github.com/SkyCryptWebsite/SkyHelper-Networth-Go/internal/constants"
 )
 
 type NetworthPet struct {

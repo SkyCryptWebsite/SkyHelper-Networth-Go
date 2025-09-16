@@ -7,9 +7,9 @@ import (
 	"strings"
 
 	skycrypttypes "github.com/DuckySoLucky/SkyCrypt-Types"
-	"github.com/DuckySoLucky/SkyHelper-Networth-Go/internal/calculators"
-	"github.com/DuckySoLucky/SkyHelper-Networth-Go/internal/lib"
-	"github.com/DuckySoLucky/SkyHelper-Networth-Go/internal/models"
+	"github.com/SkyCryptWebsite/SkyHelper-Networth-Go/internal/calculators"
+	"github.com/SkyCryptWebsite/SkyHelper-Networth-Go/internal/lib"
+	"github.com/SkyCryptWebsite/SkyHelper-Networth-Go/internal/models"
 )
 
 type ProfileNetworthCalculator struct {

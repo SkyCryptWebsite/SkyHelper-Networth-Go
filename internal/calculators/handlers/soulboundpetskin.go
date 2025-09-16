@@ -3,8 +3,8 @@ package handlers
 import (
 	"fmt"
 
-	"github.com/DuckySoLucky/SkyHelper-Networth-Go/internal/constants"
-	"github.com/DuckySoLucky/SkyHelper-Networth-Go/internal/models"
+	"github.com/SkyCryptWebsite/SkyHelper-Networth-Go/internal/constants"
+	"github.com/SkyCryptWebsite/SkyHelper-Networth-Go/internal/models"
 )
 
 type SoulboundPetSkinHandler struct{}

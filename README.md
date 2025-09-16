@@ -2,7 +2,7 @@
 
 [![discord](https://img.shields.io/discord/720018827433345138?logo=discord)](https://discord.com/invite/fd4Be4W)
 [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE)
-[![Go Reference](https://pkg.go.dev/badge/github.com/github.com/DuckySoLucky/SkyHelper-Networth-Go.svg)](https://pkg.go.dev/github.com/github.com/DuckySoLucky/SkyHelper-Networth-Go)
+[![Go Reference](https://pkg.go.dev/badge/github.com/github.com/SkyCryptWebsite/SkyHelper-Networth-Go.svg)](https://pkg.go.dev/github.com/github.com/SkyCryptWebsite/SkyHelper-Networth-Go)
 > [!NOTE] 
 > This repository is specifically designed for integration with [SkyCryptv3](https://github.com/DuckySoLucky/SkyCryptv3/). While this Go implementation focuses on core networth calculation functionality (including standard and non-cosmetic calculations), it does not include all features available in the Node.js module, such as UpdateManager and NetworthManager components.
 
@@ -11,7 +11,7 @@
 ## Installation
 
 ```bash
-go get github.com/DuckySoLucky/SkyHelper-Networth-Go
+go get github.com/SkyCryptWebsite/SkyHelper-Networth-Go
 ```
 
 ## Quick Start
@@ -21,7 +21,7 @@ package main
 
 import (
     "fmt"
-    "github.com/DuckySoLucky/SkyHelper-Networth-Go"
+    "github.com/SkyCryptWebsite/SkyHelper-Networth-Go"
 )
 
 func main() {

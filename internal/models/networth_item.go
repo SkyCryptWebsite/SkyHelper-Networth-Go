@@ -8,7 +8,7 @@ import (
 	"strings"
 
 	skycrypttypes "github.com/DuckySoLucky/SkyCrypt-Types"
-	"github.com/DuckySoLucky/SkyHelper-Networth-Go/internal/constants"
+	"github.com/SkyCryptWebsite/SkyHelper-Networth-Go/internal/constants"
 )
 
 // titleCase converts a string to title case

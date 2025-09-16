@@ -7,7 +7,7 @@ import (
 	"time"
 
 	skycrypttypes "github.com/DuckySoLucky/SkyCrypt-Types"
-	"github.com/DuckySoLucky/SkyHelper-Networth-Go/internal/lib"
+	"github.com/SkyCryptWebsite/SkyHelper-Networth-Go/internal/lib"
 )
 
 func TestParseItems(t *testing.T) {

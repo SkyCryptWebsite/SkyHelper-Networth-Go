@@ -1,6 +1,6 @@
 package handlers
 
-import "github.com/DuckySoLucky/SkyHelper-Networth-Go/internal/models"
+import "github.com/SkyCryptWebsite/SkyHelper-Networth-Go/internal/models"
 
 var ItemHandlers []models.Handler = []models.Handler{
 	ArtOfPeaceHandler{},

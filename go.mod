@@ -1,4 +1,4 @@
-module github.com/DuckySoLucky/SkyHelper-Networth-Go
+module github.com/SkyCryptWebsite/SkyHelper-Networth-Go
 
 go 1.25.1
 
