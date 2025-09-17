@@ -10,6 +10,7 @@ import (
 	"github.com/SkyCryptWebsite/SkyHelper-Networth-Go/internal/calculators"
 	"github.com/SkyCryptWebsite/SkyHelper-Networth-Go/internal/lib"
 	"github.com/SkyCryptWebsite/SkyHelper-Networth-Go/internal/models"
+	options "github.com/SkyCryptWebsite/SkyHelper-Networth-Go/options"
 )
 
 type ProfileNetworthCalculator struct {
@@ -49,27 +50,23 @@ func NewProfileNetworthCalculator(userProfile *skycrypttypes.Member, museumData 
 	}, nil
 }
 
-func (p *ProfileNetworthCalculator) GetNetworth(options ...models.NetworthOptions) *models.NetworthResult {
-	var opts models.NetworthOptions
-	if len(options) > 0 {
-		opts = options[0]
-	} else {
-		// If no config provided, set OnlyNetworth to true
-		opts.OnlyNetworth = true
+func (p *ProfileNetworthCalculator) GetNetworth(opts ...options.NetworthOptions) *models.NetworthResult {
+	var opt options.NetworthOptions
+	if len(opts) > 0 {
+		opt = opts[0]
 	}
-	return p.calculate(opts)
+
+	return p.calculate(opt.ToInternal())
 }
 
-func (p *ProfileNetworthCalculator) GetNonCosmeticNetworth(options ...models.NetworthOptions) *models.NetworthResult {
-	var opts models.NetworthOptions
-	if len(options) > 0 {
-		opts = options[0]
-	} else {
-		// If no config provided, set OnlyNetworth to true
-		opts.OnlyNetworth = true
+func (p *ProfileNetworthCalculator) GetNonCosmeticNetworth(opts ...options.NetworthOptions) *models.NetworthResult {
+	var opt options.NetworthOptions
+	if len(opts) > 0 {
+		opt = opts[0]
 	}
-	opts.NonCosmetic = true
-	return p.calculate(opts)
+
+	opt.NonCosmetic = true
+	return p.calculate(opt.ToInternal())
 }
 
 func (p *ProfileNetworthCalculator) calculate(options models.NetworthOptions) *models.NetworthResult {

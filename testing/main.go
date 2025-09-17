@@ -8,6 +8,7 @@ import (
 
 	skycrypttypes "github.com/DuckySoLucky/SkyCrypt-Types"
 	networth "github.com/SkyCryptWebsite/SkyHelper-Networth-Go"
+	"github.com/SkyCryptWebsite/SkyHelper-Networth-Go/options"
 )
 
 func main() {
@@ -41,7 +42,7 @@ func main() {
 	}
 
 	timeNow := time.Now()
-	nw := profileNWCalc.GetNonCosmeticNetworth()
+	nw := profileNWCalc.GetNonCosmeticNetworth(options.NetworthOptions{IncludeItemData: false})
 	fmt.Printf("Time: %s\n", time.Since(timeNow))
 	fmt.Printf("Networth: %+v\n", nw.Types)
 
@@ -56,5 +57,5 @@ func main() {
 		panic("Failed to encode JSON: " + err.Error())
 	}
 
-	fmt.Printf("Networth: %+v\n", nw.UnsoulboundNetworth)
+	fmt.Printf("Networth: %+v\n", nw.Types["inventory"].Items)
 }
