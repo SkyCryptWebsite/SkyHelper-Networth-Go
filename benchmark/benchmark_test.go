@@ -7,7 +7,7 @@ import (
 
 	skycrypttypes "github.com/DuckySoLucky/SkyCrypt-Types"
 	networth "github.com/SkyCryptWebsite/SkyHelper-Networth-Go"
-	"github.com/SkyCryptWebsite/SkyHelper-Networth-Go/internal/models"
+	"github.com/SkyCryptWebsite/SkyHelper-Networth-Go/options"
 )
 
 var (
@@ -48,7 +48,7 @@ func BenchmarkNetworthCalculation(b *testing.B) {
 			b.Fatalf("Failed to create ProfileNetworthCalculator: %v", err)
 		}
 
-		_ = profileNWCalc.GetNetworth(models.NetworthOptions{})
+		_ = profileNWCalc.GetNetworth(options.NetworthOptions{})
 	}
 }
 
@@ -69,6 +69,6 @@ func BenchmarkNetworthCalculationOnly(b *testing.B) {
 	}
 
 	for b.Loop() {
-		_ = profileNWCalc.GetNetworth(models.NetworthOptions{})
+		_ = profileNWCalc.GetNetworth(options.NetworthOptions{})
 	}
 }

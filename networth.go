@@ -350,3 +350,38 @@ func (p *ProfileNetworthCalculator) calculate(options models.NetworthOptions) *m
 		Types:               output,
 	}
 }
+
+type CalculatorService struct {
+	service *calculators.CalculatorService
+}
+
+func NewCalculatorService() *CalculatorService {
+	return &CalculatorService{
+		service: calculators.NewCalculatorService(),
+	}
+}
+
+func (cs *CalculatorService) NewSkyBlockItemCalculator(item *skycrypttypes.Item, prices models.Prices, options options.NetworthOptions) *models.NetworthItem {
+	return cs.service.NewSkyBlockItemCalculator(item, prices, options.ToInternal())
+}
+
+func (cs *CalculatorService) NewSkyBlockPetCalculator(pet *skycrypttypes.Pet, prices models.Prices, options options.NetworthOptions) *models.NetworthPet {
+	return cs.service.NewSkyBlockPetCalculator(pet, prices, options.ToInternal())
+}
+
+func (cs *CalculatorService) CalculateItem(item *models.NetworthItem) {
+	cs.service.CalculateItem(item)
+}
+
+func (cs *CalculatorService) CalculatePet(pet *models.NetworthPet) {
+	cs.service.CalculatePet(pet)
+}
+
+func GetPrices(cache bool, cacheTimeSeconds int64, retries int) (*models.Prices, error) {
+	prices, err := lib.GetPrices(cache, cacheTimeSeconds, retries)
+	if err != nil {
+		return nil, fmt.Errorf("failed to fetch prices: %w", err)
+	}
+
+	return prices, nil
+}

@@ -58,4 +58,29 @@ func main() {
 	}
 
 	fmt.Printf("Networth: %+v\n", nw.Types["inventory"].Items)
+
+	/*
+	prices, err := networth.GetPrices(true, 69420, 3)
+
+	count := 1
+
+	calculatorService := networth.NewCalculatorService()
+	itemNWCalc := calculatorService.NewSkyBlockItemCalculator(
+		&skycrypttypes.Item{
+			Tag: &skycrypttypes.Tag{
+				ExtraAttributes: &skycrypttypes.ExtraAttributes{
+					Id: "HYPERION",
+				},
+			},
+			Count: &count,
+		},
+		*prices,
+		options.NetworthOptions{},
+	)
+
+	calculatorService.CalculateItem(itemNWCalc)
+
+	fmt.Printf("\n\nPrice: %+v\n", itemNWCalc.Price)
+	*/
+
 }
