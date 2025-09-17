@@ -111,6 +111,10 @@ func (p *ProfileNetworthCalculator) calculate(options models.NetworthOptions) *m
 			decodedItems := categoryInfo.Items.([]*skycrypttypes.Item)
 			for _, item := range decodedItems {
 				if item.Tag == nil || item.Tag.ExtraAttributes == nil {
+					if options.KeepInvalidItems {
+						output[categoryId].Items = append(output[categoryId].Items, models.NetworthItemResult{})
+					}
+
 					continue
 				}
 
@@ -120,6 +124,10 @@ func (p *ProfileNetworthCalculator) calculate(options models.NetworthOptions) *m
 					var petData *skycrypttypes.Pet
 					err := json.Unmarshal([]byte(item.Tag.ExtraAttributes.PetInfo), &petData)
 					if err != nil {
+						if options.KeepInvalidItems {
+							output[categoryId].Items = append(output[categoryId].Items, models.NetworthItemResult{})
+						}
+
 						continue
 					}
 
@@ -171,6 +179,10 @@ func (p *ProfileNetworthCalculator) calculate(options models.NetworthOptions) *m
 				}
 
 				if result.Price == 0 {
+					if options.KeepInvalidItems {
+						output[categoryId].Items = append(output[categoryId].Items, models.NetworthItemResult{})
+					}
+
 					continue
 				}
 

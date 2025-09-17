@@ -40,13 +40,14 @@ type BasicItem struct {
 }
 
 type NetworthOptions struct {
-	Prices          Prices
-	NonCosmetic     bool
-	CachePrices     bool
-	OnlyNetworth    bool
-	IncludeItemData bool
-	SortItems       bool
-	StackItems      bool
+	Prices           Prices
+	NonCosmetic      bool
+	CachePrices      bool
+	OnlyNetworth     bool
+	IncludeItemData  bool
+	SortItems        bool
+	StackItems       bool
+	KeepInvalidItems bool
 }
 
 type NetworthResult struct {
