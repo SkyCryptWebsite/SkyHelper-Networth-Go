@@ -19,7 +19,7 @@ func (h DrillPartsHandler) Applies(item *models.NetworthItem) bool {
 		item.ExtraAttributes.DrillPartEngine != ""
 }
 
-func (h DrillPartsHandler) Calculate(item *models.NetworthItem, prices models.Prices) {
+func (h DrillPartsHandler) Calculate(item *models.NetworthItem, prices map[string]float64) {
 	parts := []struct {
 		FieldValue string
 		FieldName  string

@@ -17,7 +17,7 @@ func (h SoulboundSkinHandler) Applies(item *models.NetworthItem) bool {
 	return item.ExtraAttributes.Skin != "" && !strings.Contains(item.ItemId, item.ExtraAttributes.Skin) && item.IsSoulbound() && !item.NonCosmetic
 }
 
-func (h SoulboundSkinHandler) Calculate(item *models.NetworthItem, prices models.Prices) {
+func (h SoulboundSkinHandler) Calculate(item *models.NetworthItem, prices map[string]float64) {
 	skinId := item.ExtraAttributes.Skin
 	if prices[skinId] == 0 {
 		return

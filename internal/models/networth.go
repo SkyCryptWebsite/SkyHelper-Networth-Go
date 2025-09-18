@@ -2,8 +2,6 @@ package models
 
 import skycrypttypes "github.com/DuckySoLucky/SkyCrypt-Types"
 
-type Prices map[string]float64
-
 type CalculationData struct {
 	Id        string  `json:"id"`
 	Type      string  `json:"type"`
@@ -40,7 +38,7 @@ type BasicItem struct {
 }
 
 type NetworthOptions struct {
-	Prices           Prices
+	Prices           map[string]float64
 	NonCosmetic      bool
 	CachePrices      bool
 	OnlyNetworth     bool

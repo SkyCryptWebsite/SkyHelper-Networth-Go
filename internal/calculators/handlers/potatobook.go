@@ -15,7 +15,7 @@ func (h PotatoBookHandler) Applies(item *models.NetworthItem) bool {
 	return item.ExtraAttributes.HotPotatoCount > 0
 }
 
-func (h PotatoBookHandler) Calculate(item *models.NetworthItem, prices models.Prices) {
+func (h PotatoBookHandler) Calculate(item *models.NetworthItem, prices map[string]float64) {
 	potatoBookCount := item.ExtraAttributes.HotPotatoCount
 	hotPotatoBookCount := min(potatoBookCount, 10.0)
 	calculationData := models.CalculationData{

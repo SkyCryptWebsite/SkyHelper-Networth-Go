@@ -18,7 +18,7 @@ func (h PetItemHandler) Applies(item *models.NetworthPet) bool {
 
 }
 
-func (h PetItemHandler) Calculate(item *models.NetworthPet, prices models.Prices) {
+func (h PetItemHandler) Calculate(item *models.NetworthPet, prices map[string]float64) {
 	petItem := item.PetData.HeldItem
 	calculationData := models.CalculationData{
 		Id:    strings.ToUpper(petItem),

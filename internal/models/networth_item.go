@@ -39,7 +39,7 @@ type NetworthItem struct {
 	Count           int                            `json:"count"`
 	BaseItemId      string                         `json:"baseItemId"`
 
-	Prices Prices `json:"prices"`
+	Prices map[string]float64 `json:"prices"`
 
 	NonCosmetic      bool              `json:"nonCosmetic"`
 	Calculation      []CalculationData `json:"calculation"`
@@ -48,7 +48,7 @@ type NetworthItem struct {
 	SoulboundPortion float64           `json:"soulboundPortion"`
 }
 
-func NewSkyBlockItemCaclulator(item *skycrypttypes.Item, prices Prices, itemProvider ItemProvider, options NetworthOptions) *NetworthItem {
+func NewSkyBlockItemCaclulator(item *skycrypttypes.Item, prices map[string]float64, itemProvider ItemProvider, options NetworthOptions) *NetworthItem {
 	networthItem := &NetworthItem{
 		ItemName:        item.Tag.Display.Name,
 		ExtraAttributes: item.Tag.ExtraAttributes,

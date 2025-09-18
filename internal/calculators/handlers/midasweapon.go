@@ -21,7 +21,7 @@ func (h MidasWeaponHandler) Applies(item *models.NetworthItem) bool {
 	return false
 }
 
-func (h MidasWeaponHandler) Calculate(item *models.NetworthItem, prices models.Prices) {
+func (h MidasWeaponHandler) Calculate(item *models.NetworthItem, prices map[string]float64) {
 	maxBid := constants.MIDAS_SWORDS[item.ItemId].MaxBid
 	swordType := constants.MIDAS_SWORDS[item.ItemId].Type
 	winningBid := item.ExtraAttributes.WinningBid

@@ -15,7 +15,7 @@ func (h ArtOfPeaceHandler) Applies(item *models.NetworthItem) bool {
 	return item.ExtraAttributes.ArtOfPeaceApplied > 0
 }
 
-func (h ArtOfPeaceHandler) Calculate(item *models.NetworthItem, prices models.Prices) {
+func (h ArtOfPeaceHandler) Calculate(item *models.NetworthItem, prices map[string]float64) {
 	artOfPieceAmount := item.ExtraAttributes.ArtOfPeaceApplied
 	calculationData := models.CalculationData{
 		Id:    "THE_ART_OF_PEACE",

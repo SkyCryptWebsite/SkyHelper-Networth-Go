@@ -17,7 +17,7 @@ func (h DyeHandler) Applies(item *models.NetworthItem) bool {
 	return item.ExtraAttributes.DyeItem != ""
 }
 
-func (h DyeHandler) Calculate(item *models.NetworthItem, prices models.Prices) {
+func (h DyeHandler) Calculate(item *models.NetworthItem, prices map[string]float64) {
 	dyeItem := strings.ToUpper(item.ExtraAttributes.DyeItem)
 	calculationData := models.CalculationData{
 		Id:    dyeItem,

@@ -20,7 +20,7 @@ type ProfileNetworthCalculator struct {
 	Purse               float64
 	PersonalBankBalance float64
 	Items               *models.ParsedItems
-	Prices              models.Prices
+	Prices              map[string]float64
 }
 
 func NewProfileNetworthCalculator(userProfile *skycrypttypes.Member, museumData *skycrypttypes.Museum, bankBalance float64) (*ProfileNetworthCalculator, error) {
@@ -46,7 +46,7 @@ func NewProfileNetworthCalculator(userProfile *skycrypttypes.Member, museumData 
 		Purse:               float64(userProfile.Currencies.CoinPurse),
 		PersonalBankBalance: userProfile.Profile.BankAccount,
 		Items:               items,
-		Prices:              *prices,
+		Prices:              prices,
 	}, nil
 }
 
@@ -361,11 +361,11 @@ func NewCalculatorService() *CalculatorService {
 	}
 }
 
-func (cs *CalculatorService) NewSkyBlockItemCalculator(item *skycrypttypes.Item, prices models.Prices, options options.NetworthOptions) *models.NetworthItem {
+func (cs *CalculatorService) NewSkyBlockItemCalculator(item *skycrypttypes.Item, prices map[string]float64, options options.NetworthOptions) *models.NetworthItem {
 	return cs.service.NewSkyBlockItemCalculator(item, prices, options.ToInternal())
 }
 
-func (cs *CalculatorService) NewSkyBlockPetCalculator(pet *skycrypttypes.Pet, prices models.Prices, options options.NetworthOptions) *models.NetworthPet {
+func (cs *CalculatorService) NewSkyBlockPetCalculator(pet *skycrypttypes.Pet, prices map[string]float64, options options.NetworthOptions) *models.NetworthPet {
 	return cs.service.NewSkyBlockPetCalculator(pet, prices, options.ToInternal())
 }
 
@@ -377,7 +377,7 @@ func (cs *CalculatorService) CalculatePet(pet *models.NetworthPet) {
 	cs.service.CalculatePet(pet)
 }
 
-func GetPrices(cache bool, cacheTimeSeconds int64, retries int) (*models.Prices, error) {
+func GetPrices(cache bool, cacheTimeSeconds int64, retries int) (map[string]float64, error) {
 	prices, err := lib.GetPrices(cache, cacheTimeSeconds, retries)
 	if err != nil {
 		return nil, fmt.Errorf("failed to fetch prices: %w", err)

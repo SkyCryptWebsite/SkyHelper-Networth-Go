@@ -19,7 +19,7 @@ func (h ItemEnchantments) Applies(item *models.NetworthItem) bool {
 	return item.ItemId != "ENCHANTED_BOOK" && len(item.ExtraAttributes.Enchantments) > 0
 }
 
-func (h ItemEnchantments) Calculate(item *models.NetworthItem, prices models.Prices) {
+func (h ItemEnchantments) Calculate(item *models.NetworthItem, prices map[string]float64) {
 	for id, level := range item.ExtraAttributes.Enchantments {
 		upperCasedId := strings.ToUpper(id)
 		if slices.Contains(constants.BLOCKED_ENCHANTMENTS[item.ItemId], upperCasedId) {

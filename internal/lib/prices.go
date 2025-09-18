@@ -5,14 +5,12 @@ import (
 	"fmt"
 	"net/http"
 	"time"
-
-	"github.com/SkyCryptWebsite/SkyHelper-Networth-Go/internal/models"
 )
 
-var cachedPrices models.Prices
+var cachedPrices map[string]float64
 var alreadyFetchingPrice bool
 
-func GetPrices(cache bool, cacheTimeSeconds int64, retries int) (*models.Prices, error) {
+func GetPrices(cache bool, cacheTimeSeconds int64, retries int) (map[string]float64, error) {
 	if cacheTimeSeconds == 0 {
 		cacheTimeSeconds = 5 * 60
 	}
@@ -21,9 +19,9 @@ func GetPrices(cache bool, cacheTimeSeconds int64, retries int) (*models.Prices,
 		retries = 3
 	}
 
-	prices := make(models.Prices)
+	prices := make(map[string]float64)
 	if cachedPrices["lastUpdated"] != 0 && cache && (time.Now().Unix()-int64(cachedPrices["lastUpdated"])) < cacheTimeSeconds {
-		return &cachedPrices, nil
+		return cachedPrices, nil
 	}
 
 	if alreadyFetchingPrice {
@@ -31,7 +29,7 @@ func GetPrices(cache bool, cacheTimeSeconds int64, retries int) (*models.Prices,
 			time.Sleep(time.Millisecond * 100)
 		}
 
-		return &cachedPrices, nil
+		return cachedPrices, nil
 	}
 
 	alreadyFetchingPrice = true
@@ -42,7 +40,7 @@ func GetPrices(cache bool, cacheTimeSeconds int64, retries int) (*models.Prices,
 			return GetPrices(cache, cacheTimeSeconds, retries-1)
 		}
 
-		return &prices, nil
+		return prices, nil
 	}
 
 	defer resp.Body.Close()
@@ -67,7 +65,7 @@ func GetPrices(cache bool, cacheTimeSeconds int64, retries int) (*models.Prices,
 	cachedPrices = prices
 	cachedPrices["lastUpdated"] = float64(time.Now().Unix())
 
-	return &cachedPrices, nil
+	return cachedPrices, nil
 }
 
 func init() {

@@ -28,7 +28,7 @@ func (h RuneHandler) Applies(item *models.NetworthItem) bool {
 	return false
 }
 
-func (h RuneHandler) Calculate(item *models.NetworthItem, prices models.Prices) {
+func (h RuneHandler) Calculate(item *models.NetworthItem, prices map[string]float64) {
 	runes := item.ExtraAttributes.Runes
 	for runeType, runeTier := range runes {
 		runeId := fmt.Sprintf("RUNE_%s_%d", strings.ToUpper(runeType), runeTier)

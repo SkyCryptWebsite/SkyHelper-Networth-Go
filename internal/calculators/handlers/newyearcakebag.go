@@ -16,7 +16,7 @@ func (h NewYearCakeBagHandler) Applies(item *models.NetworthItem) bool {
 	return len(item.ExtraAttributes.NewYearCakeBagYears) > 0
 }
 
-func (h NewYearCakeBagHandler) Calculate(item *models.NetworthItem, prices models.Prices) {
+func (h NewYearCakeBagHandler) Calculate(item *models.NetworthItem, prices map[string]float64) {
 	cakePrices := 0.0
 	for _, year := range item.ExtraAttributes.NewYearCakeBagYears {
 		cakeId := fmt.Sprintf("NEW_YEAR_CAKE_%d", year)

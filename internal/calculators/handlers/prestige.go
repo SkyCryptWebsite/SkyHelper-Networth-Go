@@ -22,7 +22,7 @@ func (h PrestigeHandler) Applies(item *models.NetworthItem) bool {
 	return false
 }
 
-func (h PrestigeHandler) Calculate(item *models.NetworthItem, prices models.Prices) {
+func (h PrestigeHandler) Calculate(item *models.NetworthItem, prices map[string]float64) {
 	if prices[item.ItemId] > 0 {
 		return
 	}

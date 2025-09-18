@@ -15,7 +15,7 @@ func (h FarmingForDummiesHandler) Applies(item *models.NetworthItem) bool {
 	return item.ExtraAttributes.FarmingForDummies > 0
 }
 
-func (h FarmingForDummiesHandler) Calculate(item *models.NetworthItem, prices models.Prices) {
+func (h FarmingForDummiesHandler) Calculate(item *models.NetworthItem, prices map[string]float64) {
 	farmingForDummiesCount := item.ExtraAttributes.FarmingForDummies
 	calculationData := models.CalculationData{
 		Id:    "FARMING_FOR_DUMMIES",

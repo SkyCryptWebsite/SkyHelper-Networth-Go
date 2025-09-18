@@ -15,7 +15,7 @@ func (h GemstonePowerScrollHandler) Applies(item *models.NetworthItem) bool {
 	return item.ExtraAttributes.PowerAbilityScroll != ""
 }
 
-func (h GemstonePowerScrollHandler) Calculate(item *models.NetworthItem, prices models.Prices) {
+func (h GemstonePowerScrollHandler) Calculate(item *models.NetworthItem, prices map[string]float64) {
 	powerAbilityScroll := item.ExtraAttributes.PowerAbilityScroll
 	calculationData := models.CalculationData{
 		Id:    powerAbilityScroll,

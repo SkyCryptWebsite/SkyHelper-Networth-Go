@@ -18,7 +18,7 @@ func (h EnrichmentHandler) Applies(item *models.NetworthItem) bool {
 	return item.ExtraAttributes.TalismanEnrichment != ""
 }
 
-func (h EnrichmentHandler) Calculate(item *models.NetworthItem, prices models.Prices) {
+func (h EnrichmentHandler) Calculate(item *models.NetworthItem, prices map[string]float64) {
 	// Find the minimum enrichment priceww
 	enrichmentPrice := math.Inf(1) // Start with positive infinity
 	for _, enrichment := range constants.ENRICHMENTS {

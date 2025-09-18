@@ -15,7 +15,7 @@ func (h JalapenoBookHandler) Applies(item *models.NetworthItem) bool {
 	return item.ExtraAttributes.JalapenoCount > 0
 }
 
-func (h JalapenoBookHandler) Calculate(item *models.NetworthItem, prices models.Prices) {
+func (h JalapenoBookHandler) Calculate(item *models.NetworthItem, prices map[string]float64) {
 	jalapenoCount := item.ExtraAttributes.JalapenoCount
 	calculationData := models.CalculationData{
 		Id:    "JALAPENO_BOOK",

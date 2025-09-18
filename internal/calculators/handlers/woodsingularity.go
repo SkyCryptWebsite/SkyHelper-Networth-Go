@@ -15,7 +15,7 @@ func (h WoodSingularityHandler) Applies(item *models.NetworthItem) bool {
 	return item.ExtraAttributes.WoodSingularityCount > 0
 }
 
-func (h WoodSingularityHandler) Calculate(item *models.NetworthItem, prices models.Prices) {
+func (h WoodSingularityHandler) Calculate(item *models.NetworthItem, prices map[string]float64) {
 	woodSingularityCount := item.ExtraAttributes.WoodSingularityCount
 	calculationData := models.CalculationData{
 		Id:    "WOOD_SINGULARITY",

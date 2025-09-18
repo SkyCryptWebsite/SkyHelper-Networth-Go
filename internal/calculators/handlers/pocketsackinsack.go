@@ -15,7 +15,7 @@ func (h PocketSackInASackHandler) Applies(item *models.NetworthItem) bool {
 	return item.ExtraAttributes.SackPss > 0
 }
 
-func (h PocketSackInASackHandler) Calculate(item *models.NetworthItem, prices models.Prices) {
+func (h PocketSackInASackHandler) Calculate(item *models.NetworthItem, prices map[string]float64) {
 	sackCount := item.ExtraAttributes.SackPss
 	calculationData := models.CalculationData{
 		Id:    "POCKET_SACK_IN_A_SACK",

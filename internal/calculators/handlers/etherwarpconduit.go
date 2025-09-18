@@ -15,7 +15,7 @@ func (h EtherwarpConduitHandler) Applies(item *models.NetworthItem) bool {
 	return item.ExtraAttributes.Ethermerge > 0
 }
 
-func (h EtherwarpConduitHandler) Calculate(item *models.NetworthItem, prices models.Prices) {
+func (h EtherwarpConduitHandler) Calculate(item *models.NetworthItem, prices map[string]float64) {
 	calculationData := models.CalculationData{
 		Id:    "ETHERWARP_CONDUIT",
 		Type:  "ETHERWARP_CONDUIT",

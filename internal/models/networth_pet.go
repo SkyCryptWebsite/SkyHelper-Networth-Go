@@ -19,7 +19,7 @@ type NetworthPet struct {
 	Level       Level  `json:"level"`
 	PetName     string `json:"petName"`
 
-	Prices Prices `json:"prices"`
+	Prices map[string]float64 `json:"prices"`
 
 	Calculation []CalculationData `json:"calculation"`
 	BasePrice   float64           `json:"basePrice"`
@@ -153,7 +153,7 @@ func (item *NetworthPet) getPetLevel() Level {
 	}
 }
 
-func NewSkyBlockPetCalculator(item *skycrypttypes.Pet, prices Prices, options NetworthOptions) *NetworthPet {
+func NewSkyBlockPetCalculator(item *skycrypttypes.Pet, prices map[string]float64, options NetworthOptions) *NetworthPet {
 	networthItem := &NetworthPet{
 		PetData: *item,
 

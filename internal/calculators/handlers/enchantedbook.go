@@ -20,7 +20,7 @@ func (h EnchantedBookHandler) Applies(item *models.NetworthItem) bool {
 	return item.ItemId == "ENCHANTED_BOOK" && len(item.ExtraAttributes.Enchantments) > 0
 }
 
-func (h EnchantedBookHandler) Calculate(item *models.NetworthItem, prices models.Prices) {
+func (h EnchantedBookHandler) Calculate(item *models.NetworthItem, prices map[string]float64) {
 	enchantmentPrice := 0.0
 	isSingleBook := len(item.ExtraAttributes.Enchantments) == 1
 	for enchantment, level := range item.ExtraAttributes.Enchantments {

@@ -15,7 +15,7 @@ func (h PulseRingThunderHandler) Applies(item *models.NetworthItem) bool {
 	return item.ItemId == "PULSE_RING" && item.ExtraAttributes.ThunderCharge > 0
 }
 
-func (h PulseRingThunderHandler) Calculate(item *models.NetworthItem, prices models.Prices) {
+func (h PulseRingThunderHandler) Calculate(item *models.NetworthItem, prices map[string]float64) {
 	thunderUpgrades := min(item.ExtraAttributes.ThunderCharge, constants.MAX_THUNDER_CHARGE) / 50_000
 	calculationData := models.CalculationData{
 		Id:    "THUNDER_IN_A_BOTTLE",

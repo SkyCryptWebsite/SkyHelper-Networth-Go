@@ -15,7 +15,7 @@ func (h ManaDisintegratorHandler) Applies(item *models.NetworthItem) bool {
 	return item.ExtraAttributes.ManaDisintegrator > 0
 }
 
-func (h ManaDisintegratorHandler) Calculate(item *models.NetworthItem, prices models.Prices) {
+func (h ManaDisintegratorHandler) Calculate(item *models.NetworthItem, prices map[string]float64) {
 	manaDisintegratorCount := item.ExtraAttributes.ManaDisintegrator
 	calculationData := models.CalculationData{
 		Id:    "MANA_DISINTEGRATOR",

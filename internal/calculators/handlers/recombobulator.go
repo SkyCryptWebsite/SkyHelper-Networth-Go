@@ -32,7 +32,7 @@ func (h RecombobulatorHandler) Applies(item *models.NetworthItem) bool {
 
 }
 
-func (h RecombobulatorHandler) Calculate(item *models.NetworthItem, prices models.Prices) {
+func (h RecombobulatorHandler) Calculate(item *models.NetworthItem, prices map[string]float64) {
 	multiplier := constants.APPLICATION_WORTH["recombobulator"]
 	if item.ItemId == "BONE_BOOMERANG" {
 		multiplier *= 0.5

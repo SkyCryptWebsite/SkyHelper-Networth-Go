@@ -14,13 +14,8 @@ type NetworthOptions struct {
 }
 
 func (opts NetworthOptions) ToInternal() models.NetworthOptions {
-	var prices models.Prices
-	if opts.Prices != nil {
-		prices = models.Prices(opts.Prices)
-	}
-
 	return models.NetworthOptions{
-		Prices:           prices,
+		Prices:           opts.Prices,
 		NonCosmetic:      opts.NonCosmetic,
 		CachePrices:      opts.CachePrices,
 		OnlyNetworth:     opts.OnlyNetworth,

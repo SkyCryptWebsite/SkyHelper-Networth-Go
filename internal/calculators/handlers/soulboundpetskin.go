@@ -17,7 +17,7 @@ func (h SoulboundPetSkinHandler) Applies(item *models.NetworthPet) bool {
 	return item.PetData.Skin != "" && item.IsSoulbound() && !item.NonCosmetic
 }
 
-func (h SoulboundPetSkinHandler) Calculate(item *models.NetworthPet, prices models.Prices) {
+func (h SoulboundPetSkinHandler) Calculate(item *models.NetworthPet, prices map[string]float64) {
 	petSkinId := fmt.Sprintf("PET_SKIN_%s", item.PetData.Skin)
 	if prices[petSkinId] == 0 {
 		return

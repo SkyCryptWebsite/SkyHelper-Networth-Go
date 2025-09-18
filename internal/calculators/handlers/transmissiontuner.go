@@ -15,7 +15,7 @@ func (h TransmissionTunerHandler) Applies(item *models.NetworthItem) bool {
 	return item.ExtraAttributes.TunedTransmission > 0
 }
 
-func (h TransmissionTunerHandler) Calculate(item *models.NetworthItem, prices models.Prices) {
+func (h TransmissionTunerHandler) Calculate(item *models.NetworthItem, prices map[string]float64) {
 	tunedTransmissionCount := item.ExtraAttributes.TunedTransmission
 	calculationData := models.CalculationData{
 		Id:    "TRANSMISSION_TUNER",

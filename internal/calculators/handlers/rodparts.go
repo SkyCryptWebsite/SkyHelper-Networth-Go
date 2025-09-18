@@ -22,7 +22,7 @@ func (h RodPartsHandler) Applies(item *models.NetworthItem) bool {
 	return hasRodPart
 }
 
-func (h RodPartsHandler) Calculate(item *models.NetworthItem, prices models.Prices) {
+func (h RodPartsHandler) Calculate(item *models.NetworthItem, prices map[string]float64) {
 	ea := item.ExtraAttributes
 	rodParts := []struct {
 		key       string

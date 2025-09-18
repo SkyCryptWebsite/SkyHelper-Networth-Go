@@ -18,7 +18,7 @@ func (h BoosterHandler) Applies(item *models.NetworthItem) bool {
 	return len(item.ExtraAttributes.Boosters) > 0
 }
 
-func (h BoosterHandler) Calculate(item *models.NetworthItem, prices models.Prices) {
+func (h BoosterHandler) Calculate(item *models.NetworthItem, prices map[string]float64) {
 	for _, booster := range item.ExtraAttributes.Boosters {
 		boosterId := fmt.Sprintf("%s_BOOSTER", strings.ToUpper(booster))
 		calculationData := models.CalculationData{

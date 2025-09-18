@@ -15,7 +15,7 @@ func (h ReforgeHandler) Applies(item *models.NetworthItem) bool {
 	return item.ExtraAttributes.Modifier != "" && item.SkyblockItem.Category != "ACCESSORY"
 }
 
-func (h ReforgeHandler) Calculate(item *models.NetworthItem, prices models.Prices) {
+func (h ReforgeHandler) Calculate(item *models.NetworthItem, prices map[string]float64) {
 	reforge := item.ExtraAttributes.Modifier
 	if len(constants.REFORGES[reforge]) == 0 {
 		return

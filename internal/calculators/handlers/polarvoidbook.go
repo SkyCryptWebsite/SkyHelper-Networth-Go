@@ -15,7 +15,7 @@ func (h PolarvoidBookHandler) Applies(item *models.NetworthItem) bool {
 	return item.ExtraAttributes.Polarvoid > 0
 }
 
-func (h PolarvoidBookHandler) Calculate(item *models.NetworthItem, prices models.Prices) {
+func (h PolarvoidBookHandler) Calculate(item *models.NetworthItem, prices map[string]float64) {
 	polarvoidBookCount := item.ExtraAttributes.Polarvoid
 	calculationData := models.CalculationData{
 		Id:    "POLARVOID_BOOK",

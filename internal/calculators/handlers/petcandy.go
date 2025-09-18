@@ -19,7 +19,7 @@ func (h PetCandyHandler) Applies(item *models.NetworthPet) bool {
 	return item.PetData.CandyUsed > 0 && !slices.Contains(constants.BLOCKED_CANDY_REDUCE_PETS, item.PetData.Type) && xpLessPetCandy < float64(item.Level.ExperienceToMax)
 }
 
-func (h PetCandyHandler) Calculate(item *models.NetworthPet, prices models.Prices) {
+func (h PetCandyHandler) Calculate(item *models.NetworthPet, prices map[string]float64) {
 	reduceValue := item.BasePrice * (1 - constants.APPLICATION_WORTH["petCandy"])
 	maxReduction := 2_500_000.0
 	if item.Level.Level == 100 {

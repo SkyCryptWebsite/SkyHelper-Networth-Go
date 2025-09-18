@@ -49,7 +49,7 @@ func (h MasterStarsHandler) Applies(item *models.NetworthItem) bool {
 	return item.SkyblockItem != nil && len(item.SkyblockItem.UpgradeCosts) > 0 && getUpgradeLevel(item) > 5
 }
 
-func (h MasterStarsHandler) Calculate(item *models.NetworthItem, prices models.Prices) {
+func (h MasterStarsHandler) Calculate(item *models.NetworthItem, prices map[string]float64) {
 	upgradeLevel := getUpgradeLevel(item) - 5
 	starsUsed := min(upgradeLevel, 5)
 

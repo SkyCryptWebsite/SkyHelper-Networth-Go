@@ -15,7 +15,7 @@ func (h DivanPowderCoatingHandler) Applies(item *models.NetworthItem) bool {
 	return item.ExtraAttributes.DivanPowderCoating > 0
 }
 
-func (h DivanPowderCoatingHandler) Calculate(item *models.NetworthItem, prices models.Prices) {
+func (h DivanPowderCoatingHandler) Calculate(item *models.NetworthItem, prices map[string]float64) {
 	calculationData := models.CalculationData{
 		Id:    "DIVAN_POWDER_COATING",
 		Type:  "DIVAN_POWDER_COATING",

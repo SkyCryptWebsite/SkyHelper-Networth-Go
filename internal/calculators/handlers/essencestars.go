@@ -98,7 +98,7 @@ func starCost(item *models.NetworthItem, upgrade models.UpgradeCost, star int) *
 	}
 }
 
-func (h EssenceStarsHandler) Calculate(item *models.NetworthItem, prices models.Prices) {
+func (h EssenceStarsHandler) Calculate(item *models.NetworthItem, prices map[string]float64) {
 	level := min(getUpgradeLevel(item), len(item.SkyblockItem.UpgradeCosts))
 	item.Price += getStarCosts(item, item.SkyblockItem.UpgradeCosts[:level], "")
 }

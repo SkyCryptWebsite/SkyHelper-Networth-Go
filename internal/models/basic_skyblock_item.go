@@ -10,7 +10,7 @@ type BasicNetworthItem struct {
 	ItemName     string       `json:"itemName"`
 	SkyblockItem *HypixelItem `json:"skyblockItem"`
 
-	Prices Prices `json:"prices"`
+	Prices map[string]float64 `json:"prices"`
 
 	NonCosmetic      bool              `json:"nonCosmetic"`
 	Calculation      []CalculationData `json:"calculation"`
@@ -19,7 +19,7 @@ type BasicNetworthItem struct {
 	SoulboundPortion float64           `json:"soulboundPortion"`
 }
 
-func NewBasicItemNetworthCalculator(item *BasicItem, prices Prices, itemProvider ItemProvider) *BasicNetworthItem {
+func NewBasicItemNetworthCalculator(item *BasicItem, prices map[string]float64, itemProvider ItemProvider) *BasicNetworthItem {
 	networthItem := &BasicNetworthItem{
 		ItemId:       item.Id,
 		Amount:       item.Amount,

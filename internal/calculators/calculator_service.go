@@ -21,11 +21,11 @@ func NewCalculatorService() *CalculatorService {
 	}
 }
 
-func (cs *CalculatorService) NewSkyBlockItemCalculator(item *skycrypttypes.Item, prices models.Prices, options models.NetworthOptions) *models.NetworthItem {
+func (cs *CalculatorService) NewSkyBlockItemCalculator(item *skycrypttypes.Item, prices map[string]float64, options models.NetworthOptions) *models.NetworthItem {
 	return models.NewSkyBlockItemCaclulator(item, prices, cs.itemProvider, options)
 }
 
-func (cs *CalculatorService) NewSkyBlockPetCalculator(pet *skycrypttypes.Pet, prices models.Prices, options models.NetworthOptions) *models.NetworthPet {
+func (cs *CalculatorService) NewSkyBlockPetCalculator(pet *skycrypttypes.Pet, prices map[string]float64, options models.NetworthOptions) *models.NetworthPet {
 	return models.NewSkyBlockPetCalculator(pet, prices, options)
 }
 
@@ -37,7 +37,7 @@ func (cs *CalculatorService) CalculatePet(pet *models.NetworthPet) {
 	pet.Calculate(cs.petHandlers)
 }
 
-func (cs *CalculatorService) NewBasicItemCalculator(item *models.BasicItem, prices models.Prices) *models.BasicNetworthItem {
+func (cs *CalculatorService) NewBasicItemCalculator(item *models.BasicItem, prices map[string]float64) *models.BasicNetworthItem {
 	return models.NewBasicItemNetworthCalculator(item, prices, cs.itemProvider)
 }
 
