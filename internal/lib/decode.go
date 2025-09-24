@@ -7,6 +7,7 @@ import (
 	"errors"
 	"sync"
 
+	skycrypttypes "github.com/DuckySoLucky/SkyCrypt-Types"
 	"github.com/SkyCryptWebsite/SkyHelper-Networth-Go/internal/models"
 	"github.com/Tnze/go-mc/nbt"
 )
@@ -18,6 +19,12 @@ var gzipReaderPool = sync.Pool{
 }
 
 func DecodeInventory(data string) (*models.DecodedInventory, error) {
+	if data == "" {
+		return &models.DecodedInventory{
+			Items: []skycrypttypes.Item{},
+		}, nil
+	}
+
 	decodedData, err := base64.StdEncoding.DecodeString(data)
 	if err != nil {
 		return nil, errors.New("failed to decode base64 data: " + err.Error())
