@@ -9,8 +9,11 @@ import (
 )
 
 func ParseItems(profileData *skycrypttypes.Member, museumData *skycrypttypes.Museum) (*models.ParsedItems, error) {
-	inventory := profileData.Inventory
 	sharedInventory := profileData.SharedInventory
+	inventory := profileData.Inventory
+	if inventory == nil {
+		inventory = &skycrypttypes.Inventory{}
+	}
 
 	itemsToDecode := map[string]string{
 		"armor":                   inventory.Armor.Data,
@@ -163,7 +166,7 @@ func postParseItems(profileData skycrypttypes.Member, items *models.ParsedItems)
 	var sackCounts map[string]int
 	if profileData.SackCounts != nil {
 		sackCounts = profileData.SackCounts
-	} else {
+	} else if profileData.Inventory != nil {
 		sackCounts = profileData.Inventory.Sacks
 	}
 	for item, amount := range sackCounts {
@@ -175,8 +178,11 @@ func postParseItems(profileData skycrypttypes.Member, items *models.ParsedItems)
 			Amount: amount,
 		})
 	}
-	for _, pet := range profileData.Pets.Pets {
-		items.Pets = append(items.Pets, &pet)
+
+	if profileData.Pets == nil {
+		for _, pet := range profileData.Pets.Pets {
+			items.Pets = append(items.Pets, &pet)
+		}
 	}
 	return nil
 }
