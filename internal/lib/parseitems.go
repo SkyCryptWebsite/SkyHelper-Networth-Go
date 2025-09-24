@@ -90,6 +90,14 @@ func ParseItems(profileData *skycrypttypes.Member, museumData *skycrypttypes.Mus
 	}
 
 	if museumData != nil {
+		if museumData.Items == nil {
+			museumData.Items = &map[string]skycrypttypes.MuseumItem{}
+		}
+
+		if museumData.Special == nil {
+			museumData.Special = &[]skycrypttypes.MuseumItem{}
+		}
+
 		for _, item := range *museumData.Items {
 			if item.Borrowing {
 				continue
