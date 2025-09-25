@@ -150,7 +150,7 @@ func (item *NetworthItem) getItemName() string {
 	name = REMOVE_PERCENTAGE_COLOR_CODES_REGEX.ReplaceAllString(name, "")
 
 	itemsWithRarites := []string{"Beastmaster Crest", "Griffin Upgrade Stone", "Wisp Upgrade Stone"}
-	if slices.Contains(itemsWithRarites, name) {
+	if slices.Contains(itemsWithRarites, name) && item.SkyblockItem != nil {
 		rarity := item.SkyblockItem.Rarity
 		if rarity == "" {
 			rarity = "common"
@@ -159,7 +159,7 @@ func (item *NetworthItem) getItemName() string {
 		return fmt.Sprintf("%s (%s)", name, titleCase(rarity))
 	}
 
-	if strings.HasSuffix(name, "Exp Boost") {
+	if strings.HasSuffix(name, "Exp Boost") && item.SkyblockItem != nil {
 		var itemId = "Unknown"
 		if item.SkyblockItem.SkyBlockID != "" {
 			parts := strings.Split(item.SkyblockItem.SkyBlockID, "_")

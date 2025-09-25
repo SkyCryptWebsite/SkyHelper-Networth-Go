@@ -17,7 +17,7 @@ func (h GemstonesHandler) IsCosmetic() bool {
 }
 
 func (h GemstonesHandler) Applies(item *models.NetworthItem) bool {
-	return len(item.ExtraAttributes.Gems) > 0 && len(item.SkyblockItem.GemstoneSlots) > 0
+	return item.SkyblockItem != nil && len(item.ExtraAttributes.Gems) > 0 && len(item.SkyblockItem.GemstoneSlots) > 0
 }
 
 func (h GemstonesHandler) Calculate(item *models.NetworthItem, prices map[string]float64) {

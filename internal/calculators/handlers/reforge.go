@@ -12,7 +12,7 @@ func (h ReforgeHandler) IsCosmetic() bool {
 }
 
 func (h ReforgeHandler) Applies(item *models.NetworthItem) bool {
-	return item.ExtraAttributes.Modifier != "" && item.SkyblockItem.Category != "ACCESSORY"
+	return item.ExtraAttributes.Modifier != "" && item.SkyblockItem != nil && item.SkyblockItem.Category != "ACCESSORY"
 }
 
 func (h ReforgeHandler) Calculate(item *models.NetworthItem, prices map[string]float64) {
