@@ -187,7 +187,7 @@ func postParseItems(profileData skycrypttypes.Member, items *models.ParsedItems)
 		})
 	}
 
-	if profileData.Pets == nil {
+	if profileData.Pets != nil {
 		for _, pet := range profileData.Pets.Pets {
 			items.Pets = append(items.Pets, &pet)
 		}
