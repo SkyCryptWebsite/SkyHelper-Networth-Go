@@ -8,7 +8,7 @@ import (
 
 	skycrypttypes "github.com/DuckySoLucky/SkyCrypt-Types"
 	networth "github.com/SkyCryptWebsite/SkyHelper-Networth-Go"
-	"github.com/SkyCryptWebsite/SkyHelper-Networth-Go/options"
+	"github.com/SkyCryptWebsite/SkyHelper-Networth-Go/internal/models"
 )
 
 func main() {
@@ -36,14 +36,41 @@ func main() {
 
 	userProfile := profile.Members["fb3d96498a5b4d5b91b763db14b195ad"]
 
-	profileNWCalc, err := networth.NewProfileNetworthCalculator(&userProfile, &museum, *profile.Banking.Balance)
+	/*profileNWCalc, err := networth.NewProfileNetworthCalculator(&userProfile, &museum, *profile.Banking.Balance)
 	if err != nil {
 		panic("Failed to create ProfileNetworthCalculator: " + err.Error())
+	}*/
+
+	//timeNow := time.Now()
+
+	type SpecifiedInventory map[string]skycrypttypes.EncodedItems
+	inputtedInventory := map[string]skycrypttypes.EncodedItems{
+		"inventory": userProfile.Inventory.Inventory,
+		"armor":     userProfile.Inventory.Armor,
+		"equipment": userProfile.Inventory.Equipment,
 	}
 
+	networth.GetPrices(true, 69420, 3) // Preload prices
+	networth.GetItems(true, 69420, 3)  // Preload items
+
 	timeNow := time.Now()
-	nw := profileNWCalc.GetNonCosmeticNetworth(options.NetworthOptions{IncludeItemData: false})
-	fmt.Printf("Time: %s\n", time.Since(timeNow))
+	nw, err := networth.CalculateFromSpecifiedInventories(inputtedInventory, models.NetworthOptions{
+		IncludeItemData: true,
+	})
+	fmt.Printf("Calculation took %s\n", time.Since(timeNow))
+
+	f, err := os.Create("networth.json")
+	if err != nil {
+		panic("Failed to create file: " + err.Error())
+	}
+	defer f.Close()
+	enc := json.NewEncoder(f)
+	enc.SetIndent("", "  ")
+	if err := enc.Encode(nw); err != nil {
+		panic("Failed to encode JSON: " + err.Error())
+	}
+
+	/*fmt.Printf("Time: %s\n", time.Since(timeNow))
 	fmt.Printf("Networth: %+v\n", nw.Types)
 
 	f, err := os.Create("networth.json")
@@ -58,29 +85,30 @@ func main() {
 	}
 
 	fmt.Printf("Networth: %+v\n", nw.Types["inventory"].Items)
+	*/
 
 	/*
-	prices, err := networth.GetPrices(true, 69420, 3)
+		prices, err := networth.GetPrices(true, 69420, 3)
 
-	count := 1
+		count := 1
 
-	calculatorService := networth.NewCalculatorService()
-	itemNWCalc := calculatorService.NewSkyBlockItemCalculator(
-		&skycrypttypes.Item{
-			Tag: &skycrypttypes.Tag{
-				ExtraAttributes: &skycrypttypes.ExtraAttributes{
-					Id: "HYPERION",
+		calculatorService := networth.NewCalculatorService()
+		itemNWCalc := calculatorService.NewSkyBlockItemCalculator(
+			&skycrypttypes.Item{
+				Tag: &skycrypttypes.Tag{
+					ExtraAttributes: &skycrypttypes.ExtraAttributes{
+						Id: "HYPERION",
+					},
 				},
+				Count: &count,
 			},
-			Count: &count,
-		},
-		*prices,
-		options.NetworthOptions{},
-	)
+			*prices,
+			options.NetworthOptions{},
+		)
 
-	calculatorService.CalculateItem(itemNWCalc)
+		calculatorService.CalculateItem(itemNWCalc)
 
-	fmt.Printf("\n\nPrice: %+v\n", itemNWCalc.Price)
+		fmt.Printf("\n\nPrice: %+v\n", itemNWCalc.Price)
 	*/
 
 }

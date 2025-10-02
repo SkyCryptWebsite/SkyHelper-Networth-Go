@@ -1,17 +1,24 @@
 package skyhelpernetworthgo
 
 import (
-	"encoding/json"
 	"fmt"
 	"sort"
 	"strings"
+	"sync"
 
 	skycrypttypes "github.com/DuckySoLucky/SkyCrypt-Types"
 	"github.com/SkyCryptWebsite/SkyHelper-Networth-Go/internal/calculators"
 	"github.com/SkyCryptWebsite/SkyHelper-Networth-Go/internal/lib"
 	"github.com/SkyCryptWebsite/SkyHelper-Networth-Go/internal/models"
 	options "github.com/SkyCryptWebsite/SkyHelper-Networth-Go/options"
+	"github.com/bytedance/sonic"
 )
+
+var json = sonic.Config{
+	UseNumber:  false,
+	UseInt64:   true,
+	CopyString: false, // Zero-copy strings (unsafe but faster)
+}.Froze()
 
 type ProfileNetworthCalculator struct {
 	ProfileData         *skycrypttypes.Member
@@ -99,13 +106,16 @@ func (p *ProfileNetworthCalculator) calculate(options models.NetworthOptions) *m
 
 	totalNetworth, totalUnsoulboundNetworth := 0.0, 0.0
 	output := make(map[string]*models.NetworthType, len(categories))
-	for categoryId, categoryInfo := range categories {
+
+	for categoryId := range categories {
 		output[categoryId] = &models.NetworthType{
 			Total:            0,
 			UnsoulboundTotal: 0,
-			Items:            []models.NetworthItemResult{},
+			Items:            make([]models.NetworthItemResult, 0, 64),
 		}
+	}
 
+	for categoryId, categoryInfo := range categories {
 		switch categoryInfo.Type {
 		case "decoded":
 			decodedItems := categoryInfo.Items.([]*skycrypttypes.Item)
@@ -203,7 +213,6 @@ func (p *ProfileNetworthCalculator) calculate(options models.NetworthOptions) *m
 			}
 
 		case "basic":
-			// Handle sacks and essence items
 			basicItems := categoryInfo.Items.([]*models.BasicItem)
 			for _, item := range basicItems {
 				if strings.HasPrefix(item.Id, "RUNE") && options.NonCosmetic {
@@ -351,6 +360,354 @@ func (p *ProfileNetworthCalculator) calculate(options models.NetworthOptions) *m
 	}
 }
 
+type SpecifiedInventory map[string]skycrypttypes.EncodedItems
+
+type decodedInventoryResult struct {
+	id    string
+	items []skycrypttypes.Item
+	err   error
+}
+
+type inventoryResult struct {
+	id   string
+	data *models.NetworthType
+	err  error
+}
+
+func CalculateFromSpecifiedInventories(inventories SpecifiedInventory, opts ...models.NetworthOptions) (*models.NetworthResult, error) {
+	var opt options.NetworthOptions
+	if len(opts) > 0 {
+		opt = options.NetworthOptions(opts[0])
+	}
+	options := opt.ToInternal()
+
+	prices, err := lib.GetPrices(true, 5*60, 3)
+	if err != nil {
+		return nil, fmt.Errorf("failed to fetch prices: %w", err)
+	}
+
+	if options.Prices != nil {
+		prices = options.Prices
+	}
+
+	_, err = lib.GetItems(true, 12*60*60, 3)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get Hypixel items: %w", err)
+	}
+
+	onlyNetworth := options.OnlyNetworth
+	keepInvalid := options.KeepInvalidItems
+	nonCosmetic := options.NonCosmetic
+	includeItemData := options.IncludeItemData
+
+	output := make(map[string]*models.NetworthType, len(inventories))
+
+	nonEmptyCount := 0
+	for _, inventoryData := range inventories {
+		if inventoryData.Data != "" {
+			nonEmptyCount++
+		}
+	}
+
+	if nonEmptyCount > 1 {
+		decodeResults := make(chan decodedInventoryResult, len(inventories))
+		var decodeWg sync.WaitGroup
+
+		for inventoryId, inventoryData := range inventories {
+			if inventoryData.Data == "" {
+				continue
+			}
+
+			decodeWg.Add(1)
+			go func(id string, data string) {
+				defer decodeWg.Done()
+
+				decodedData, err := lib.DecodeInventory(data)
+				if err != nil {
+					decodeResults <- decodedInventoryResult{
+						id:  id,
+						err: fmt.Errorf("failed to decode inventory %s: %w", id, err),
+					}
+					return
+				}
+
+				decodeResults <- decodedInventoryResult{
+					id:    id,
+					items: decodedData.Items,
+					err:   nil,
+				}
+			}(inventoryId, inventoryData.Data)
+		}
+
+		go func() {
+			decodeWg.Wait()
+			close(decodeResults)
+		}()
+
+		processResults := make(chan inventoryResult, len(inventories))
+		var processWg sync.WaitGroup
+
+		for decodeResult := range decodeResults {
+			if decodeResult.err != nil {
+				return nil, decodeResult.err
+			}
+
+			processWg.Add(1)
+			go func(id string, items []skycrypttypes.Item) {
+				defer processWg.Done()
+
+				networthType := processDecodedInventory(items, prices, options, onlyNetworth, keepInvalid, nonCosmetic, includeItemData)
+				processResults <- inventoryResult{
+					id:   id,
+					data: networthType,
+					err:  nil,
+				}
+			}(decodeResult.id, decodeResult.items)
+		}
+
+		go func() {
+			processWg.Wait()
+			close(processResults)
+		}()
+
+		for result := range processResults {
+			if result.err != nil {
+				return nil, result.err
+			}
+			output[result.id] = result.data
+		}
+	} else {
+		for inventoryId, inventoryData := range inventories {
+			if inventoryData.Data == "" {
+				continue
+			}
+
+			networthType, err := processInventory(inventoryId, inventoryData, prices, options, onlyNetworth, keepInvalid, nonCosmetic, includeItemData)
+			if err != nil {
+				return nil, err
+			}
+			output[inventoryId] = networthType
+		}
+	}
+
+	return &models.NetworthResult{
+		Types: output,
+	}, nil
+}
+
+func processInventory(
+	inventoryId string,
+	inventoryData skycrypttypes.EncodedItems,
+	prices map[string]float64,
+	options models.NetworthOptions,
+	onlyNetworth, keepInvalid, nonCosmetic, includeItemData bool,
+) (*models.NetworthType, error) {
+	decodedData, err := lib.DecodeInventory(inventoryData.Data)
+	if err != nil {
+		return nil, fmt.Errorf("failed to decode inventory %s: %w", inventoryId, err)
+	}
+
+	decodedItems := decodedData.Items
+	itemCount := len(decodedItems)
+
+	var itemResults []models.NetworthItemResult
+	if !onlyNetworth {
+		itemResults = make([]models.NetworthItemResult, 0, itemCount)
+	}
+
+	networthType := &models.NetworthType{
+		Items: itemResults,
+	}
+
+	calculatorService := calculators.NewCalculatorService()
+
+	for i := 0; i < itemCount; i++ {
+		item := &decodedItems[i]
+
+		tag := item.Tag
+		if tag == nil || tag.ExtraAttributes == nil {
+			if keepInvalid && !onlyNetworth {
+				networthType.Items = append(networthType.Items, models.NetworthItemResult{})
+			}
+			continue
+		}
+
+		extraAttrs := tag.ExtraAttributes
+
+		petInfo := extraAttrs.PetInfo
+		if petInfo != "" {
+			var petData skycrypttypes.Pet
+			if err := json.Unmarshal([]byte(petInfo), &petData); err != nil {
+				if keepInvalid && !onlyNetworth {
+					networthType.Items = append(networthType.Items, models.NetworthItemResult{})
+				}
+				continue
+			}
+
+			petCalculator := calculatorService.NewSkyBlockPetCalculator(&petData, prices, options)
+			calculatorService.CalculatePet(petCalculator)
+
+			price := petCalculator.Price + petCalculator.BasePrice
+			if price == 0 {
+				if keepInvalid && !onlyNetworth {
+					networthType.Items = append(networthType.Items, models.NetworthItemResult{})
+				}
+				continue
+			}
+
+			if onlyNetworth {
+				continue
+			}
+
+			result := models.NetworthItemResult{
+				Price: price,
+			}
+			if includeItemData {
+				result.ItemData = &petData
+			}
+			networthType.Items = append(networthType.Items, result)
+		} else {
+			itemCalculator := calculatorService.NewSkyBlockItemCalculator(item, prices, options)
+
+			if nonCosmetic && itemCalculator.IsCosmetic() {
+				continue
+			}
+
+			calculatorService.CalculateItem(itemCalculator)
+
+			price := itemCalculator.GetPrice()
+			if price == 0 {
+				if keepInvalid && !onlyNetworth {
+					networthType.Items = append(networthType.Items, models.NetworthItemResult{})
+				}
+				continue
+			}
+
+			if onlyNetworth {
+				continue
+			}
+
+			result := models.NetworthItemResult{
+				Price: price,
+			}
+			if includeItemData {
+				result.ItemData = item
+			}
+			networthType.Items = append(networthType.Items, result)
+		}
+	}
+
+	return networthType, nil
+}
+
+func processDecodedInventory(
+	decodedItems []skycrypttypes.Item,
+	prices map[string]float64,
+	options models.NetworthOptions,
+	onlyNetworth, keepInvalid, nonCosmetic, includeItemData bool,
+) *models.NetworthType {
+	itemCount := len(decodedItems)
+
+	var itemResults []models.NetworthItemResult
+	if !onlyNetworth {
+		itemResults = make([]models.NetworthItemResult, 0, (itemCount*8)/10)
+	}
+
+	networthType := &models.NetworthType{
+		Items: itemResults,
+	}
+
+	calculatorService := calculators.NewCalculatorService()
+
+	for i := 0; i < itemCount; i++ {
+		item := &decodedItems[i]
+
+		tag := item.Tag
+		if tag == nil {
+			if keepInvalid && !onlyNetworth {
+				networthType.Items = append(networthType.Items, models.NetworthItemResult{})
+			}
+			continue
+		}
+
+		extraAttrs := tag.ExtraAttributes
+		if extraAttrs == nil {
+			if keepInvalid && !onlyNetworth {
+				networthType.Items = append(networthType.Items, models.NetworthItemResult{})
+			}
+			continue
+		}
+
+		petInfo := extraAttrs.PetInfo
+		if len(petInfo) > 0 {
+			var petData skycrypttypes.Pet
+			if err := json.Unmarshal([]byte(petInfo), &petData); err != nil {
+				if keepInvalid && !onlyNetworth {
+					networthType.Items = append(networthType.Items, models.NetworthItemResult{})
+				}
+				continue
+			}
+
+			petCalculator := calculatorService.NewSkyBlockPetCalculator(&petData, prices, options)
+			calculatorService.CalculatePet(petCalculator)
+
+			price := petCalculator.Price + petCalculator.BasePrice
+			if price == 0 {
+				if keepInvalid && !onlyNetworth {
+					networthType.Items = append(networthType.Items, models.NetworthItemResult{})
+				}
+				continue
+			}
+
+			if onlyNetworth {
+				continue
+			}
+
+			networthType.Items = append(networthType.Items, models.NetworthItemResult{
+				Price: price,
+				ItemData: func() any {
+					if includeItemData {
+						return &petData
+					}
+					return nil
+				}(),
+			})
+		} else {
+			itemCalculator := calculatorService.NewSkyBlockItemCalculator(item, prices, options)
+
+			if nonCosmetic && itemCalculator.IsCosmetic() {
+				continue
+			}
+
+			calculatorService.CalculateItem(itemCalculator)
+
+			price := itemCalculator.GetPrice()
+			if price == 0 {
+				if keepInvalid && !onlyNetworth {
+					networthType.Items = append(networthType.Items, models.NetworthItemResult{})
+				}
+				continue
+			}
+
+			if onlyNetworth {
+				continue
+			}
+
+			networthType.Items = append(networthType.Items, models.NetworthItemResult{
+				Price: price,
+				ItemData: func() any {
+					if includeItemData {
+						return item
+					}
+					return nil
+				}(),
+			})
+		}
+	}
+
+	return networthType
+}
+
 type CalculatorService struct {
 	service *calculators.CalculatorService
 }
@@ -384,4 +741,13 @@ func GetPrices(cache bool, cacheTimeSeconds int64, retries int) (map[string]floa
 	}
 
 	return prices, nil
+}
+
+func GetItems(cache bool, cacheTimeSeconds int64, retries int) (map[string]models.HypixelItem, error) {
+	items, err := lib.GetItems(cache, cacheTimeSeconds, retries)
+	if err != nil {
+		return nil, fmt.Errorf("failed to fetch items: %w", err)
+	}
+
+	return items, nil
 }
