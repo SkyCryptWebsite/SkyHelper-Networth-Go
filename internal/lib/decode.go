@@ -52,9 +52,9 @@ func stringToBytes(s string) []byte {
 
 func DecodeInventory(data string) (*models.DecodedInventory, error) {
 	if data == "" {
-		return &models.DecodedInventory{
-			Items: []skycrypttypes.Item{},
-		}, nil
+		inv := decodedInventoryPool.Get().(*models.DecodedInventory)
+		inv.Items = inv.Items[:0]
+		return inv, nil
 	}
 
 	// Pre-calculate decoded length
@@ -69,7 +69,7 @@ func DecodeInventory(data string) (*models.DecodedInventory, error) {
 		buf = make([]byte, decodedLen)
 		*bufPtr = buf
 	} else {
-		buf = buf[:decodedLen]
+		buf = buf[:decodedLen:decodedLen]
 	}
 
 	// Decode base64 using unsafe string-to-bytes (zero-copy)
@@ -112,6 +112,8 @@ func DecodeFromBytes(data []byte) (*models.DecodedInventory, error) {
 		decodedInventoryPool.Put(nbtData)
 		return nil, err
 	}
+
+	reader.Close()
 
 	return nbtData, nil
 }
