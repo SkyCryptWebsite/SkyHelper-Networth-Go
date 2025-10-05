@@ -1,4 +1,4 @@
-package options
+package skyhelpernetworthgo
 
 import "github.com/SkyCryptWebsite/SkyHelper-Networth-Go/internal/models"
 
@@ -10,7 +10,7 @@ type NetworthOptions struct {
 	IncludeItemData  bool               `json:"includeItemData"`
 	SortItems        bool               `json:"sortItems"`
 	StackItems       bool               `json:"stackItems"`
-	KeepInvalidItems bool               `json:"KeepInvalidItems"`
+	KeepInvalidItems bool               `json:"keepInvalidItems"`
 }
 
 func (opts NetworthOptions) ToInternal() models.NetworthOptions {

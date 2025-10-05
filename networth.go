@@ -10,7 +10,6 @@ import (
 	"github.com/SkyCryptWebsite/SkyHelper-Networth-Go/internal/calculators"
 	"github.com/SkyCryptWebsite/SkyHelper-Networth-Go/internal/lib"
 	"github.com/SkyCryptWebsite/SkyHelper-Networth-Go/internal/models"
-	options "github.com/SkyCryptWebsite/SkyHelper-Networth-Go/options"
 	"github.com/bytedance/sonic"
 )
 
@@ -57,8 +56,8 @@ func NewProfileNetworthCalculator(userProfile *skycrypttypes.Member, museumData 
 	}, nil
 }
 
-func (p *ProfileNetworthCalculator) GetNetworth(opts ...options.NetworthOptions) *models.NetworthResult {
-	var opt options.NetworthOptions
+func (p *ProfileNetworthCalculator) GetNetworth(opts ...NetworthOptions) *models.NetworthResult {
+	var opt NetworthOptions
 	if len(opts) > 0 {
 		opt = opts[0]
 	}
@@ -66,8 +65,8 @@ func (p *ProfileNetworthCalculator) GetNetworth(opts ...options.NetworthOptions)
 	return p.calculate(opt.ToInternal())
 }
 
-func (p *ProfileNetworthCalculator) GetNonCosmeticNetworth(opts ...options.NetworthOptions) *models.NetworthResult {
-	var opt options.NetworthOptions
+func (p *ProfileNetworthCalculator) GetNonCosmeticNetworth(opts ...NetworthOptions) *models.NetworthResult {
+	var opt NetworthOptions
 	if len(opts) > 0 {
 		opt = opts[0]
 	}
@@ -159,7 +158,7 @@ func (p *ProfileNetworthCalculator) calculate(options models.NetworthOptions) *m
 					}
 
 					if options.IncludeItemData {
-						result.ItemData = petData
+						result.PetData = petData
 					}
 				} else {
 					itemCalculator := calculatorService.NewSkyBlockItemCalculator(item, p.Prices, options)
@@ -236,10 +235,6 @@ func (p *ProfileNetworthCalculator) calculate(options models.NetworthOptions) *m
 					Cosmetic:         false, // Basic items are not cosmetic
 				}
 
-				if options.IncludeItemData {
-					result.ItemData = item
-				}
-
 				if result.Price == 0 {
 					continue
 				}
@@ -281,7 +276,7 @@ func (p *ProfileNetworthCalculator) calculate(options models.NetworthOptions) *m
 				}
 
 				if options.IncludeItemData {
-					result.ItemData = pet
+					result.PetData = pet
 				}
 
 				if result.Price == 0 {
@@ -375,9 +370,9 @@ type inventoryResult struct {
 }
 
 func CalculateFromSpecifiedInventories(inventories SpecifiedInventory, opts ...models.NetworthOptions) (*models.NetworthResult, error) {
-	var opt options.NetworthOptions
+	var opt NetworthOptions
 	if len(opts) > 0 {
-		opt = options.NetworthOptions(opts[0])
+		opt = NetworthOptions(opts[0])
 	}
 	options := opt.ToInternal()
 
@@ -563,7 +558,7 @@ func processInventory(
 				Price: price,
 			}
 			if includeItemData {
-				result.ItemData = &petData
+				result.PetData = &petData
 			}
 			networthType.Items = append(networthType.Items, result)
 		} else {
@@ -665,7 +660,7 @@ func processDecodedInventory(
 
 			networthType.Items = append(networthType.Items, models.NetworthItemResult{
 				Price: price,
-				ItemData: func() any {
+				PetData: func() *skycrypttypes.Pet {
 					if includeItemData {
 						return &petData
 					}
@@ -695,7 +690,7 @@ func processDecodedInventory(
 
 			networthType.Items = append(networthType.Items, models.NetworthItemResult{
 				Price: price,
-				ItemData: func() any {
+				ItemData: func() *skycrypttypes.Item {
 					if includeItemData {
 						return item
 					}
@@ -718,11 +713,11 @@ func NewCalculatorService() *CalculatorService {
 	}
 }
 
-func (cs *CalculatorService) NewSkyBlockItemCalculator(item *skycrypttypes.Item, prices map[string]float64, options options.NetworthOptions) *models.NetworthItem {
+func (cs *CalculatorService) NewSkyBlockItemCalculator(item *skycrypttypes.Item, prices map[string]float64, options NetworthOptions) *models.NetworthItem {
 	return cs.service.NewSkyBlockItemCalculator(item, prices, options.ToInternal())
 }
 
-func (cs *CalculatorService) NewSkyBlockPetCalculator(pet *skycrypttypes.Pet, prices map[string]float64, options options.NetworthOptions) *models.NetworthPet {
+func (cs *CalculatorService) NewSkyBlockPetCalculator(pet *skycrypttypes.Pet, prices map[string]float64, options NetworthOptions) *models.NetworthPet {
 	return cs.service.NewSkyBlockPetCalculator(pet, prices, options.ToInternal())
 }
 

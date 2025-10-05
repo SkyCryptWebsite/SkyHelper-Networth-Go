@@ -9,7 +9,7 @@ import (
 
 	skycrypttypes "github.com/DuckySoLucky/SkyCrypt-Types"
 	networth "github.com/SkyCryptWebsite/SkyHelper-Networth-Go"
-	"github.com/SkyCryptWebsite/SkyHelper-Networth-Go/options"
+	skyhelpernetworthgo "github.com/SkyCryptWebsite/SkyHelper-Networth-Go"
 )
 
 func main() {
@@ -45,7 +45,7 @@ func main() {
 		if err != nil {
 			panic("Failed to create ProfileNetworthCalculator: " + err.Error())
 		}
-		_ = profileNWCalc.GetNetworth(options.NetworthOptions{})
+		_ = profileNWCalc.GetNetworth(skyhelpernetworthgo.NetworthOptions{})
 	}
 
 	fmt.Println("Starting 100 benchmark runs...")
@@ -64,7 +64,7 @@ func main() {
 			panic("Failed to create ProfileNetworthCalculator: " + err.Error())
 		}
 
-		nw := profileNWCalc.GetNetworth(options.NetworthOptions{})
+		nw := profileNWCalc.GetNetworth(skyhelpernetworthgo.NetworthOptions{})
 		duration := time.Since(start)
 
 		if i == 0 {

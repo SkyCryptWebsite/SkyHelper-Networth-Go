@@ -66,18 +66,19 @@ type NetworthType struct {
 }
 
 type NetworthItemResult struct {
-	Name             string            `json:"name"`
-	LoreName         string            `json:"loreName"`
-	Id               string            `json:"id"`
-	CustomId         string            `json:"customId"`
-	Price            float64           `json:"price"`
-	SoulboundPortion float64           `json:"soulboundPortion"`
-	BasePrice        float64           `json:"basePrice"`
-	Calculation      []CalculationData `json:"calculation"`
-	Count            int               `json:"count"`
-	Soulbound        bool              `json:"soulbound"`
-	Cosmetic         bool              `json:"cosmetic"`
-	ItemData         interface{}       `json:"itemData,omitempty"`
+	Name             string              `json:"name"`
+	LoreName         string              `json:"loreName"`
+	Id               string              `json:"id"`
+	CustomId         string              `json:"customId"`
+	Price            float64             `json:"price"`
+	SoulboundPortion float64             `json:"soulboundPortion"`
+	BasePrice        float64             `json:"basePrice"`
+	Calculation      []CalculationData   `json:"calculation"`
+	Count            int                 `json:"count"`
+	Soulbound        bool                `json:"soulbound"`
+	Cosmetic         bool                `json:"cosmetic"`
+	ItemData         *skycrypttypes.Item `json:"itemData,omitempty"`
+	PetData          *skycrypttypes.Pet  `json:"petData,omitempty"`
 }
 
 type CategoryInfo struct {
