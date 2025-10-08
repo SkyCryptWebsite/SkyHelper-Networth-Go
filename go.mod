@@ -5,7 +5,7 @@ go 1.25.1
 require github.com/Tnze/go-mc v1.20.2
 
 require (
-	github.com/DuckySoLucky/SkyCrypt-Types v0.1.6
+	github.com/DuckySoLucky/SkyCrypt-Types v0.1.9
 	github.com/bytedance/sonic v1.14.1
 	github.com/klauspost/compress v1.18.0
 )

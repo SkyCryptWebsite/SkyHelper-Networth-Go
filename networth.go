@@ -679,7 +679,15 @@ func processDecodedInventory(
 			price := itemCalculator.GetPrice()
 			if price == 0 {
 				if keepInvalid && !onlyNetworth {
-					networthType.Items = append(networthType.Items, models.NetworthItemResult{})
+					networthType.Items = append(networthType.Items, models.NetworthItemResult{
+						ItemData: func() *skycrypttypes.Item {
+							if includeItemData {
+								return item
+							}
+							return nil
+						}(),
+						Price: price,
+					})
 				}
 				continue
 			}
