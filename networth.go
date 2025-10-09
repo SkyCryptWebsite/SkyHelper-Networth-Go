@@ -121,7 +121,14 @@ func (p *ProfileNetworthCalculator) calculate(options models.NetworthOptions) *m
 			for _, item := range decodedItems {
 				if item.Tag == nil || item.Tag.ExtraAttributes == nil {
 					if options.KeepInvalidItems {
-						output[categoryId].Items = append(output[categoryId].Items, models.NetworthItemResult{})
+						output[categoryId].Items = append(output[categoryId].Items, models.NetworthItemResult{
+							ItemData: func() *skycrypttypes.Item {
+								if options.IncludeItemData {
+									return item
+								}
+								return nil
+							}(),
+						})
 					}
 
 					continue
@@ -134,7 +141,14 @@ func (p *ProfileNetworthCalculator) calculate(options models.NetworthOptions) *m
 					err := json.Unmarshal([]byte(item.Tag.ExtraAttributes.PetInfo), &petData)
 					if err != nil {
 						if options.KeepInvalidItems {
-							output[categoryId].Items = append(output[categoryId].Items, models.NetworthItemResult{})
+							output[categoryId].Items = append(output[categoryId].Items, models.NetworthItemResult{
+								PetData: func() *skycrypttypes.Pet {
+									if options.IncludeItemData {
+										return petData
+									}
+									return nil
+								}(),
+							})
 						}
 
 						continue
@@ -189,7 +203,14 @@ func (p *ProfileNetworthCalculator) calculate(options models.NetworthOptions) *m
 
 				if result.Price == 0 {
 					if options.KeepInvalidItems {
-						output[categoryId].Items = append(output[categoryId].Items, models.NetworthItemResult{})
+						output[categoryId].Items = append(output[categoryId].Items, models.NetworthItemResult{
+							ItemData: func() *skycrypttypes.Item {
+								if options.IncludeItemData {
+									return item
+								}
+								return nil
+							}(),
+						})
 					}
 
 					continue
@@ -522,7 +543,14 @@ func processInventory(
 		tag := item.Tag
 		if tag == nil || tag.ExtraAttributes == nil {
 			if keepInvalid && !onlyNetworth {
-				networthType.Items = append(networthType.Items, models.NetworthItemResult{})
+				networthType.Items = append(networthType.Items, models.NetworthItemResult{
+					ItemData: func() *skycrypttypes.Item {
+						if includeItemData {
+							return item
+						}
+						return nil
+					}(),
+				})
 			}
 			continue
 		}
@@ -534,7 +562,14 @@ func processInventory(
 			var petData skycrypttypes.Pet
 			if err := json.Unmarshal([]byte(petInfo), &petData); err != nil {
 				if keepInvalid && !onlyNetworth {
-					networthType.Items = append(networthType.Items, models.NetworthItemResult{})
+					networthType.Items = append(networthType.Items, models.NetworthItemResult{
+						PetData: func() *skycrypttypes.Pet {
+							if includeItemData {
+								return &petData
+							}
+							return nil
+						}(),
+					})
 				}
 				continue
 			}
@@ -545,7 +580,9 @@ func processInventory(
 			price := petCalculator.Price + petCalculator.BasePrice
 			if price == 0 {
 				if keepInvalid && !onlyNetworth {
-					networthType.Items = append(networthType.Items, models.NetworthItemResult{})
+					networthType.Items = append(networthType.Items, models.NetworthItemResult{
+						PetData: &petData,
+					})
 				}
 				continue
 			}
@@ -573,7 +610,14 @@ func processInventory(
 			price := itemCalculator.GetPrice()
 			if price == 0 {
 				if keepInvalid && !onlyNetworth {
-					networthType.Items = append(networthType.Items, models.NetworthItemResult{})
+					networthType.Items = append(networthType.Items, models.NetworthItemResult{
+						ItemData: func() *skycrypttypes.Item {
+							if includeItemData {
+								return item
+							}
+							return nil
+						}(),
+					})
 				}
 				continue
 			}
@@ -620,7 +664,14 @@ func processDecodedInventory(
 		tag := item.Tag
 		if tag == nil {
 			if keepInvalid && !onlyNetworth {
-				networthType.Items = append(networthType.Items, models.NetworthItemResult{})
+				networthType.Items = append(networthType.Items, models.NetworthItemResult{
+					ItemData: func() *skycrypttypes.Item {
+						if includeItemData {
+							return item
+						}
+						return nil
+					}(),
+				})
 			}
 			continue
 		}
@@ -628,7 +679,14 @@ func processDecodedInventory(
 		extraAttrs := tag.ExtraAttributes
 		if extraAttrs == nil {
 			if keepInvalid && !onlyNetworth {
-				networthType.Items = append(networthType.Items, models.NetworthItemResult{})
+				networthType.Items = append(networthType.Items, models.NetworthItemResult{
+					ItemData: func() *skycrypttypes.Item {
+						if includeItemData {
+							return item
+						}
+						return nil
+					}(),
+				})
 			}
 			continue
 		}
@@ -638,7 +696,14 @@ func processDecodedInventory(
 			var petData skycrypttypes.Pet
 			if err := json.Unmarshal([]byte(petInfo), &petData); err != nil {
 				if keepInvalid && !onlyNetworth {
-					networthType.Items = append(networthType.Items, models.NetworthItemResult{})
+					networthType.Items = append(networthType.Items, models.NetworthItemResult{
+						PetData: func() *skycrypttypes.Pet {
+							if includeItemData {
+								return &petData
+							}
+							return nil
+						}(),
+					})
 				}
 				continue
 			}
@@ -649,7 +714,14 @@ func processDecodedInventory(
 			price := petCalculator.Price + petCalculator.BasePrice
 			if price == 0 {
 				if keepInvalid && !onlyNetworth {
-					networthType.Items = append(networthType.Items, models.NetworthItemResult{})
+					networthType.Items = append(networthType.Items, models.NetworthItemResult{
+						PetData: func() *skycrypttypes.Pet {
+							if includeItemData {
+								return &petData
+							}
+							return nil
+						}(),
+					})
 				}
 				continue
 			}
