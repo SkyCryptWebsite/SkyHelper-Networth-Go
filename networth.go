@@ -148,6 +148,12 @@ func (p *ProfileNetworthCalculator) calculate(options models.NetworthOptions) *m
 									}
 									return nil
 								}(),
+								ItemData: func() *skycrypttypes.Item {
+									if options.IncludeItemData {
+										return item
+									}
+									return nil
+								}(),
 							})
 						}
 
@@ -173,6 +179,7 @@ func (p *ProfileNetworthCalculator) calculate(options models.NetworthOptions) *m
 
 					if options.IncludeItemData {
 						result.PetData = petData
+						result.ItemData = item
 					}
 				} else {
 					itemCalculator := calculatorService.NewSkyBlockItemCalculator(item, p.Prices, options)
@@ -569,6 +576,12 @@ func processInventory(
 							}
 							return nil
 						}(),
+						ItemData: func() *skycrypttypes.Item {
+							if includeItemData {
+								return item
+							}
+							return nil
+						}(),
 					})
 				}
 				continue
@@ -581,7 +594,8 @@ func processInventory(
 			if price == 0 {
 				if keepInvalid && !onlyNetworth {
 					networthType.Items = append(networthType.Items, models.NetworthItemResult{
-						PetData: &petData,
+						PetData:  &petData,
+						ItemData: item,
 					})
 				}
 				continue
@@ -596,6 +610,7 @@ func processInventory(
 			}
 			if includeItemData {
 				result.PetData = &petData
+				result.ItemData = item
 			}
 			networthType.Items = append(networthType.Items, result)
 		} else {
@@ -703,6 +718,12 @@ func processDecodedInventory(
 							}
 							return nil
 						}(),
+						ItemData: func() *skycrypttypes.Item {
+							if includeItemData {
+								return item
+							}
+							return nil
+						}(),
 					})
 				}
 				continue
@@ -721,6 +742,12 @@ func processDecodedInventory(
 							}
 							return nil
 						}(),
+						ItemData: func() *skycrypttypes.Item {
+							if includeItemData {
+								return item
+							}
+							return nil
+						}(),
 					})
 				}
 				continue
@@ -735,6 +762,12 @@ func processDecodedInventory(
 				PetData: func() *skycrypttypes.Pet {
 					if includeItemData {
 						return &petData
+					}
+					return nil
+				}(),
+				ItemData: func() *skycrypttypes.Item {
+					if includeItemData {
+						return item
 					}
 					return nil
 				}(),
