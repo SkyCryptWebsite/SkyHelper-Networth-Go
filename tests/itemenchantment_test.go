@@ -531,6 +531,47 @@ func TestItemEnchantmentHandler(t *testing.T) {
 			},
 		},
 		{
+			description: "Applies correctly without fateful stinger",
+			item: &models.NetworthItem{
+				ItemId: "HYPERION",
+				ExtraAttributes: &skycrypttypes.ExtraAttributes{
+					Enchantments: map[string]int{
+						"venomous": 6,
+					},
+				},
+				Price:       100,
+				Calculation: []models.CalculationData{},
+			},
+			prices:              map[string]float64{"FATEFUL_STINGER": 1000000},
+			shouldApply:         true,
+			expectedPriceChange: 0,
+			expectedCalculation: []models.CalculationData{},
+		},
+		{
+			description: "Applies correctly with fateful stinger",
+			item: &models.NetworthItem{
+				ItemId: "HYPERION",
+				ExtraAttributes: &skycrypttypes.ExtraAttributes{
+					Enchantments: map[string]int{
+						"venomous": 7,
+					},
+				},
+				Price:       100,
+				Calculation: []models.CalculationData{},
+			},
+			prices:              map[string]float64{"FATEFUL_STINGER": 1000000},
+			shouldApply:         true,
+			expectedPriceChange: 1000000 * constants.APPLICATION_WORTH["enchantmentUpgrades"],
+			expectedCalculation: []models.CalculationData{
+				{
+					Id:    "FATEFUL_STINGER",
+					Type:  "ENCHANTMENT_UPGRADE",
+					Price: 1000000 * constants.APPLICATION_WORTH["enchantmentUpgrades"],
+					Count: 1,
+				},
+			},
+		},
+		{
 			description: "Does not apply",
 			item: &models.NetworthItem{
 				ItemId:          "IRON_SWORD",

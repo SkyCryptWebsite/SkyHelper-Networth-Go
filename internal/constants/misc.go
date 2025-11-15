@@ -67,6 +67,8 @@ var SPECIAL_ENCHANTMENT_NAMES = map[string]string{
 	"turbo_wheat":          "Turbo-Wheat",
 	"ultimate_reiterate":   "Ultimate Duplex",
 	"ultimate_bobbin_time": "Ultimate Bobbin' Time",
+	"arcane":               "Woodsplitter",
+	"dragon_hunter":        "Gravity",
 }
 
 // GemstoneSlots lists the types of available gemstone slots.
@@ -103,6 +105,7 @@ var ENCHANTMENT_UPGRADES = map[string]struct {
 	"FRAIL":           {"SEVERED_PINCER", 7},
 	"SPIKED_HOOK":     {"OCTOPUS_TENDRIL", 7},
 	"CHARM":           {"CHAIN_END_TIMES", 6},
+	"VENOMOUS":        {"FATEFUL_STINGER", 7},
 }
 
 type MidasWeapon struct {
