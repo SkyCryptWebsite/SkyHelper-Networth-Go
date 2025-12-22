@@ -40,6 +40,7 @@ var APPLICATION_WORTH = map[string]float64{
 	"soulboundPetSkins":   0.8,
 	"soulboundSkins":      0.8,
 	"petItem":             1,
+	"overclocker3000":     0.9,
 }
 
 var ENCHANTMENTS_WORTH = map[string]float64{
