@@ -25,7 +25,6 @@ var APPLICATION_WORTH = map[string]float64{
 	"booster":             0.8,
 	"dye":                 0.9,
 	"gemstoneChambers":    0.9,
-	"attributes":          1,
 	"rodPart":             1,
 	"drillPart":           1,
 	"etherwarp":           1,

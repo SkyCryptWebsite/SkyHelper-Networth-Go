@@ -112,12 +112,6 @@ func (item *NetworthItem) getItemId() string {
 		return fmt.Sprintf("%s_%s", item.ItemId, strings.ToUpper(item.ExtraAttributes.PartyHatColor))
 	}
 
-	if item.ItemId == "ATTRIBUTE_SHARD" && item.ExtraAttributes.Attributes != nil {
-		for attributeId := range item.ExtraAttributes.Attributes {
-			return fmt.Sprintf("ATTRIBUTE_SHARD_%s", strings.ToUpper(attributeId))
-		}
-	}
-
 	if item.ItemId == "DCTR_SPACE_HELM" && item.ExtraAttributes.Edition != 0 {
 		return "DCTR_SPACE_HELM_EDITIONED"
 	}
