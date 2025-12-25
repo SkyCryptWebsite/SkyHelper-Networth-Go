@@ -5,6 +5,7 @@ import "github.com/SkyCryptWebsite/SkyHelper-Networth-Go/internal/models"
 var ItemHandlers []models.Handler = []models.Handler{
 	ArtOfPeaceHandler{},
 	ArtOfWarHandler{},
+	AvariceCoinsCollectedHandler{},
 	BoosterHandler{},
 	DivanPowderCoatingHandler{},
 	DrillPartsHandler{},
@@ -23,7 +24,7 @@ var ItemHandlers []models.Handler = []models.Handler{
 	MidasWeaponHandler{},
 	NecronBladeScrollHandler{},
 	NewYearCakeBagHandler{},
-
+	Overclocker3000Handler{},
 	PickonimbusHandler{},
 	PocketSackInASackHandler{},
 	PolarvoidBookHandler{},
@@ -35,7 +36,6 @@ var ItemHandlers []models.Handler = []models.Handler{
 	RodPartsHandler{},
 	RuneHandler{},
 	ShensAuctionHandler{},
-
 	SoulboundSkinHandler{},
 	TransmissionTunerHandler{},
 	WoodSingularityHandler{},
