@@ -45,6 +45,10 @@ func NewProfileNetworthCalculator(userProfile *skycrypttypes.Member, museumData 
 		return nil, fmt.Errorf("failed to get Hypixel items: %w", err)
 	}
 
+	if userProfile.Profile == nil {
+		userProfile.Profile = &skycrypttypes.ProfileData{}
+	}
+
 	return &ProfileNetworthCalculator{
 		ProfileData:         userProfile,
 		MuseumData:          museumData,
