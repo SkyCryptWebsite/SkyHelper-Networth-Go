@@ -3,6 +3,7 @@ package constants
 var PETS_SPECIAL_LEVELS = map[string]int{
 	"GOLDEN_DRAGON": 200,
 	"JADE_DRAGON":   200,
+	"ROSE_DRAGON":   200,
 }
 
 var SOULBOUND_PETS = []string{
