@@ -123,6 +123,10 @@ func (p *ProfileNetworthCalculator) calculate(options models.NetworthOptions) *m
 		case "decoded":
 			decodedItems := categoryInfo.Items.([]*skycrypttypes.Item)
 			for _, item := range decodedItems {
+				if item == nil {
+					continue
+				}
+
 				if item.Tag == nil || item.Tag.ExtraAttributes == nil {
 					if options.KeepInvalidItems {
 						output[categoryId].Items = append(output[categoryId].Items, models.NetworthItemResult{
