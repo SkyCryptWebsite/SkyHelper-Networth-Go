@@ -18,7 +18,6 @@ func ParseItems(profileData *skycrypttypes.Member, museumData *skycrypttypes.Mus
 	itemsToDecode := map[string]string{
 		"armor":                   inventory.Armor.Data,
 		"equipment":               inventory.Equipment.Data,
-		"wardrobe":                inventory.Wardrobe.Data,
 		"inventory":               inventory.Inventory.Data,
 		"enderchest":              inventory.Enderchest.Data,
 		"accessories":             inventory.BagContents.TalismanBag.Data,
@@ -29,6 +28,13 @@ func ParseItems(profileData *skycrypttypes.Member, museumData *skycrypttypes.Mus
 		"candy_inventory":         sharedInventory.CandyInventory.Data,
 		"carnival_mask_inventory": sharedInventory.CarnivalMaskInventory.Data,
 		"quiver":                  inventory.BagContents.Quiver.Data,
+	}
+
+	for i, layout := range profileData.Loadout.Armor {
+		itemsToDecode[fmt.Sprintf("wardrobe_%d_0", i)] = layout.Helmet.Data
+		itemsToDecode[fmt.Sprintf("wardrobe_%d_1", i)] = layout.Chestplate.Data
+		itemsToDecode[fmt.Sprintf("wardrobe_%d_2", i)] = layout.Leggings.Data
+		itemsToDecode[fmt.Sprintf("wardrobe_%d_3", i)] = layout.Boots.Data
 	}
 
 	for backpack, contents := range inventory.Backpack {
@@ -57,14 +63,26 @@ func ParseItems(profileData *skycrypttypes.Member, museumData *skycrypttypes.Mus
 		}
 		if strings.HasPrefix(key, "storage") {
 			items.Storage = append(items.Storage, categoryItems...)
+		} else if strings.HasPrefix(key, "wardrobe_") {
+			if len(categoryItems) == 0 {
+				continue
+			}
+
+			if items.Wardrobe == nil {
+				items.Wardrobe = make([]*skycrypttypes.Item, len(profileData.Loadout.Armor)*4)
+			}
+
+			var index, offset int
+			_, err := fmt.Sscanf(key, "wardrobe_%d_%d", &index, &offset)
+			if err == nil && index*4+offset < len(items.Wardrobe) {
+				items.Wardrobe[index*4+offset] = categoryItems[0]
+			}
 		} else {
 			switch key {
 			case "armor":
 				items.Armor = categoryItems
 			case "equipment":
 				items.Equipment = categoryItems
-			case "wardrobe":
-				items.Wardrobe = categoryItems
 			case "inventory":
 				items.Inventory = categoryItems
 			case "enderchest":
