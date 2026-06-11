@@ -31,10 +31,10 @@ func ParseItems(profileData *skycrypttypes.Member, museumData *skycrypttypes.Mus
 	}
 
 	for i, layout := range profileData.Loadout.Armor {
-		itemsToDecode[fmt.Sprintf("wardrobe_%d_0", i)] = layout.Helmet.Data
-		itemsToDecode[fmt.Sprintf("wardrobe_%d_1", i)] = layout.Chestplate.Data
-		itemsToDecode[fmt.Sprintf("wardrobe_%d_2", i)] = layout.Leggings.Data
-		itemsToDecode[fmt.Sprintf("wardrobe_%d_3", i)] = layout.Boots.Data
+		itemsToDecode[fmt.Sprintf("wardrobe_%d_helmet", i)] = layout.Helmet.Data
+		itemsToDecode[fmt.Sprintf("wardrobe_%d_chestplate", i)] = layout.Chestplate.Data
+		itemsToDecode[fmt.Sprintf("wardrobe_%d_leggings", i)] = layout.Leggings.Data
+		itemsToDecode[fmt.Sprintf("wardrobe_%d_boots", i)] = layout.Boots.Data
 	}
 
 	for backpack, contents := range inventory.Backpack {
@@ -72,10 +72,31 @@ func ParseItems(profileData *skycrypttypes.Member, museumData *skycrypttypes.Mus
 				items.Wardrobe = make([]*skycrypttypes.Item, len(profileData.Loadout.Armor)*4)
 			}
 
-			var index, offset int
-			_, err := fmt.Sscanf(key, "wardrobe_%d_%d", &index, &offset)
-			if err == nil && index*4+offset < len(items.Wardrobe) {
-				items.Wardrobe[index*4+offset] = categoryItems[0]
+			parts := strings.Split(key, "_")
+			if len(parts) == 3 {
+				var index int
+				if _, err := fmt.Sscanf(parts[1], "%d", &index); err != nil {
+					continue
+				}
+				part := parts[2]
+
+				var offset int
+				switch part {
+				case "helmet":
+					offset = 0
+				case "chestplate":
+					offset = 1
+				case "leggings":
+					offset = 2
+				case "boots":
+					offset = 3
+				default:
+					continue
+				}
+
+				if index*4+offset < len(items.Wardrobe) {
+					items.Wardrobe[index*4+offset] = categoryItems[0]
+				}
 			}
 		} else {
 			switch key {
@@ -159,7 +180,7 @@ func postParseItems(profileData skycrypttypes.Member, items *models.ParsedItems)
 
 	for _, categoryItems := range categories {
 		for _, item := range categoryItems {
-			if item.Tag == nil || item.Tag.ExtraAttributes == nil || item.Tag.ExtraAttributes.NewYearCakeBagData == nil {
+			if item == nil || item.Tag == nil || item.Tag.ExtraAttributes == nil || item.Tag.ExtraAttributes.NewYearCakeBagData == nil {
 				continue
 			}
 
