@@ -64,40 +64,7 @@ func ParseItems(profileData *skycrypttypes.Member, museumData *skycrypttypes.Mus
 		if strings.HasPrefix(key, "storage") {
 			items.Storage = append(items.Storage, categoryItems...)
 		} else if strings.HasPrefix(key, "wardrobe_") {
-			if len(categoryItems) == 0 {
-				continue
-			}
-
-			if items.Wardrobe == nil {
-				items.Wardrobe = make([]*skycrypttypes.Item, len(profileData.Loadout.Armor)*4)
-			}
-
-			parts := strings.Split(key, "_")
-			if len(parts) == 3 {
-				var index int
-				if _, err := fmt.Sscanf(parts[1], "%d", &index); err != nil {
-					continue
-				}
-				part := parts[2]
-
-				var offset int
-				switch part {
-				case "helmet":
-					offset = 0
-				case "chestplate":
-					offset = 1
-				case "leggings":
-					offset = 2
-				case "boots":
-					offset = 3
-				default:
-					continue
-				}
-
-				if index*4+offset < len(items.Wardrobe) {
-					items.Wardrobe[index*4+offset] = categoryItems[0]
-				}
-			}
+			items.Wardrobe = append(items.Wardrobe, categoryItems...)
 		} else {
 			switch key {
 			case "armor":
