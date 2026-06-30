@@ -3,6 +3,7 @@ package handlers
 import (
 	"fmt"
 	"slices"
+	"sort"
 	"strings"
 
 	"github.com/SkyCryptWebsite/SkyHelper-Networth-Go/internal/constants"
@@ -20,7 +21,16 @@ func (h ItemEnchantments) Applies(item *models.NetworthItem) bool {
 }
 
 func (h ItemEnchantments) Calculate(item *models.NetworthItem, prices map[string]float64) {
-	for id, level := range item.ExtraAttributes.Enchantments {
+	appliedOncePerItemUpgrades := map[string]bool{}
+
+	enchantmentIds := make([]string, 0, len(item.ExtraAttributes.Enchantments))
+	for id := range item.ExtraAttributes.Enchantments {
+		enchantmentIds = append(enchantmentIds, id)
+	}
+	sort.Strings(enchantmentIds)
+
+	for _, id := range enchantmentIds {
+		level := item.ExtraAttributes.Enchantments[id]
 		upperCasedId := strings.ToUpper(id)
 		if slices.Contains(constants.BLOCKED_ENCHANTMENTS[item.ItemId], upperCasedId) {
 			continue
@@ -55,18 +65,28 @@ func (h ItemEnchantments) Calculate(item *models.NetworthItem, prices map[string
 			}
 		}
 
-		for enchantmentId, enchantmentData := range constants.ENCHANTMENT_UPGRADES {
-			if upperCasedId == enchantmentId && level >= enchantmentData.Tier {
-				calculationData := models.CalculationData{
-					Id:    enchantmentData.UpgradeItem,
-					Type:  "ENCHANTMENT_UPGRADE",
-					Price: prices[enchantmentData.UpgradeItem] * constants.APPLICATION_WORTH["enchantmentUpgrades"],
-					Count: 1,
+		for _, enchantmentData := range constants.ENCHANTMENT_UPGRADES[upperCasedId] {
+			if level < enchantmentData.Tier {
+				continue
+			}
+
+			if enchantmentData.OncePerItem {
+				if appliedOncePerItemUpgrades[enchantmentData.UpgradeItem] {
+					continue
 				}
 
-				item.Price += calculationData.Price
-				item.Calculation = append(item.Calculation, calculationData)
+				appliedOncePerItemUpgrades[enchantmentData.UpgradeItem] = true
 			}
+
+			calculationData := models.CalculationData{
+				Id:    enchantmentData.UpgradeItem,
+				Type:  "ENCHANTMENT_UPGRADE",
+				Price: prices[enchantmentData.UpgradeItem] * constants.APPLICATION_WORTH["enchantmentUpgrades"],
+				Count: 1,
+			}
+
+			item.Price += calculationData.Price
+			item.Calculation = append(item.Calculation, calculationData)
 		}
 
 		formattedId := fmt.Sprintf("%s_%d", upperCasedId, level)

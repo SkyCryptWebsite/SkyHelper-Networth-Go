@@ -53,15 +53,15 @@ func TestEnchantedBookandler(t *testing.T) {
 			expectedNewBasePrice: 50000000*constants.APPLICATION_WORTH["enchantments"] + 4000000*constants.APPLICATION_WORTH["enchantments"],
 			expectedCalculation: []models.CalculationData{
 				{
-					Id:    "ULTIMATE_LEGION_7",
-					Type:  "ENCHANT",
-					Price: 50000000 * constants.APPLICATION_WORTH["enchantments"],
-					Count: 1,
-				},
-				{
 					Id:    "SMITE_7",
 					Type:  "ENCHANT",
 					Price: 4000000 * constants.APPLICATION_WORTH["enchantments"],
+					Count: 1,
+				},
+				{
+					Id:    "ULTIMATE_LEGION_7",
+					Type:  "ENCHANT",
+					Price: 50000000 * constants.APPLICATION_WORTH["enchantments"],
 					Count: 1,
 				},
 			},

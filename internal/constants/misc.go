@@ -97,18 +97,39 @@ var MAX_THUNDER_CHARGE = 5000000
 
 var ROD_PART_TYPES = []string{"line", "hook", "sinker"}
 
-var ENCHANTMENT_UPGRADES = map[string]struct {
+type enchantmentUpgrade struct {
 	UpgradeItem string
 	Tier        int
-}{
-	"SCAVENGER":       {"GOLDEN_BOUNTY", 6},
-	"PESTERMINATOR":   {"PESTHUNTING_GUIDE", 6},
-	"LUCK_OF_THE_SEA": {"GOLD_BOTTLE_CAP", 7},
-	"PISCARY":         {"TROUBLED_BUBBLE", 7},
-	"FRAIL":           {"SEVERED_PINCER", 7},
-	"SPIKED_HOOK":     {"OCTOPUS_TENDRIL", 7},
-	"CHARM":           {"CHAIN_END_TIMES", 6},
-	"VENOMOUS":        {"FATEFUL_STINGER", 7},
+	OncePerItem bool
+}
+
+var ENCHANTMENT_UPGRADES = map[string][]enchantmentUpgrade{
+	"SCAVENGER":          {{UpgradeItem: "GOLDEN_BOUNTY", Tier: 6}},
+	"PESTERMINATOR":      {{UpgradeItem: "PESTHUNTING_GUIDE", Tier: 6}},
+	"LUCK_OF_THE_SEA":    {{UpgradeItem: "GOLD_BOTTLE_CAP", Tier: 7}},
+	"PISCARY":            {{UpgradeItem: "TROUBLED_BUBBLE", Tier: 7}},
+	"FRAIL":              {{UpgradeItem: "SEVERED_PINCER", Tier: 7}},
+	"SPIKED_HOOK":        {{UpgradeItem: "OCTOPUS_TENDRIL", Tier: 7}},
+	"CHARM":              {{UpgradeItem: "CHAIN_END_TIMES", Tier: 6}},
+	"VENOMOUS":           {{UpgradeItem: "FATEFUL_STINGER", Tier: 7}},
+	"SMITE":              {{UpgradeItem: "SEVERED_HAND", Tier: 7}},
+	"ENDER_SLAYER":       {{UpgradeItem: "ENDSTONE_IDOL", Tier: 7}},
+	"BANE_OF_ARTHROPODS": {{UpgradeItem: "ENSNARED_SNAIL", Tier: 7}},
+	"THORNS":             {{UpgradeItem: "PRICKLY_CREEPER", Tier: 4}},
+	"SCUBA":              {{UpgradeItem: "VIBRANT_CORAL", Tier: 6}},
+	"TURBO_WHEAT":        {{UpgradeItem: "TURBO_GOURD", Tier: 6, OncePerItem: true}, {UpgradeItem: "ENCHANTED_TURBO_GOURD", Tier: 7, OncePerItem: true}},
+	"TURBO_CARROT":       {{UpgradeItem: "TURBO_GOURD", Tier: 6, OncePerItem: true}, {UpgradeItem: "ENCHANTED_TURBO_GOURD", Tier: 7, OncePerItem: true}},
+	"TURBO_POTATO":       {{UpgradeItem: "TURBO_GOURD", Tier: 6, OncePerItem: true}, {UpgradeItem: "ENCHANTED_TURBO_GOURD", Tier: 7, OncePerItem: true}},
+	"TURBO_PUMPKIN":      {{UpgradeItem: "TURBO_GOURD", Tier: 6, OncePerItem: true}, {UpgradeItem: "ENCHANTED_TURBO_GOURD", Tier: 7, OncePerItem: true}},
+	"TURBO_MELON":        {{UpgradeItem: "TURBO_GOURD", Tier: 6, OncePerItem: true}, {UpgradeItem: "ENCHANTED_TURBO_GOURD", Tier: 7, OncePerItem: true}},
+	"TURBO_MUSHROOMS":    {{UpgradeItem: "TURBO_GOURD", Tier: 6, OncePerItem: true}, {UpgradeItem: "ENCHANTED_TURBO_GOURD", Tier: 7, OncePerItem: true}},
+	"TURBO_COCOA":        {{UpgradeItem: "TURBO_GOURD", Tier: 6, OncePerItem: true}, {UpgradeItem: "ENCHANTED_TURBO_GOURD", Tier: 7, OncePerItem: true}},
+	"TURBO_CACTI":        {{UpgradeItem: "TURBO_GOURD", Tier: 6, OncePerItem: true}, {UpgradeItem: "ENCHANTED_TURBO_GOURD", Tier: 7, OncePerItem: true}},
+	"TURBO_CANE":         {{UpgradeItem: "TURBO_GOURD", Tier: 6, OncePerItem: true}, {UpgradeItem: "ENCHANTED_TURBO_GOURD", Tier: 7, OncePerItem: true}},
+	"TURBO_WARTS":        {{UpgradeItem: "TURBO_GOURD", Tier: 6, OncePerItem: true}, {UpgradeItem: "ENCHANTED_TURBO_GOURD", Tier: 7, OncePerItem: true}},
+	"TURBO_SUNFLOWER":    {{UpgradeItem: "TURBO_GOURD", Tier: 6, OncePerItem: true}, {UpgradeItem: "ENCHANTED_TURBO_GOURD", Tier: 7, OncePerItem: true}},
+	"TURBO_MOONFLOWER":   {{UpgradeItem: "TURBO_GOURD", Tier: 6, OncePerItem: true}, {UpgradeItem: "ENCHANTED_TURBO_GOURD", Tier: 7, OncePerItem: true}},
+	"TURBO_ROSE":         {{UpgradeItem: "TURBO_GOURD", Tier: 6, OncePerItem: true}, {UpgradeItem: "ENCHANTED_TURBO_GOURD", Tier: 7, OncePerItem: true}},
 }
 
 type MidasWeapon struct {

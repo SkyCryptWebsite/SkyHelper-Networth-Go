@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"fmt"
+	"sort"
 	"strconv"
 	"strings"
 
@@ -23,7 +24,15 @@ func (h EnchantedBookHandler) Applies(item *models.NetworthItem) bool {
 func (h EnchantedBookHandler) Calculate(item *models.NetworthItem, prices map[string]float64) {
 	enchantmentPrice := 0.0
 	isSingleBook := len(item.ExtraAttributes.Enchantments) == 1
-	for enchantment, level := range item.ExtraAttributes.Enchantments {
+
+	enchantmentIds := make([]string, 0, len(item.ExtraAttributes.Enchantments))
+	for enchantment := range item.ExtraAttributes.Enchantments {
+		enchantmentIds = append(enchantmentIds, enchantment)
+	}
+	sort.Strings(enchantmentIds)
+
+	for _, enchantment := range enchantmentIds {
+		level := item.ExtraAttributes.Enchantments[enchantment]
 		enchantmentId := fmt.Sprintf("ENCHANTMENT_%s_%d", strings.ToUpper(enchantment), level)
 		price := prices[enchantmentId]
 		if price == 0 {
