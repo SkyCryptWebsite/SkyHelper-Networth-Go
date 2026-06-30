@@ -116,7 +116,7 @@ func (item *NetworthItem) getItemId() string {
 		return "DCTR_SPACE_HELM_EDITIONED"
 	}
 
-	if item.ItemId == "CREATIVE_MIND" && item.ExtraAttributes.Edition != 0 {
+	if item.ItemId == "CREATIVE_MIND" && item.ExtraAttributes.Edition == 0 {
 		return "CREATIVE_MIND_UNEDITIONED"
 	}
 
