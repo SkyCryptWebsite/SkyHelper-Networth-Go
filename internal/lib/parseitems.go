@@ -30,7 +30,7 @@ func ParseItems(profileData *skycrypttypes.Member, museumData *skycrypttypes.Mus
 		"quiver":                  inventory.BagContents.Quiver.Data,
 	}
 
-	for i, layout := range profileData.Loadout.Armor {
+	for i, layout := range profileData.Loadout.Armor.Sets {
 		itemsToDecode[fmt.Sprintf("wardrobe_%d_helmet", i)] = layout.Helmet.Data
 		itemsToDecode[fmt.Sprintf("wardrobe_%d_chestplate", i)] = layout.Chestplate.Data
 		itemsToDecode[fmt.Sprintf("wardrobe_%d_leggings", i)] = layout.Leggings.Data
