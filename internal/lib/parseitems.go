@@ -37,6 +37,13 @@ func ParseItems(profileData *skycrypttypes.Member, museumData *skycrypttypes.Mus
 		itemsToDecode[fmt.Sprintf("wardrobe_%d_boots", i)] = layout.Boots.Data
 	}
 
+	for i, layout := range profileData.Loadout.Equipment.Sets {
+		itemsToDecode[fmt.Sprintf("equipment_%d_1", i)] = layout.EquipmentSlot1.Data
+		itemsToDecode[fmt.Sprintf("equipment_%d_2", i)] = layout.EquipmentSlot2.Data
+		itemsToDecode[fmt.Sprintf("equipment_%d_3", i)] = layout.EquipmentSlot3.Data
+		itemsToDecode[fmt.Sprintf("equipment_%d_4", i)] = layout.EquipmentSlot4.Data
+	}
+
 	for backpack, contents := range inventory.Backpack {
 		itemsToDecode["storage_"+backpack] = contents.Data
 	}
@@ -65,6 +72,8 @@ func ParseItems(profileData *skycrypttypes.Member, museumData *skycrypttypes.Mus
 			items.Storage = append(items.Storage, categoryItems...)
 		} else if strings.HasPrefix(key, "wardrobe_") {
 			items.Wardrobe = append(items.Wardrobe, categoryItems...)
+		} else if strings.HasPrefix(key, "equipment_") {
+			items.Equipment = append(items.Equipment, categoryItems...)
 		} else {
 			switch key {
 			case "armor":
