@@ -4,14 +4,26 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"sync"
+	"sync/atomic"
 	"time"
 
 	"github.com/SkyCryptWebsite/SkyHelper-Networth-Go/internal/models"
 )
 
-var cachedItems map[string]models.HypixelItem
-var lastCached int64
-var alreadyFetching bool
+var itemsURL = "https://api.hypixel.net/v2/resources/skyblock/items"
+
+type itemsSnapshot struct {
+	items map[string]models.HypixelItem
+	// byID points into one shared copy per item, so GetItem needn't copy the struct on every lookup.
+	byID      map[string]*models.HypixelItem
+	fetchedAt time.Time
+}
+
+// A published snapshot is never written to again, so readers need no lock.
+var cachedItems atomic.Pointer[itemsSnapshot]
+var itemsFetchMu sync.Mutex
+var lastItemsFailure atomic.Int64
 
 func GetItems(cache bool, cacheTime int64, retries int) (map[string]models.HypixelItem, error) {
 	if cacheTime == 0 {
@@ -22,74 +34,110 @@ func GetItems(cache bool, cacheTime int64, retries int) (map[string]models.Hypix
 		retries = 3
 	}
 
-	if lastCached != 0 && cache && (time.Now().Unix()-lastCached) < cacheTime {
-		return cachedItems, nil
+	current := cachedItems.Load()
+	if cache && current != nil && time.Since(current.fetchedAt) < time.Duration(cacheTime)*time.Second {
+		return current.items, nil
 	}
 
-	if alreadyFetching {
-		for lastCached == 0 {
-			time.Sleep(time.Millisecond * 100)
-		}
-
-		return cachedItems, nil
+	// With a stale copy in hand, serve it and refresh in the background, so no request waits on Hypixel.
+	if current != nil && cache {
+		refreshItemsInBackground(retries)
+		return current.items, nil
 	}
 
-	alreadyFetching = true
-	defer func() { alreadyFetching = false }() // Ensure we reset the flag after fetching
-	resp, err := http.Get("https://api.hypixel.net/v2/resources/skyblock/items")
+	itemsFetchMu.Lock()
+	defer itemsFetchMu.Unlock()
+
+	if latest := cachedItems.Load(); latest != nil && latest != current {
+		return latest.items, nil
+	}
+
+	items, err := fetchItems(retries)
 	if err != nil {
-		if retries > 0 {
-			return GetItems(cache, cacheTime, retries-1)
+		if current != nil {
+			return current.items, nil
 		}
 
-		return nil, fmt.Errorf("failed to fetch items: %v", err)
+		return nil, err
 	}
 
-	defer resp.Body.Close()
-	if resp.StatusCode != http.StatusOK {
-		if retries > 0 {
-			return GetItems(cache, cacheTime, retries-1)
-		}
+	storeItems(items)
+	return items, nil
+}
 
-		return nil, fmt.Errorf("failed to fetch prices: %s", resp.Status)
+func storeItems(items map[string]models.HypixelItem) {
+	byID := make(map[string]*models.HypixelItem, len(items))
+	for id, item := range items {
+		byID[id] = &item
+	}
+	cachedItems.Store(&itemsSnapshot{items: items, byID: byID, fetchedAt: time.Now()})
+}
+
+// refreshItemsInBackground starts one refresh at a time, and waits refreshFailureBackoff after a failed one.
+func refreshItemsInBackground(retries int) {
+	if time.Since(time.Unix(0, lastItemsFailure.Load())) < refreshFailureBackoff {
+		return
+	}
+	if !itemsFetchMu.TryLock() {
+		return
+	}
+
+	go func() {
+		defer itemsFetchMu.Unlock()
+		items, err := fetchItems(retries)
+		if err != nil {
+			lastItemsFailure.Store(time.Now().UnixNano())
+			return
+		}
+		storeItems(items)
+	}()
+}
+
+func fetchItems(retries int) (map[string]models.HypixelItem, error) {
+	var lastErr error
+	for attempt := 0; attempt <= retries; attempt++ {
+		items, err := fetchItemsOnce()
+		if err == nil {
+			return items, nil
+		}
+		lastErr = err
+	}
+	return nil, lastErr
+}
+
+func fetchItemsOnce() (map[string]models.HypixelItem, error) {
+	resp, err := httpClient.Get(itemsURL)
+	if err != nil {
+		return nil, fmt.Errorf("failed to fetch items: %w", err)
+	}
+	defer func() { _ = resp.Body.Close() }()
+
+	if resp.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("failed to fetch items: %s", resp.Status)
 	}
 
 	response := models.HypixelItemsResponse{}
-	err = json.NewDecoder(resp.Body).Decode(&response)
-	if err != nil {
-		// ? NOTE: Is there even point of this? Won't this fail every time?
-		if retries > 0 {
-			return GetItems(cache, cacheTime, retries-1)
-		}
-
-		return nil, fmt.Errorf("failed to decode prices: %v", err)
+	if err := json.NewDecoder(resp.Body).Decode(&response); err != nil {
+		return nil, fmt.Errorf("failed to decode items: %w", err)
 	}
 
-	items := make(map[string]models.HypixelItem)
+	items := make(map[string]models.HypixelItem, len(response.Items))
 	for _, item := range response.Items {
 		items[item.SkyBlockID] = item
 	}
 
-	cachedItems = items
-	lastCached = time.Now().Unix()
-
 	return items, nil
 }
 
+// GetItem returns a shared, read-only item.
 func GetItem(itemId string) *models.HypixelItem {
-	items, err := GetItems(true, 69420, 3)
-	if err != nil {
+	if _, err := GetItems(true, 69420, 3); err != nil {
 		return nil
 	}
 
-	item, exists := items[itemId]
-	if !exists {
+	snapshot := cachedItems.Load()
+	if snapshot == nil {
 		return nil
 	}
-
-	return &item
-}
-
-func init() {
-	// go GetItems(true, 69420, 3) // Initial fetch to populate cache
+	return snapshot.byID[itemId]
 }

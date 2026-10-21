@@ -79,7 +79,8 @@ func ParseItems(profileData *skycrypttypes.Member, museumData *skycrypttypes.Mus
 			case "armor":
 				items.Armor = categoryItems
 			case "equipment":
-				items.Equipment = categoryItems
+				// Append: equipment_N_M loadout keys may already have added to this slice.
+				items.Equipment = append(items.Equipment, categoryItems...)
 			case "inventory":
 				items.Inventory = categoryItems
 			case "enderchest":
@@ -104,28 +105,29 @@ func ParseItems(profileData *skycrypttypes.Member, museumData *skycrypttypes.Mus
 		}
 	}
 
-	if museumData != nil {
-		if museumData.Items == nil {
-			museumData.Items = &map[string]skycrypttypes.MuseumItem{}
-		}
-
-		if museumData.Special == nil {
-			museumData.Special = &[]skycrypttypes.MuseumItem{}
-		}
-
+	// museumData can be shared between concurrent requests, so it is only read here.
+	if museumData != nil && museumData.Items != nil {
 		for _, item := range *museumData.Items {
 			if item.Borrowing {
 				continue
 			}
 
-			decodedItems, _ := DecodeInventory(item.Items.Data)
+			decodedItems, err := DecodeInventory(item.Items.Data)
+			if err != nil {
+				continue
+			}
 			for _, item := range decodedItems.Items {
 				items.Museum = append(items.Museum, &item)
 			}
 		}
+	}
 
+	if museumData != nil && museumData.Special != nil {
 		for _, item := range *museumData.Special {
-			decodedItems, _ := DecodeInventory(item.Items.Data)
+			decodedItems, err := DecodeInventory(item.Items.Data)
+			if err != nil {
+				continue
+			}
 			for _, item := range decodedItems.Items {
 				items.Museum = append(items.Museum, &item)
 			}

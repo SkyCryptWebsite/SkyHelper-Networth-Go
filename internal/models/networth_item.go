@@ -49,13 +49,19 @@ type NetworthItem struct {
 }
 
 func NewSkyBlockItemCaclulator(item *skycrypttypes.Item, prices map[string]float64, itemProvider ItemProvider, options NetworthOptions) *NetworthItem {
+	// Minecraft treats a missing Count as a single item.
+	count := 1
+	if item.Count != nil {
+		count = *item.Count
+	}
+
 	networthItem := &NetworthItem{
 		ItemName:        item.Tag.Display.Name,
 		ExtraAttributes: item.Tag.ExtraAttributes,
 		ItemId:          item.Tag.ExtraAttributes.Id,
 		SkyblockItem:    itemProvider.GetItem(item.Tag.ExtraAttributes.Id),
 		ItemLore:        item.Tag.Display.Lore,
-		Count:           *item.Count,
+		Count:           count,
 		BaseItemId:      item.Tag.ExtraAttributes.Id,
 
 		Prices: prices,
@@ -172,7 +178,7 @@ func (item *NetworthItem) IsCosmetic() bool {
 	isSkinOrDye := strings.Contains(testId, "DYE") || strings.Contains(testId, "SKIN")
 	isCosmetic, isMemento := false, false
 	if item.SkyblockItem != nil {
-		isCosmetic = item.SkyblockItem.Category == "COSMETIC" || strings.Contains(item.ItemLore[len(item.ItemLore)-1], "COSMETIC")
+		isCosmetic = item.SkyblockItem.Category == "COSMETIC" || (len(item.ItemLore) > 0 && strings.Contains(item.ItemLore[len(item.ItemLore)-1], "COSMETIC"))
 		isMemento = item.SkyblockItem.Category == "MEMENTO"
 
 	}

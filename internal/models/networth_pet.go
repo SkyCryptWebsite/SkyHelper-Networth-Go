@@ -40,16 +40,27 @@ func (item *NetworthPet) getTierName() string {
 	return item.PetData.Rarity
 }
 
+// hasKnownRarity is false for rarities missing from constants.RARITIES; such pets are left unpriced.
+func (item *NetworthPet) hasKnownRarity() bool {
+	return item.getTier() >= 0
+}
+
 func (item *NetworthPet) getTierBoostedTier() int {
-	if item.PetData.HeldItem == "PET_ITEM_TIER_BOOST" {
-		return item.getTier() + 1
+	tier := item.getTier()
+	if tier >= 0 && tier+1 < len(constants.RARITIES) && item.PetData.HeldItem == "PET_ITEM_TIER_BOOST" {
+		return tier + 1
 	}
 
-	return item.getTier()
+	return tier
 }
 
 func (item *NetworthPet) getTierBoostedTierName() string {
-	return constants.RARITIES[item.getTierBoostedTier()]
+	tier := item.getTierBoostedTier()
+	if tier < 0 {
+		return item.getTierName()
+	}
+
+	return constants.RARITIES[tier]
 }
 
 func (item *NetworthPet) IsSoulbound() bool {
@@ -80,6 +91,10 @@ func (item *NetworthPet) getPetLevelPrices() map[string]float64 {
 }
 
 func (item *NetworthPet) getBasePrice() {
+	if !item.hasKnownRarity() {
+		return
+	}
+
 	petLevelPrices := item.getPetLevelPrices()
 
 	basePrice := petLevelPrices["LVL_200"]
@@ -127,7 +142,7 @@ func (item *NetworthPet) getPetLevel() Level {
 	}
 
 	petOffset := constants.RARITY_OFFSET_PETS[item.getTierBoostedTierName()]
-	petLevels := constants.PET_LEVELS[petOffset : petOffset+maxPetLevel-1]
+	petLevels := constants.PET_LEVELS[petOffset:min(petOffset+maxPetLevel-1, len(constants.PET_LEVELS))]
 
 	level := 1
 	totalExp := 0.0
@@ -194,6 +209,10 @@ func NewSkyBlockPetCalculator(item *skycrypttypes.Pet, prices map[string]float64
 }
 
 func (item *NetworthPet) Calculate(handlers []PetHandler) {
+	if !item.hasKnownRarity() {
+		return
+	}
+
 	for _, handler := range handlers {
 		if item.NonCosmetic && handler.IsCosmetic() {
 			continue

@@ -5,7 +5,6 @@ import (
 	"sync"
 	"unsafe"
 
-	skycrypttypes "github.com/DuckySoLucky/SkyCrypt-Types"
 	"github.com/SkyCryptWebsite/SkyHelper-Networth-Go/internal/models"
 	"github.com/Tnze/go-mc/nbt"
 	"github.com/klauspost/compress/gzip"
@@ -32,16 +31,6 @@ var bytesReaderPool = sync.Pool{
 	},
 }
 
-// Pool for decoded inventory structs to reduce allocations
-// Pre-allocate larger capacity to handle most inventories without reallocation
-var decodedInventoryPool = sync.Pool{
-	New: func() any {
-		return &models.DecodedInventory{
-			Items: make([]skycrypttypes.Item, 0, 256), // Larger pre-allocation
-		}
-	},
-}
-
 // stringToBytes converts string to []byte without allocation using unsafe
 // UNSAFE: The returned slice MUST NOT be modified
 //
@@ -52,9 +41,7 @@ func stringToBytes(s string) []byte {
 
 func DecodeInventory(data string) (*models.DecodedInventory, error) {
 	if data == "" {
-		inv := decodedInventoryPool.Get().(*models.DecodedInventory)
-		inv.Items = inv.Items[:0]
-		return inv, nil
+		return &models.DecodedInventory{}, nil
 	}
 
 	// Pre-calculate decoded length
@@ -97,23 +84,21 @@ func DecodeFromBytes(data []byte) (*models.DecodedInventory, error) {
 		return nil, err
 	}
 
-	// Get pooled decoded inventory
-	nbtData := decodedInventoryPool.Get().(*models.DecodedInventory)
-	nbtData.Items = nbtData.Items[:0] // Reset slice but keep capacity
+	// Not pooled: the result goes to the caller and is never returned, and a pooled 256-slot slice per call
+	// cost far more than letting the decoder size the slice to the real item count.
+	nbtData := &models.DecodedInventory{}
 
 	decoder := nbt.NewDecoder(reader)
 	_, err = decoder.Decode(nbtData)
 
-	// Manual cleanup instead of defer (faster in hot paths)
+	// Close before pooling: once Put, another goroutine may already be reusing the reader.
+	_ = reader.Close()
 	gzipReaderPool.Put(reader)
 	bytesReaderPool.Put(bytesReader)
 
 	if err != nil {
-		decodedInventoryPool.Put(nbtData)
 		return nil, err
 	}
-
-	reader.Close()
 
 	return nbtData, nil
 }

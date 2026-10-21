@@ -1,6 +1,7 @@
 package skyhelpernetworthgo
 
 import (
+	"errors"
 	"fmt"
 	"sort"
 	"strings"
@@ -18,6 +19,9 @@ var json = sonic.Config{
 	UseInt64:   true,
 	CopyString: false, // Zero-copy strings (unsafe but faster)
 }.Froze()
+
+// ErrPricesUnavailable is wrapped by errors from calculators and GetPrices when prices have never loaded.
+var ErrPricesUnavailable = lib.ErrPricesUnavailable
 
 type ProfileNetworthCalculator struct {
 	ProfileData         *skycrypttypes.Member
@@ -412,17 +416,19 @@ func CalculateFromSpecifiedInventories(inventories SpecifiedInventory, opts ...m
 	}
 	options := opt.ToInternal()
 
-	prices, err := lib.GetPrices(true, 5*60, 3)
-	if err != nil {
-		return nil, fmt.Errorf("failed to fetch prices: %w", err)
+	prices := options.Prices
+	if prices == nil {
+		var err error
+		prices, err = lib.GetPrices(true, 5*60, 3)
+		// Callers use this to decode items for display, so keep decoding with no prices rather than fail the page.
+		if errors.Is(err, lib.ErrPricesUnavailable) {
+			prices = map[string]float64{}
+		} else if err != nil {
+			return nil, fmt.Errorf("failed to fetch prices: %w", err)
+		}
 	}
 
-	if options.Prices != nil {
-		prices = options.Prices
-	}
-
-	_, err = lib.GetItems(true, 12*60*60, 3)
-	if err != nil {
+	if _, err := lib.GetItems(true, 12*60*60, 3); err != nil {
 		return nil, fmt.Errorf("failed to get Hypixel items: %w", err)
 	}
 
@@ -452,6 +458,12 @@ func CalculateFromSpecifiedInventories(inventories SpecifiedInventory, opts ...m
 			decodeWg.Add(1)
 			go func(id string, data string) {
 				defer decodeWg.Done()
+				// An unrecovered panic here would crash the whole host process.
+				defer func() {
+					if r := recover(); r != nil {
+						decodeResults <- decodedInventoryResult{id: id, err: fmt.Errorf("panic decoding inventory %s: %v", id, r)}
+					}
+				}()
 
 				decodedData, err := lib.DecodeInventory(data)
 				if err != nil {
@@ -486,6 +498,11 @@ func CalculateFromSpecifiedInventories(inventories SpecifiedInventory, opts ...m
 			processWg.Add(1)
 			go func(id string, items []skycrypttypes.Item) {
 				defer processWg.Done()
+				defer func() {
+					if r := recover(); r != nil {
+						processResults <- inventoryResult{id: id, err: fmt.Errorf("panic processing inventory %s: %v", id, r)}
+					}
+				}()
 
 				networthType := processDecodedInventory(items, prices, options, onlyNetworth, keepInvalid, nonCosmetic, includeItemData)
 				processResults <- inventoryResult{
