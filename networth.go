@@ -83,6 +83,36 @@ func (p *ProfileNetworthCalculator) GetNonCosmeticNetworth(opts ...NetworthOptio
 	return p.calculate(opt.ToInternal())
 }
 
+// GetNetworthAndNonCosmetic calculates normal and non-cosmetic networth in parallel. Both only read the parsed
+// items; a panic in either is raised again on the caller's goroutine.
+func (p *ProfileNetworthCalculator) GetNetworthAndNonCosmetic(opts NetworthOptions) (normal, nonCosmetic *models.NetworthResult) {
+	// calculate stores opts.Prices on p, so do it once here instead of from both goroutines.
+	if opts.Prices != nil {
+		p.Prices = opts.Prices
+		opts.Prices = nil
+	}
+
+	var wg sync.WaitGroup
+	var panicked any
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		defer func() {
+			if r := recover(); r != nil {
+				panicked = r
+			}
+		}()
+		nonCosmetic = p.GetNonCosmeticNetworth(opts)
+	}()
+	normal = p.GetNetworth(opts)
+	wg.Wait()
+
+	if panicked != nil {
+		panic(panicked)
+	}
+	return normal, nonCosmetic
+}
+
 func (p *ProfileNetworthCalculator) calculate(options models.NetworthOptions) *models.NetworthResult {
 	if options.Prices != nil {
 		p.Prices = options.Prices

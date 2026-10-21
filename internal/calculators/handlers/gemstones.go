@@ -10,6 +10,11 @@ import (
 	"github.com/SkyCryptWebsite/SkyHelper-Networth-Go/internal/models"
 )
 
+var (
+	divansArmorRegex  = regexp.MustCompile(`^DIVAN_(HELMET|CHESTPLATE|LEGGINGS|BOOTS)$`)
+	crimsonArmorRegex = regexp.MustCompile(`^(|HOT_|FIERY_|BURNING_|INFERNAL_)(AURORA|CRIMSON|TERROR|HOLLOW|FERVOR)(_HELMET|_CHESTPLATE|_LEGGINGS|_BOOTS)$`)
+)
+
 type GemstonesHandler struct{}
 
 func (h GemstonesHandler) IsCosmetic() bool {
@@ -25,6 +30,7 @@ func (h GemstonesHandler) Calculate(item *models.NetworthItem, prices map[string
 	gems := []gemstone{}
 
 	extraAttributesGems := item.ExtraAttributes.Gems
+	usedGemKeys := make(map[string]struct{}, len(extraAttributesGems))
 
 	var unlockedSlotsArr []string
 	if unlockedSlotsInterface, ok := item.ExtraAttributes.Gems["unlocked_slots"].([]interface{}); ok {
@@ -62,9 +68,13 @@ func (h GemstonesHandler) Calculate(item *models.NetworthItem, prices map[string
 			unlockedSlots = append(unlockedSlots, slot.SlotType)
 		}
 
-		// Process gems for this slot
+		// Process gems for this slot. Used keys are tracked here rather than deleted: the gems map belongs to the
+		// decoded item, which is priced again for non-cosmetic networth and read again to display the gems.
 		var key string
 		for k := range extraAttributesGems {
+			if _, taken := usedGemKeys[k]; taken {
+				continue
+			}
 			if strings.HasPrefix(k, slot.SlotType) && !strings.HasSuffix(k, "_gem") {
 				key = k
 				break
@@ -92,12 +102,12 @@ func (h GemstonesHandler) Calculate(item *models.NetworthItem, prices map[string
 				SlotType: slot.SlotType,
 			})
 
-			delete(extraAttributesGems, key)
+			usedGemKeys[key] = struct{}{}
 		}
 	}
 
-	isDivansArmor, _ := regexp.MatchString(`^DIVAN_(HELMET|CHESTPLATE|LEGGINGS|BOOTS)$`, item.ItemId)
-	isCrimsonArmor, _ := regexp.MatchString(`^(|HOT_|FIERY_|BURNING_|INFERNAL_)(AURORA|CRIMSON|TERROR|HOLLOW|FERVOR)(_HELMET|_CHESTPLATE|_LEGGINGS|_BOOTS)$`, item.ItemId)
+	isDivansArmor := divansArmorRegex.MatchString(item.ItemId)
+	isCrimsonArmor := crimsonArmorRegex.MatchString(item.ItemId)
 	if isDivansArmor || isCrimsonArmor {
 		application := constants.APPLICATION_WORTH["gemstoneSlots"]
 		if isDivansArmor {
