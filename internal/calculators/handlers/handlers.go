@@ -22,7 +22,7 @@ var ItemHandlers []models.Handler = []models.Handler{
 	ManaDisintegratorHandler{},
 	MasterStarsHandler{},
 	MidasWeaponHandler{},
-	NecronBladeScrollHandler{},
+	AbilityScrollsHandler{},
 	NewYearCakeBagHandler{},
 	Overclocker3000Handler{},
 	PickonimbusHandler{},

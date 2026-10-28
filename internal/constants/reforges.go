@@ -1,7 +1,9 @@
 package constants
 
-// Reforges maps reforge names to their corresponding item IDs.
+// REFORGES maps reforge names to the reforge stone that applies them. Kept in the same order as REFORGES in
+// SkyHelper-networth's constants/reforges.js, so the two diff cleanly.
 var REFORGES = map[string]string{
+
 	"stiff":        "HARDENED_WOOD",
 	"trashy":       "OVERFLOWING_TRASH_CAN",
 	"salty":        "SALT_CUBE",
@@ -16,19 +18,20 @@ var REFORGES = map[string]string{
 	"fabled":       "DRAGON_CLAW",
 	"spiked":       "DRAGON_SCALE",
 	"royal":        "DWARVEN_TREASURE",
-	"hyper":        "ENDSTONE_GEODE",
+	"warped":       "ENDSTONE_GEODE",
 	"coldfusion":   "ENTROPY_SUPPRESSOR",
 	"blooming":     "FLOWERING_BOUQUET",
 	"fanged":       "FULL_JAW_FANGING_KIT",
 	"jaded":        "JADERALD",
-	"jerry":        "JERRY_STONE",
+	"jerry_stone":  "JERRY_STONE",
 	"magnetic":     "LAPIS_CRYSTAL",
 	"earthy":       "LARGE_WALNUT",
 	"groovy":       "MANGROVE_GEM",
 	"fortified":    "METEOR_SHARD",
 	"gilded":       "MIDAS_JEWEL",
-	"moonglade":    "MOONGLADE_JEWEL",
 	"cubic":        "MOLTEN_CUBE",
+	"moonglade":    "MOONGLADE_JEWEL",
+	"lunar":        "MOONSTONE",
 	"necrotic":     "NECROMANCER_BROOCH",
 	"fruitful":     "ONYX",
 	"precise":      "OPTICAL_LENS",
@@ -48,6 +51,7 @@ var REFORGES = map[string]string{
 	"bustling":     "SKYMART_BROCHURE",
 	"spiritual":    "SPIRIT_DECOY",
 	"squeaky":      "SQUEAKY_TOY",
+	"sunny":        "SUNSTONE",
 	"suspicious":   "SUSPICIOUS_VIAL",
 	"snowy":        "TERRY_SNOWGLOBE",
 	"dimensional":  "TITANIUM_TESSERACT",
@@ -56,6 +60,7 @@ var REFORGES = map[string]string{
 	"blessed":      "BLESSED_FRUIT",
 	"bulky":        "BULKY_STONE",
 	"buzzing":      "CLIPPED_WINGS",
+	"erudite":      "DAEDALUS_NOTES",
 	"submerged":    "DEEP_SEA_ORB",
 	"renowned":     "DRAGON_HORN",
 	"festive":      "FROZEN_BAUBLE",
@@ -64,6 +69,7 @@ var REFORGES = map[string]string{
 	"bountiful":    "GOLDEN_BALL",
 	"chomp":        "KUUDRA_MANDIBLE",
 	"lucky":        "LUCKY_DICE",
+	"mantid":       "MANTID_CLAW",
 	"stellar":      "PETRIFIED_STARFALL",
 	"scraped":      "POCKET_ICEBERG",
 	"ancient":      "PRECURSOR_GEAR",
@@ -72,8 +78,15 @@ var REFORGES = map[string]string{
 	"withered":     "WITHER_BLOOD",
 	"glacial":      "FRIGID_HUSK",
 	"heated":       "HOT_STUFF",
-
-	// Non-bazaar reforges
+	"blood_shot":   "SHRIVELED_CORNEA",
+	"overpriced":   "OVERPRICED_DRINK",
+	"deep_fried":   "HASHBROWN",
+	"geometric":    "GEOMETRIC_ODDITY",
+	"thorny":       "BLOOMING_THORNS",
+	"sticky":       "EXTREMELY_MILD_ADHESIVE",
+	"majestic":     "MORNING_DEW",
+	"marshy":       "MARSHROOM",
+	// Non-bazaar
 	"dirty":         "DIRT_BOTTLE",
 	"moil":          "MOIL_LOG",
 	"toil":          "TOIL_LOG",

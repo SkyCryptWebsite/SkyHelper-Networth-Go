@@ -3,13 +3,13 @@ package tests
 import (
 	"testing"
 
-	skycrypttypes "github.com/DuckySoLucky/SkyCrypt-Types"
+	skycrypttypes "github.com/SkyCryptWebsite/SkyCrypt-Types"
 	"github.com/SkyCryptWebsite/SkyHelper-Networth-Go/internal/calculators/handlers"
 	"github.com/SkyCryptWebsite/SkyHelper-Networth-Go/internal/constants"
 	"github.com/SkyCryptWebsite/SkyHelper-Networth-Go/internal/models"
 )
 
-func TestNecronBladeScrollHandler(t *testing.T) {
+func TestAbilityScrollsHandler(t *testing.T) {
 	testCases := []TestCase{
 		{
 			description: "Applies correctly",
@@ -23,18 +23,18 @@ func TestNecronBladeScrollHandler(t *testing.T) {
 			},
 			prices:              map[string]float64{"WITHER_SHIELD_SCROLL": 280000000, "IMPLOSION_SCROLL": 300000000},
 			shouldApply:         true,
-			expectedPriceChange: 280000000*constants.APPLICATION_WORTH["necronBladeScroll"] + 300000000*constants.APPLICATION_WORTH["necronBladeScroll"],
+			expectedPriceChange: 280000000*constants.APPLICATION_WORTH["abilityScroll"] + 300000000*constants.APPLICATION_WORTH["abilityScroll"],
 			expectedCalculation: []models.CalculationData{
 				{
 					Id:    "WITHER_SHIELD_SCROLL",
-					Type:  "NECRON_SCROLL",
-					Price: 280000000 * constants.APPLICATION_WORTH["necronBladeScroll"],
+					Type:  "ABILITY_SCROLL",
+					Price: 280000000 * constants.APPLICATION_WORTH["abilityScroll"],
 					Count: 1,
 				},
 				{
 					Id:    "IMPLOSION_SCROLL",
-					Type:  "NECRON_SCROLL",
-					Price: 300000000 * constants.APPLICATION_WORTH["necronBladeScroll"],
+					Type:  "ABILITY_SCROLL",
+					Price: 300000000 * constants.APPLICATION_WORTH["abilityScroll"],
 					Count: 1,
 				},
 			},
@@ -53,5 +53,5 @@ func TestNecronBladeScrollHandler(t *testing.T) {
 		},
 	}
 
-	runHandlerTests(t, &handlers.NecronBladeScrollHandler{}, testCases)
+	runHandlerTests(t, &handlers.AbilityScrollsHandler{}, testCases)
 }

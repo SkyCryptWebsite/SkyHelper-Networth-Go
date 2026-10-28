@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	skycrypttypes "github.com/DuckySoLucky/SkyCrypt-Types"
+	skycrypttypes "github.com/SkyCryptWebsite/SkyCrypt-Types"
 	"github.com/SkyCryptWebsite/SkyHelper-Networth-Go/internal/models"
 )
 
@@ -133,6 +133,9 @@ func ParseItems(profileData *skycrypttypes.Member, museumData *skycrypttypes.Mus
 			}
 		}
 	}
+
+	items.FarmingToolkit = ParseToolkit(profileData.Garden.FarmingToolkit)
+	items.HuntingToolkit = ParseToolkit(profileData.Foraging.HuntingToolkit)
 
 	postParseItems(*profileData, &items)
 	return &items, nil

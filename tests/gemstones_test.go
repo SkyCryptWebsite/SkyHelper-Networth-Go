@@ -3,7 +3,7 @@ package tests
 import (
 	"testing"
 
-	skycrypttypes "github.com/DuckySoLucky/SkyCrypt-Types"
+	skycrypttypes "github.com/SkyCryptWebsite/SkyCrypt-Types"
 	"github.com/SkyCryptWebsite/SkyHelper-Networth-Go/internal/calculators/handlers"
 	"github.com/SkyCryptWebsite/SkyHelper-Networth-Go/internal/constants"
 	"github.com/SkyCryptWebsite/SkyHelper-Networth-Go/internal/models"
@@ -14,7 +14,8 @@ func TestGemstonesHandler(t *testing.T) {
 		{
 			description: "Applies correctly",
 			item: &models.NetworthItem{
-				ItemId: "HYPERION",
+				ItemId:     "HYPERION",
+				BaseItemId: "HYPERION",
 				ExtraAttributes: &skycrypttypes.ExtraAttributes{
 					Gems: map[string]any{
 						"COMBAT_0":       map[string]interface{}{"quality": "PERFECT"},
@@ -68,7 +69,8 @@ func TestGemstonesHandler(t *testing.T) {
 		{
 			description: "Applies correctly v2",
 			item: &models.NetworthItem{
-				ItemId: "HYPERION",
+				ItemId:     "HYPERION",
+				BaseItemId: "HYPERION",
 				ExtraAttributes: &skycrypttypes.ExtraAttributes{
 					Gems: map[string]any{
 						"COMBAT_0":        "FINE",
@@ -123,7 +125,8 @@ func TestGemstonesHandler(t *testing.T) {
 		{
 			description: "Applies correctly simple",
 			item: &models.NetworthItem{
-				ItemId: "ADAPTIVE_BOOTS",
+				ItemId:     "ADAPTIVE_BOOTS",
+				BaseItemId: "ADAPTIVE_BOOTS",
 				ExtraAttributes: &skycrypttypes.ExtraAttributes{
 					Gems: map[string]any{
 						"COMBAT_0":     "FINE",
@@ -155,7 +158,8 @@ func TestGemstonesHandler(t *testing.T) {
 		{
 			description: "Applies correctly with divan",
 			item: &models.NetworthItem{
-				ItemId: "DIVAN_CHESTPLATE",
+				ItemId:     "DIVAN_CHESTPLATE",
+				BaseItemId: "DIVAN_CHESTPLATE",
 				ExtraAttributes: &skycrypttypes.ExtraAttributes{
 					Gems: map[string]any{
 						"JADE_1":         map[string]interface{}{"quality": "PERFECT"},
@@ -262,7 +266,8 @@ func TestGemstonesHandler(t *testing.T) {
 		{
 			description: "Applies correctly with divan unlocked and no gems",
 			item: &models.NetworthItem{
-				ItemId: "DIVAN_CHESTPLATE",
+				ItemId:     "DIVAN_CHESTPLATE",
+				BaseItemId: "DIVAN_CHESTPLATE",
 				ExtraAttributes: &skycrypttypes.ExtraAttributes{
 					Gems: map[string]any{
 						"unlocked_slots": []string{"TOPAZ_0", "JADE_1", "JADE_0", "AMBER_0", "AMBER_1"},
@@ -336,7 +341,8 @@ func TestGemstonesHandler(t *testing.T) {
 		{
 			description: "Applies correctly with kuudra",
 			item: &models.NetworthItem{
-				ItemId: "INFERNAL_AURORA_CHESTPLATE",
+				ItemId:     "INFERNAL_AURORA_CHESTPLATE",
+				BaseItemId: "INFERNAL_AURORA_CHESTPLATE",
 				ExtraAttributes: &skycrypttypes.ExtraAttributes{
 					Gems: map[string]any{
 						"COMBAT_0":       "PERFECT",

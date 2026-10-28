@@ -7,7 +7,7 @@ import (
 	"sort"
 	"strings"
 
-	skycrypttypes "github.com/DuckySoLucky/SkyCrypt-Types"
+	skycrypttypes "github.com/SkyCryptWebsite/SkyCrypt-Types"
 	"github.com/SkyCryptWebsite/SkyHelper-Networth-Go/internal/constants"
 )
 
@@ -56,7 +56,8 @@ func NewSkyBlockItemCaclulator(item *skycrypttypes.Item, prices map[string]float
 	}
 
 	networthItem := &NetworthItem{
-		ItemName:        item.Tag.Display.Name,
+		// Cleaned here, as upstream does, so every name check (cosmetic detection included) sees the plain name.
+		ItemName:        REMOVE_PERCENTAGE_COLOR_CODES_REGEX.ReplaceAllString(REMOVE_COLOR_CODES_REGEX.ReplaceAllString(item.Tag.Display.Name, ""), ""),
 		ExtraAttributes: item.Tag.ExtraAttributes,
 		ItemId:          item.Tag.ExtraAttributes.Id,
 		SkyblockItem:    itemProvider.GetItem(item.Tag.ExtraAttributes.Id),
@@ -113,7 +114,7 @@ func (item *NetworthItem) getItemId() string {
 		return fmt.Sprintf("NEW_YEAR_CAKE_%d", item.ExtraAttributes.NewYearsCake)
 	}
 
-	partyHatAccessories := []string{"PARTY_HAT_CRAB", "PARTY_HAT_CRAB_ANIMATED", "BALLOON_HAT_2024"}
+	partyHatAccessories := []string{"PARTY_HAT_CRAB", "PARTY_HAT_CRAB_ANIMATED", "BALLOON_HAT_2024", "BALLOON_HAT_2025"}
 	if slices.Contains(partyHatAccessories, item.ItemId) && item.ExtraAttributes.PartyHatColor != "" {
 		return fmt.Sprintf("%s_%s", item.ItemId, strings.ToUpper(item.ExtraAttributes.PartyHatColor))
 	}
@@ -174,13 +175,20 @@ func (item *NetworthItem) getItemName() string {
 }
 
 func (item *NetworthItem) IsCosmetic() bool {
-	testId := strings.ToUpper(item.ItemId + item.ItemName)
-	isSkinOrDye := strings.Contains(testId, "DYE") || strings.Contains(testId, "SKIN")
-	isCosmetic, isMemento := false, false
+	// Upstream checks twice, before pricing (with the base item ID) and after (with the priced one, such as
+	// X_SKINNED_Y). It glues the ID straight onto the name, so this matches its results exactly, quirks included:
+	// "PARTY_HAT_CRAB_ANIMATED" + "Yellow Crab Hat" contains "DYE".
+	isSkinOrDye := false
+	for _, id := range []string{item.BaseItemId, item.ItemId} {
+		testId := strings.ToUpper(id + item.ItemName)
+		isSkinOrDye = isSkinOrDye || strings.Contains(testId, "DYE") || strings.Contains(testId, "SKIN")
+	}
+	// The lore's last line marks cosmetics even for items missing from the Hypixel item list.
+	isCosmetic := len(item.ItemLore) > 0 && strings.Contains(item.ItemLore[len(item.ItemLore)-1], "COSMETIC")
+	isMemento := false
 	if item.SkyblockItem != nil {
-		isCosmetic = item.SkyblockItem.Category == "COSMETIC" || (len(item.ItemLore) > 0 && strings.Contains(item.ItemLore[len(item.ItemLore)-1], "COSMETIC"))
+		isCosmetic = isCosmetic || item.SkyblockItem.Category == "COSMETIC"
 		isMemento = item.SkyblockItem.Category == "MEMENTO"
-
 	}
 	isOnCosmeticBlacklist := slices.Contains(constants.NON_COSMETIC_ITEMS, item.BaseItemId)
 	return isCosmetic || isSkinOrDye || isMemento || isOnCosmeticBlacklist || item.isRune() || item.isUniqueRune()

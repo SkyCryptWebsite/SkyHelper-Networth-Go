@@ -3,7 +3,7 @@ package tests
 import (
 	"testing"
 
-	skycrypttypes "github.com/DuckySoLucky/SkyCrypt-Types"
+	skycrypttypes "github.com/SkyCryptWebsite/SkyCrypt-Types"
 	"github.com/SkyCryptWebsite/SkyHelper-Networth-Go/internal/calculators/handlers"
 	"github.com/SkyCryptWebsite/SkyHelper-Networth-Go/internal/models"
 )
@@ -15,7 +15,7 @@ func TestPickonimbusHandler(t *testing.T) {
 			item: &models.NetworthItem{
 				ItemId: "PICKONIMBUS",
 				ExtraAttributes: &skycrypttypes.ExtraAttributes{
-					PickonimbusDurability: 2500,
+					PickonimbusDurability: 1000,
 				},
 				Price:       50000,
 				BasePrice:   50000,
@@ -29,9 +29,22 @@ func TestPickonimbusHandler(t *testing.T) {
 					Id:    "PICKONIMBUS_DURABLITY",
 					Type:  "PICKONIMBUS",
 					Price: -25000,
-					Count: 2500,
+					Count: 1000,
 				},
 			},
+		},
+		{
+			description: "Does not apply at full durability",
+			item: &models.NetworthItem{
+				ItemId:          "PICKONIMBUS",
+				ExtraAttributes: &skycrypttypes.ExtraAttributes{PickonimbusDurability: 2000},
+				Price:           50000,
+				BasePrice:       50000,
+				Calculation:     []models.CalculationData{},
+			},
+			prices:              map[string]float64{},
+			shouldApply:         false,
+			expectedCalculation: []models.CalculationData{},
 		},
 		{
 			description: "Does not apply",

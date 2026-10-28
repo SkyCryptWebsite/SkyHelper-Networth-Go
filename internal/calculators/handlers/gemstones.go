@@ -11,8 +11,10 @@ import (
 )
 
 var (
-	divansArmorRegex  = regexp.MustCompile(`^DIVAN_(HELMET|CHESTPLATE|LEGGINGS|BOOTS)$`)
-	crimsonArmorRegex = regexp.MustCompile(`^(|HOT_|FIERY_|BURNING_|INFERNAL_)(AURORA|CRIMSON|TERROR|HOLLOW|FERVOR)(_HELMET|_CHESTPLATE|_LEGGINGS|_BOOTS)$`)
+	// Items whose unlocked gemstone slots are worth something: Divan's armor and pendant (gemstone chambers) and
+	// Kuudra armor (gemstone slots). Matched on the base item ID, so starred and renamed variants count too.
+	divansRegex      = regexp.MustCompile(`^DIVAN_(HELMET|CHESTPLATE|LEGGINGS|BOOTS|PENDANT)$`)
+	kuudraArmorRegex = regexp.MustCompile(`^((HOT|FIERY|BURNING|INFERNAL)_)?(AURORA|CRIMSON|TERROR|HOLLOW|FERVOR)_(HELMET|CHESTPLATE|LEGGINGS|BOOTS)$`)
 )
 
 type GemstonesHandler struct{}
@@ -70,14 +72,16 @@ func (h GemstonesHandler) Calculate(item *models.NetworthItem, prices map[string
 
 		// Process gems for this slot. Used keys are tracked here rather than deleted: the gems map belongs to the
 		// decoded item, which is priced again for non-cosmetic networth and read again to display the gems.
+		// Upstream takes the first matching key in the item's data order. Go maps have no order, and an item can
+		// carry more gems than its slots (COMBAT_0 and COMBAT_1 for one COMBAT slot), so take the lowest key, which
+		// is the order Hypixel writes them in.
 		var key string
 		for k := range extraAttributesGems {
 			if _, taken := usedGemKeys[k]; taken {
 				continue
 			}
-			if strings.HasPrefix(k, slot.SlotType) && !strings.HasSuffix(k, "_gem") {
+			if strings.HasPrefix(k, slot.SlotType) && !strings.HasSuffix(k, "_gem") && (key == "" || k < key) {
 				key = k
-				break
 			}
 		}
 
@@ -106,11 +110,11 @@ func (h GemstonesHandler) Calculate(item *models.NetworthItem, prices map[string
 		}
 	}
 
-	isDivansArmor := divansArmorRegex.MatchString(item.ItemId)
-	isCrimsonArmor := crimsonArmorRegex.MatchString(item.ItemId)
-	if isDivansArmor || isCrimsonArmor {
+	isDivans := divansRegex.MatchString(item.BaseItemId)
+	isKuudraArmor := kuudraArmorRegex.MatchString(item.BaseItemId)
+	if isDivans || isKuudraArmor {
 		application := constants.APPLICATION_WORTH["gemstoneSlots"]
-		if isDivansArmor {
+		if isDivans {
 			application = constants.APPLICATION_WORTH["gemstoneChambers"]
 		}
 

@@ -5,7 +5,7 @@ import (
 	"slices"
 	"sort"
 
-	skycrypttypes "github.com/DuckySoLucky/SkyCrypt-Types"
+	skycrypttypes "github.com/SkyCryptWebsite/SkyCrypt-Types"
 	"github.com/SkyCryptWebsite/SkyHelper-Networth-Go/internal/constants"
 )
 
@@ -27,8 +27,10 @@ type NetworthPet struct {
 }
 
 type Level struct {
-	Level           int     `json:"level"`
-	ExperienceToMax int     `json:"xpMax"`
+	Level           int `json:"level"`
+	ExperienceToMax int `json:"xpMax"`
+	// ExperienceTo100 is the XP the pet's rarity needs for level 100, which prices below 100 scale against.
+	ExperienceTo100 int     `json:"xpMaxTo100"`
 	Experience      float64 `json:"xp"`
 }
 
@@ -47,7 +49,8 @@ func (item *NetworthPet) hasKnownRarity() bool {
 
 func (item *NetworthPet) getTierBoostedTier() int {
 	tier := item.getTier()
-	if tier >= 0 && tier+1 < len(constants.RARITIES) && item.PetData.HeldItem == "PET_ITEM_TIER_BOOST" {
+	// A Tier Boost doesn't raise a Phoenix's rarity.
+	if tier >= 0 && tier+1 < len(constants.RARITIES) && item.PetData.HeldItem == "PET_ITEM_TIER_BOOST" && item.PetData.Type != "PHOENIX" {
 		return tier + 1
 	}
 
@@ -102,24 +105,26 @@ func (item *NetworthPet) getBasePrice() {
 		basePrice = petLevelPrices["LVL_100"]
 	}
 
+	// Up to level 100 a pet is worth its level 100 price, even one that can reach 200.
+	if item.Level.Level <= 100 {
+		basePrice = petLevelPrices["LVL_100"]
+	}
 	item.BasePrice = basePrice
 
-	if item.Level.Level < 100 && item.Level.ExperienceToMax > 0 {
-		baseFormula := (petLevelPrices["LVL_100"] - petLevelPrices["LVL_1"]) / float64(item.Level.ExperienceToMax)
-
-		if baseFormula > 0 {
+	// Below level 100, scale between the level 1 and level 100 prices by the XP towards level 100.
+	if item.Level.Level < 100 && item.Level.ExperienceToMax > 0 && item.Level.ExperienceTo100 > 0 {
+		baseFormula := (petLevelPrices["LVL_100"] - petLevelPrices["LVL_1"]) / float64(item.Level.ExperienceTo100)
+		if baseFormula != 0 {
 			item.BasePrice = baseFormula*item.Level.Experience + petLevelPrices["LVL_1"]
-
 		}
 	}
 
+	// Between 100 and 200, scale between the level 100 and level 200 prices by level.
 	if item.Level.Level > 100 && item.Level.Level < 200 {
 		level := item.Level.Level - 100
-		if level > 1 {
-			baseFormula := (petLevelPrices["LVL_200"] - petLevelPrices["LVL_100"]) / 100
-			if baseFormula > 0 {
-				item.BasePrice = baseFormula*float64(level) + petLevelPrices["LVL_100"]
-			}
+		baseFormula := (petLevelPrices["LVL_200"] - petLevelPrices["LVL_100"]) / 100
+		if baseFormula != 0 {
+			item.BasePrice = baseFormula*float64(level) + petLevelPrices["LVL_100"]
 		}
 	}
 }
@@ -141,7 +146,12 @@ func (item *NetworthPet) getPetLevel() Level {
 		maxPetLevel = 100
 	}
 
-	petOffset := constants.RARITY_OFFSET_PETS[item.getTierBoostedTierName()]
+	rarity := item.getTierBoostedTierName()
+	if item.PetData.Type == "BINGO" {
+		// The Bingo pet levels like a common pet, whatever its rarity.
+		rarity = "COMMON"
+	}
+	petOffset := constants.RARITY_OFFSET_PETS[rarity]
 	petLevels := constants.PET_LEVELS[petOffset:min(petOffset+maxPetLevel-1, len(constants.PET_LEVELS))]
 
 	level := 1
@@ -162,8 +172,9 @@ func (item *NetworthPet) getPetLevel() Level {
 	}
 
 	return Level{
-		Level:           level,
+		Level:           min(level, maxPetLevel),
 		ExperienceToMax: int(sumOfExp),
+		ExperienceTo100: constants.XP_TO_LEVEL_100[item.getTierBoostedTierName()],
 		Experience:      item.PetData.Experience,
 	}
 }

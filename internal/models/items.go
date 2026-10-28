@@ -1,6 +1,6 @@
 package models
 
-import skycrypttypes "github.com/DuckySoLucky/SkyCrypt-Types"
+import skycrypttypes "github.com/SkyCryptWebsite/SkyCrypt-Types"
 
 type DecodedNewYearCakeBagData struct {
 	Items []skycrypttypes.Item `nbt:"i" json:"items,omitempty"`

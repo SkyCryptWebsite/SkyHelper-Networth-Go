@@ -5,7 +5,7 @@ import (
 	"os"
 	"testing"
 
-	skycrypttypes "github.com/DuckySoLucky/SkyCrypt-Types"
+	skycrypttypes "github.com/SkyCryptWebsite/SkyCrypt-Types"
 	"github.com/SkyCryptWebsite/SkyHelper-Networth-Go/internal/calculators"
 	"github.com/SkyCryptWebsite/SkyHelper-Networth-Go/internal/lib"
 	"github.com/SkyCryptWebsite/SkyHelper-Networth-Go/internal/models"

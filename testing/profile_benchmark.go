@@ -6,7 +6,7 @@ import (
 	"os"
 	"runtime/pprof"
 
-	skycrypttypes "github.com/DuckySoLucky/SkyCrypt-Types"
+	skycrypttypes "github.com/SkyCryptWebsite/SkyCrypt-Types"
 	networth "github.com/SkyCryptWebsite/SkyHelper-Networth-Go"
 	"github.com/SkyCryptWebsite/SkyHelper-Networth-Go/internal/models"
 )

@@ -1,11 +1,11 @@
 module github.com/SkyCryptWebsite/SkyHelper-Networth-Go
 
-go 1.25.1
+go 1.26.4
 
 require github.com/Tnze/go-mc v1.20.2
 
 require (
-	github.com/DuckySoLucky/SkyCrypt-Types v0.1.24
+	github.com/SkyCryptWebsite/SkyCrypt-Types v0.1.27
 	github.com/bytedance/sonic v1.15.1
 	github.com/klauspost/compress v1.18.0
 )

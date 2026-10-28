@@ -12,7 +12,9 @@ func (h PickonimbusHandler) IsCosmetic() bool {
 }
 
 func (h PickonimbusHandler) Applies(item *models.NetworthItem) bool {
-	return item.ItemId == "PICKONIMBUS" && item.ExtraAttributes.PickonimbusDurability > 0
+	// Only a used one loses value. 0 means the field is missing: Go can't tell it from a fully used one.
+	durability := item.ExtraAttributes.PickonimbusDurability
+	return item.ItemId == "PICKONIMBUS" && durability > 0 && durability < constants.PICKONIMBUS_DURABILITY
 }
 
 func (h PickonimbusHandler) Calculate(item *models.NetworthItem, prices map[string]float64) {

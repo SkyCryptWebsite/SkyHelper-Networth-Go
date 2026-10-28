@@ -68,6 +68,8 @@ var SPECIAL_ENCHANTMENT_NAMES = map[string]string{
 	"turbo_rose":           "Turbo-Rose",
 	"turbo_moonflower":     "Turbo-Moonflower",
 	"turbo_sunflower":      "Turbo-Sunflower",
+	"magmarizer":           "Pyroclasm",
+	"triple_strike":        "Triple-Strike",
 	"ultimate_reiterate":   "Ultimate Duplex",
 	"ultimate_bobbin_time": "Ultimate Bobbin' Time",
 	"arcane":               "Woodsplitter",
@@ -78,6 +80,10 @@ var SPECIAL_ENCHANTMENT_NAMES = map[string]string{
 var GEMSTONE_SLOTS = []string{
 	"COMBAT", "OFFENSIVE", "DEFENSIVE", "MINING", "UNIVERSAL", "CHISEL",
 }
+
+// ITEMS_WITH_UNIQUE_MODIFIERS can appear several times in a profile once their upgrades are combined. Each distinct
+// modifier counts towards a profile's networth once; the items' base prices all count.
+var ITEMS_WITH_UNIQUE_MODIFIERS = []string{"SAFARI_BELT"}
 
 // NonCosmeticItems is a set of item IDs that are not considered cosmetic.
 var NON_COSMETIC_ITEMS = []string{
@@ -91,7 +97,7 @@ var NON_COSMETIC_ITEMS = []string{
 	"POTATO_BASKET",
 }
 
-var PICKONIMBUS_DURABILITY = 5000
+var PICKONIMBUS_DURABILITY = 2000
 
 var MAX_THUNDER_CHARGE = 5000000
 
@@ -117,6 +123,9 @@ var ENCHANTMENT_UPGRADES = map[string][]enchantmentUpgrade{
 	"BANE_OF_ARTHROPODS": {{UpgradeItem: "ENSNARED_SNAIL", Tier: 7}},
 	"THORNS":             {{UpgradeItem: "PRICKLY_CREEPER", Tier: 4}},
 	"SCUBA":              {{UpgradeItem: "VIBRANT_CORAL", Tier: 6}},
+	"FOREST_PLEDGE":      {{UpgradeItem: "WATER_HYACINTH", Tier: 6}},
+	"KARMA":              {{UpgradeItem: "FORESTS_FAVOR", Tier: 6}},
+	"STEALTH":            {{UpgradeItem: "DISTANT_ECHO", Tier: 6}},
 	"TURBO_WHEAT":        {{UpgradeItem: "TURBO_GOURD", Tier: 6, OncePerItem: true}, {UpgradeItem: "ENCHANTED_TURBO_GOURD", Tier: 7, OncePerItem: true}},
 	"TURBO_CARROT":       {{UpgradeItem: "TURBO_GOURD", Tier: 6, OncePerItem: true}, {UpgradeItem: "ENCHANTED_TURBO_GOURD", Tier: 7, OncePerItem: true}},
 	"TURBO_POTATO":       {{UpgradeItem: "TURBO_GOURD", Tier: 6, OncePerItem: true}, {UpgradeItem: "ENCHANTED_TURBO_GOURD", Tier: 7, OncePerItem: true}},

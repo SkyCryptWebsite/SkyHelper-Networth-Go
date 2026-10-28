@@ -3,12 +3,12 @@ package main
 import (
 	"fmt"
 
-	"github.com/SkyCryptWebsite/SkyHelper-Networth-Go/options"
+	skyhelpernetworthgo "github.com/SkyCryptWebsite/SkyHelper-Networth-Go"
 )
 
 func main() {
 	// Example usage of the public NetworthOptions
-	opts := options.NetworthOptions{
+	opts := skyhelpernetworthgo.NetworthOptions{
 		NonCosmetic:     true,
 		OnlyNetworth:    false,
 		IncludeItemData: true,

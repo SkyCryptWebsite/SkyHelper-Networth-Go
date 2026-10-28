@@ -1,6 +1,6 @@
 package models
 
-import skycrypttypes "github.com/DuckySoLucky/SkyCrypt-Types"
+import skycrypttypes "github.com/SkyCryptWebsite/SkyCrypt-Types"
 
 type CalculationData struct {
 	Id        string  `json:"id"`
@@ -30,6 +30,8 @@ type ParsedItems struct {
 	Storage               []*skycrypttypes.Item `json:"storage"`
 	Wardrobe              []*skycrypttypes.Item `json:"wardrobe"`
 	Museum                []*skycrypttypes.Item `json:"museum"`
+	FarmingToolkit        []*skycrypttypes.Item `json:"farming_toolkit"`
+	HuntingToolkit        []*skycrypttypes.Item `json:"hunting_toolkit"`
 }
 
 type BasicItem struct {

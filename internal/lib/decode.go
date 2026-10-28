@@ -2,6 +2,7 @@ package lib
 
 import (
 	"bytes"
+	"io"
 	"sync"
 	"unsafe"
 
@@ -22,6 +23,13 @@ var bufferPool = sync.Pool{
 	New: func() any {
 		b := make([]byte, 0, 32768) // 32KB pre-allocation
 		return &b
+	},
+}
+
+// Inflated NBT, so the decoder reads from memory.
+var inflatePool = sync.Pool{
+	New: func() any {
+		return new(bytes.Buffer)
 	},
 }
 
@@ -84,16 +92,29 @@ func DecodeFromBytes(data []byte) (*models.DecodedInventory, error) {
 		return nil, err
 	}
 
-	// Not pooled: the result goes to the caller and is never returned, and a pooled 256-slot slice per call
-	// cost far more than letting the decoder size the slice to the real item count.
-	nbtData := &models.DecodedInventory{}
-
-	decoder := nbt.NewDecoder(reader)
-	_, err = decoder.Decode(nbtData)
+	// Inflate first: the NBT decoder reads byte by byte, and a gzip reader has no ReadByte, so decoding straight
+	// from it cost a gzip Read call per byte (about 20% slower on real inventories).
+	inflated := inflatePool.Get().(*bytes.Buffer)
+	inflated.Reset()
+	_, err = io.Copy(inflated, reader)
 
 	// Close before pooling: once Put, another goroutine may already be reusing the reader.
 	_ = reader.Close()
 	gzipReaderPool.Put(reader)
+	if err != nil {
+		inflatePool.Put(inflated)
+		bytesReaderPool.Put(bytesReader)
+		return nil, err
+	}
+
+	// Not pooled: the result goes to the caller and is never returned, and a pooled 256-slot slice per call
+	// cost far more than letting the decoder size the slice to the real item count.
+	nbtData := &models.DecodedInventory{}
+
+	// The decoder copies every string and array it reads, so nothing it returns points into the pooled buffer.
+	bytesReader.Reset(inflated.Bytes())
+	_, err = nbt.NewDecoder(bytesReader).Decode(nbtData)
+	inflatePool.Put(inflated)
 	bytesReaderPool.Put(bytesReader)
 
 	if err != nil {

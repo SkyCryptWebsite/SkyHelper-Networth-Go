@@ -18,7 +18,7 @@ type HypixelItem struct {
 	Origin            string          `json:"origin,omitempty"`
 	RiftTransferrable bool            `json:"rift_transferrable,omitempty"`
 	UpgradeCosts      [][]UpgradeCost `json:"upgrade_costs,omitempty"`
-	GemstoneSlots    []GemstoneSlot  `json:"gemstone_slots,omitempty"`
+	GemstoneSlots     []GemstoneSlot  `json:"gemstone_slots,omitempty"`
 	Prestige          PrestigeCost    `json:"prestige,omitempty"`
 }
 

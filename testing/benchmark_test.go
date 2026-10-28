@@ -7,7 +7,7 @@ import (
 	"testing"
 	"time"
 
-	skycrypttypes "github.com/DuckySoLucky/SkyCrypt-Types"
+	skycrypttypes "github.com/SkyCryptWebsite/SkyCrypt-Types"
 	networth "github.com/SkyCryptWebsite/SkyHelper-Networth-Go"
 )
 

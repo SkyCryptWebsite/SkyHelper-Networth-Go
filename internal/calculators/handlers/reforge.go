@@ -12,7 +12,8 @@ func (h ReforgeHandler) IsCosmetic() bool {
 }
 
 func (h ReforgeHandler) Applies(item *models.NetworthItem) bool {
-	return item.ExtraAttributes.Modifier != "" && item.SkyblockItem != nil && item.SkyblockItem.Category != "ACCESSORY"
+	// Items missing from the Hypixel item list are reforgeable too, as upstream treats them.
+	return item.ExtraAttributes.Modifier != "" && (item.SkyblockItem == nil || item.SkyblockItem.Category != "ACCESSORY")
 }
 
 func (h ReforgeHandler) Calculate(item *models.NetworthItem, prices map[string]float64) {

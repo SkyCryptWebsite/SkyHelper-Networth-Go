@@ -7,22 +7,22 @@ import (
 	"github.com/SkyCryptWebsite/SkyHelper-Networth-Go/internal/models"
 )
 
-type NecronBladeScrollHandler struct{}
+type AbilityScrollsHandler struct{}
 
-func (h NecronBladeScrollHandler) IsCosmetic() bool {
+func (h AbilityScrollsHandler) IsCosmetic() bool {
 	return false
 }
 
-func (h NecronBladeScrollHandler) Applies(item *models.NetworthItem) bool {
+func (h AbilityScrollsHandler) Applies(item *models.NetworthItem) bool {
 	return len(item.ExtraAttributes.AbilityScroll) > 0
 }
 
-func (h NecronBladeScrollHandler) Calculate(item *models.NetworthItem, prices map[string]float64) {
+func (h AbilityScrollsHandler) Calculate(item *models.NetworthItem, prices map[string]float64) {
 	for _, id := range item.ExtraAttributes.AbilityScroll {
 		calculationData := models.CalculationData{
 			Id:    id,
-			Type:  "NECRON_SCROLL",
-			Price: prices[strings.ToUpper(id)] * constants.APPLICATION_WORTH["necronBladeScroll"],
+			Type:  "ABILITY_SCROLL",
+			Price: prices[strings.ToUpper(id)] * constants.APPLICATION_WORTH["abilityScroll"],
 			Count: 1,
 		}
 

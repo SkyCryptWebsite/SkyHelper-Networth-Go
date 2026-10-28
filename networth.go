@@ -3,12 +3,15 @@ package skyhelpernetworthgo
 import (
 	"errors"
 	"fmt"
+	"runtime"
+	"slices"
 	"sort"
 	"strings"
 	"sync"
 
-	skycrypttypes "github.com/DuckySoLucky/SkyCrypt-Types"
+	skycrypttypes "github.com/SkyCryptWebsite/SkyCrypt-Types"
 	"github.com/SkyCryptWebsite/SkyHelper-Networth-Go/internal/calculators"
+	"github.com/SkyCryptWebsite/SkyHelper-Networth-Go/internal/constants"
 	"github.com/SkyCryptWebsite/SkyHelper-Networth-Go/internal/lib"
 	"github.com/SkyCryptWebsite/SkyHelper-Networth-Go/internal/models"
 	"github.com/bytedance/sonic"
@@ -92,6 +95,11 @@ func (p *ProfileNetworthCalculator) GetNetworthAndNonCosmetic(opts NetworthOptio
 		opts.Prices = nil
 	}
 
+	// On one CPU (a prefork child) a second goroutine can't run alongside, so it would only add scheduling.
+	if runtime.GOMAXPROCS(0) == 1 {
+		return p.GetNetworth(opts), p.GetNonCosmeticNetworth(opts)
+	}
+
 	var wg sync.WaitGroup
 	var panicked any
 	wg.Add(1)
@@ -139,6 +147,8 @@ func (p *ProfileNetworthCalculator) calculate(options models.NetworthOptions) *m
 		"essence":                 {Items: p.Items.Essence, Type: "basic"},
 		"pets":                    {Items: p.Items.Pets, Type: "pets"},
 		"museum":                  {Items: p.Items.Museum, Type: "decoded"},
+		"farming_toolkit":         {Items: p.Items.FarmingToolkit, Type: "decoded"},
+		"hunting_toolkit":         {Items: p.Items.HuntingToolkit, Type: "decoded"},
 	}
 
 	totalNetworth, totalUnsoulboundNetworth := 0.0, 0.0
@@ -152,7 +162,13 @@ func (p *ProfileNetworthCalculator) calculate(options models.NetworthOptions) *m
 		}
 	}
 
-	for categoryId, categoryInfo := range categories {
+	// Modifiers already counted for ITEMS_WITH_UNIQUE_MODIFIERS, per item ID, across every category.
+	countedModifiers := map[string]map[string]bool{}
+
+	// Upstream's order. Totals don't depend on it, but which copy of an ITEMS_WITH_UNIQUE_MODIFIERS item keeps its
+	// modifiers does, so a fixed order keeps each category's total the same as upstream's and the same every run.
+	for _, categoryId := range categoryOrder {
+		categoryInfo := categories[categoryId]
 		switch categoryInfo.Type {
 		case "decoded":
 			decodedItems := categoryInfo.Items.([]*skycrypttypes.Item)
@@ -250,6 +266,10 @@ func (p *ProfileNetworthCalculator) calculate(options models.NetworthOptions) *m
 					}
 				}
 
+				if result.Price != 0 && slices.Contains(constants.ITEMS_WITH_UNIQUE_MODIFIERS, result.Id) {
+					dropCountedModifiers(&result, countedModifiers)
+				}
+
 				if result.Price == 0 {
 					if options.KeepInvalidItems {
 						output[categoryId].Items = append(output[categoryId].Items, models.NetworthItemResult{
@@ -284,7 +304,7 @@ func (p *ProfileNetworthCalculator) calculate(options models.NetworthOptions) *m
 		case "basic":
 			basicItems := categoryInfo.Items.([]*models.BasicItem)
 			for _, item := range basicItems {
-				if strings.HasPrefix(item.Id, "RUNE") && options.NonCosmetic {
+				if strings.HasPrefix(item.Id, "RUNE_") && options.NonCosmetic {
 					continue
 				}
 
@@ -439,6 +459,37 @@ type inventoryResult struct {
 	err  error
 }
 
+// categoryOrder is the order SkyHelper-networth's parseItems creates the categories in.
+var categoryOrder = []string{
+	"armor", "equipment", "inventory", "enderchest", "accessories", "personal_vault", "fishing_bag", "potion_bag",
+	"sacks_bag", "candy_inventory", "carnival_mask_inventory", "quiver", "wardrobe", "storage", "museum",
+	"farming_toolkit", "hunting_toolkit", "sacks", "essence", "pets",
+}
+
+// dropCountedModifiers removes from result the modifiers an earlier copy of the same item already counted, so a
+// modifier that shows on several copies of a combined item counts once. The item's base price stays.
+func dropCountedModifiers(result *models.NetworthItemResult, counted map[string]map[string]bool) {
+	seen := counted[result.Id]
+	if seen == nil {
+		seen = map[string]bool{}
+		counted[result.Id] = seen
+	}
+	kept := result.Calculation[:0:0]
+	for _, calculation := range result.Calculation {
+		key := calculation.Type + ":" + calculation.Id
+		if seen[key] {
+			result.Price -= calculation.Price
+			if calculation.Soulbound {
+				result.SoulboundPortion -= calculation.Price
+			}
+			continue
+		}
+		seen[key] = true
+		kept = append(kept, calculation)
+	}
+	result.Calculation = kept
+}
+
 func CalculateFromSpecifiedInventories(inventories SpecifiedInventory, opts ...models.NetworthOptions) (*models.NetworthResult, error) {
 	var opt NetworthOptions
 	if len(opts) > 0 {
@@ -476,7 +527,8 @@ func CalculateFromSpecifiedInventories(inventories SpecifiedInventory, opts ...m
 		}
 	}
 
-	if nonEmptyCount > 1 {
+	// Decode and price inventories side by side, unless there is one CPU to run them on.
+	if nonEmptyCount > 1 && runtime.GOMAXPROCS(0) > 1 {
 		decodeResults := make(chan decodedInventoryResult, len(inventories))
 		var decodeWg sync.WaitGroup
 
